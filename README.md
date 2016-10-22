@@ -1,5 +1,7 @@
 # j - journalism for [\[matrix\]](http://matrix.org)
 
+![alt-text](https://matrix.org/_matrix/media/v1/download/matrix.org/bIdFrGkGBVaVDdcAuORobifg "Screenshot of j")
+
 A web client for writing news stories, personal blogs and more, built on matrix.
 
 ```
