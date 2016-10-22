@@ -1,7 +1,5 @@
 # j - journalism for [\[matrix\]](http://matrix.org)
 
-![alt-text](https://matrix.org/_matrix/media/v1/download/matrix.org/bIdFrGkGBVaVDdcAuORobifg "Screenshot of j")
-
 A web client for writing news stories, personal blogs and more, built on matrix.
 
 ```
@@ -11,3 +9,5 @@ curl -O https://raw.githubusercontent.com/matrix-org/matrix-js-sdk/master/dist/0
 cd ..
 npm run-script dev
 ```
+
+![alt-text](https://matrix.org/_matrix/media/v1/download/matrix.org/bIdFrGkGBVaVDdcAuORobifg "Screenshot of j")
