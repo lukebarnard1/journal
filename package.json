@@ -9,11 +9,11 @@
     "dev": "npm run-script run & npm run-script watch"
   },
   "author": "Luke Barnard",
-  "repository" : "git@github.com:lukebarnard1/j.git",
+  "repository": "git@github.com:lukebarnard1/j.git",
   "license": "ISC",
   "devDependencies": {
     "riotify": "^1.0.1",
-    "watchify" : "v3.6.1"
+    "watchify": "v3.6.1"
   },
   "dependencies": {
     "express": "^4.14.0",
