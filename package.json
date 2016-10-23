@@ -4,16 +4,15 @@
   "description": "Blogs for [matrix]",
   "main": "index.js",
   "scripts": {
-    "watch": "watchify src/index.js -o web/bundle.js -t [ babelify --presets [ es2015 react ] ] -v",
+    "watch": "watchify src/index.js --debug -o web/bundle.js -t [ riotify ] -v",
     "run": "node index.js",
     "dev": "npm run-script run & npm run-script watch"
   },
   "author": "Luke Barnard",
+  "repository" : "git@github.com:lukebarnard1/j.git",
   "license": "ISC",
   "devDependencies": {
-    "babel-preset-es2015": "^6.16.0",
-    "babel-preset-react": "^6.16.0",
-    "babelify": "^7.3.0",
+    "riotify": "^1.0.1",
     "watchify" : "v3.6.1"
   },
   "dependencies": {
