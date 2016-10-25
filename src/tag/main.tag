@@ -1,10 +1,21 @@
+<raw>
+    this.root.innerHTML = opts.content
+</raw>
+
+<comment>
+    <span style="font-weight: 700">comment from {opts.sender}: </span><span>{opts.content}</span>
+    <button if={opts.mine} onClick={opts.delete}>
+        delete comment
+    </button>
+</comment>
+
 <main name="content">
     <div style="width:80%;padding-left:10%">
         <h3>j - journalism for cool people</h3>
         <p>I am WAY too tired to be coding right now. Use this at your own risk. Access tokens are stored in the browser if 'auto-login' is enabled. For the list of things to do: <button onClick={() => {showTodo = !showTodo}}>
         {showTodo? 'hide' : 'show'}
         TODO</button></p>
-        
+
         <div if={showTodo} style="margin-left:5%;width:90%">
             <h1>TODO</h1>
             <ul>
@@ -22,7 +33,7 @@
             <p>login here:</p>
             <input type="text" name="user_id" placeholder="@person1234:matrix.org"/></br>
             <input type="password" name="password" placeholder="password" /></br>
-            
+
             <label>auto-login next time:</label>
             <input type="checkbox" name="shouldRememberMe"/><br>
             <button onClick={doLoginWithPassword}>login</button>
@@ -32,14 +43,25 @@
             <input type="text" name="room_name" placeholder="My First Mlog"/>
             <button onClick={doCreateBlog}>Create Blog</button>
             <input type="text" name="view_room_id" placeholder="!roomtoview:matrix.org" value="!qJXdPYrthkbuFjdrxj:matrix.org"/>
-            <button onClick={()=>{
-            riot.route('/journal/' + view_room_id.value)}}>View Blog</button>
+            <button onClick={viewBlogButtonClick}>View Blog</button>
 
             <div each={entries}>
-                <blog 
-                    mine={isMine} if={isBlogPost} content={html}
-                    delete={deleteEntry} comment={comment}
-                />
+                <raw content={html}/>
+                <div each={comments} style="padding-left: 50px">
+                    <comment
+                        content={content}
+                        mine={isMine}
+                        delete={deleteEntry}
+                        sender={sender}
+                    />
+                </div>
+                <button if={isMine} onClick={deleteEntry}>
+                    delete post
+                </button>
+                <input type="text" name="comment_text"/>
+                <button onClick={comment}>
+                    comment on post
+                </button>
             </div>
 
             <div if={entries.length==0} style="text-align:center">
@@ -48,9 +70,9 @@
 
             <div if={isOwnerOfCurrentBlog}>
                 <h2>Create a new blog post here:</h2>
-                <div 
-                    contenteditable="true" 
-                    name="new_blog_post_content" 
+                <div
+                    contenteditable="true"
+                    name="new_blog_post_content"
                     style="background-color:#fff; color:#333; border-radius:5px;border:1px solid #ccc; outline:0px; padding:5px"
                 ></div>
                 <button onClick={doNewBlogPost}>Post</button>
@@ -66,7 +88,9 @@
             (nroom_id) => {
                 console.log('Now viewing ', nroom_id);
                 self.view_room_id.value = nroom_id;
-                doViewBlog().catch(console.error);
+                if (self.isLoggedIn){
+                    doViewBlog();
+                }
             }
         );
 
@@ -94,11 +118,11 @@
         let creds = null;
 
         let access_token = null;
-            
+
         // Initial loaded state
         self.update({
-            entries: [], 
-            canCreateNewPost: false, 
+            entries: [],
+            canCreateNewPost: false,
             isLoggedIn: false}
         );
 
@@ -113,15 +137,19 @@
         let updateEntries = () => {
             console.log('updateEntries');
             if (!events[self.view_room_id.value]) {
+                console.warn('No events received yet');
                 return; // No events yet
             }
 
             let entries = events[self.view_room_id.value];
-            
+
             entries = entries.filter((e) => {
                 return e.event.type === 'm.room.message'
-                    && e.event.content.parent === undefined; // remove comments
+                    && e.event.content.parent === undefined
+                    && e.event.content.formatted_body; // remove comments
             }).sort((a,b) => b.getTs() - a.getTs());
+
+            console.log(entries);
 
             // Transform into view
             entries = entries.map((e) => {
@@ -131,7 +159,7 @@
                         (e2) => e2.event.content.parent === e.getId()
                 ).map(
                     (e2) => {
-                        return { 
+                        return {
                             content : e2.event.content.body,
                             id : e2.getId(),
                             isMine : e2.getSender() === creds.user_id,
@@ -161,12 +189,15 @@
 
                     comment : function () {
                         doNewComment(
-                            e.getId(), 
+                            e.getId(),
                             self.comment_text.value
                         );
                     }
                 }
             });
+
+            console.log('Number of blog posts:', entries.length);
+            console.log(entries);
 
             self.update({entries: entries});
         }
@@ -190,16 +221,57 @@
                 }
             );
 
-        } 
+        }
+
+        viewBlogButtonClick = () => {
+            riot.route('/journal/'+this.view_room_id.value);
+            doViewBlog();
+        }
 
         doViewBlog = () => {
+            if (!self.isLoggedIn) {
+                throw new Error('Cannot view blog, not logged in');
+            }
             console.log('Viewing ',self.view_room_id.value);
 
-            cli.joinRoom(self.view_room_id.value, {
-                syncRoom: true
-            });
+            let room = null;
+            cli.joinRoom(self.view_room_id.value).done((room) => {
+                let trackedRooms = localStorage.getItem('mx_tracked_rooms');
 
-            rooms[self.view_room_id.value] = cli.getRoom(self.view_room_id.value);
+                if (!trackedRooms) {
+                    trackedRooms = [room.roomId];
+                } else {
+                    trackedRooms = JSON.parse(trackedRooms);
+                    if (trackedRooms.indexOf(room.roomId) === -1) {
+                        trackedRooms.push(room.roomId);
+                    }
+                }
+                localStorage.setItem('mx_tracked_rooms', JSON.stringify(trackedRooms));
+
+                // Fudge a filter into the syncApi
+                let f = new matrixSdk.Filter(creds.user_id);
+                f.setDefinition({
+                    "room": {
+                        "rooms": trackedRooms,
+                        "timeline": {
+                            "types": ["m.room.message"],
+                        }
+                    }
+                });
+
+                // TODO: This needs to be put into matrix-js-sdk
+                //  1. stopping the client should set sync token to null in the store. This allows for a clean restart
+                //  2. passing a filter to a client will filter all future calls to /sync. This is useful when you want to limit the rooms to a subset of client-tracked rooms.
+                cli.stopClient();
+                cli.store.setSyncToken(null);
+                cli.startClient({
+                    filter : f,
+                    pollTimeout : 5000
+                });
+
+                // Update the view - we might not receive any events to trigger an update
+                updateEntries();
+            });
 
             return cli.getStateEvent(self.view_room_id.value, 'm.room.power_levels').then(
                 (powerLevels) => {
@@ -254,7 +326,7 @@
                baseUrl: hsUrl,
                accessToken: opts.access_token,
                userId: opts.user_id
-            }); 
+            });
 
             loggedIn(opts);
         };
@@ -272,6 +344,7 @@
 
             //TODO: Hook these on load, not on login
             cli.on("event", (e) => {
+                console.log(e.event.type, 'in', e.event.room_id);
                 if (!events[e.getRoomId()]) events[e.getRoomId()] = [];
 
                 // No duplicates
@@ -292,14 +365,12 @@
             self.update({isLoggedIn: true});
             console.log('Logged in!');
 
-            cli.startClient();
             doViewBlog().catch(console.error);
         }
 
         doLogout = () => {
             localStorage.removeItem("mx_access_token");
             localStorage.removeItem("mx_user_id");
-            // riot.route('/');
             self.update({isLoggedIn: false});
         }
 
