@@ -40,10 +40,12 @@
         </div>
 
         <div if={isLoggedIn}>
-            <input type="text" name="room_name" placeholder="My First Mlog"/>
+            <input type="text" name="room_name_input" placeholder="My First Mlog"/>
             <button onClick={doCreateBlog}>Create Blog</button>
             <input type="text" name="view_room_id" placeholder="!roomtoview:matrix.org" value="!qJXdPYrthkbuFjdrxj:matrix.org"/>
             <button onClick={viewBlogButtonClick}>View Blog</button>
+
+            <h1>{room.name}</h1>
 
             <div each={entries}>
                 <raw content={html}/>
@@ -103,7 +105,7 @@
         doCreateBlog = () => {
             cli.createRoom({
                 visibility: 'public',
-                name: self.room_name.value
+                name: self.room_name_input.value
             }).then((resp) => {
                 riot.route('/journal/'+this.view_room_id.value);
                 doViewBlog();
@@ -238,6 +240,8 @@
             cli.joinRoom(self.view_room_id.value).done((room) => {
                 let trackedRooms = localStorage.getItem('mx_tracked_rooms');
 
+                self.update({trackedRooms : trackedRooms});
+
                 if (!trackedRooms) {
                     trackedRooms = [room.roomId];
                 } else {
@@ -268,6 +272,10 @@
                     filter : f,
                     pollTimeout : 5000
                 });
+
+                room.name = "Loading...";
+
+                self.update({room : room});
 
                 // Update the view - we might not receive any events to trigger an update
                 updateEntries();
@@ -358,8 +366,13 @@
                     updateEntriesDebounce(1000);
                 }
             });
+            cli.on("Room.name", function(room) {
+                if (room.roomId === self.view_room_id.value) {
+                    self.update({room : room});
+                }
+            });
             cli.on("Room.redaction", function(e) {
-                console.log('redaction received');
+                console.log('ignoring redaction');
             });
 
             self.update({isLoggedIn: true});
