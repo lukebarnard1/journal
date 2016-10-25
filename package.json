@@ -16,6 +16,7 @@
     "watchify": "v3.6.1"
   },
   "dependencies": {
+    "bluebird": "^3.4.6",
     "express": "^4.14.0",
     "matrix-js-sdk": "^0.6.3"
   }
