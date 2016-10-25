@@ -100,14 +100,14 @@
            baseUrl: hsUrl
         });
 
-        var doCreateBlog = () => {
+        doCreateBlog = () => {
             cli.createRoom({
                 visibility: 'public',
                 name: self.room_name.value
             }).then((resp) => {
-                self.view_room_id.value = resp.room_id;
-                doViewBlog().catch(console.error);
-            });
+                riot.route('/journal/'+this.view_room_id.value);
+                doViewBlog();
+            }).catch(console.error);
         }
 
         // let entries = []; // Blog posts and comments
