@@ -28,10 +28,10 @@
         </div>
 
         <div if={isLoggedIn}>
-            <input type="text" name="room_name_input" placeholder="My First Mlog"/>
+            <input type="text" name="room_name_input" placeholder="blog title"/>
             <select name="room_join_rule_input">
-                <option value="public_chat" selected="selected">Public</option>
-                <option value="private_chat">Private</option>
+                <option value="public_chat" selected="selected">public</option>
+                <option value="private_chat">private</option>
             </select>
             <button onClick={doCreateBlog}>create blog</button>
             <input type="text" name="view_room_id" placeholder="!roomtoview:matrix.org" value="!qJXdPYrthkbuFjdrxj:matrix.org"/>
@@ -266,7 +266,7 @@
                     pollTimeout : 5000
                 });
 
-                room.name = "Loading...";
+                room.name = "loading...";
 
                 self.update({room : room});
 
