@@ -11,23 +11,11 @@
 
 <main name="content">
     <div style="width:80%;padding-left:10%">
-        <h3>j - journalism for cool people</h3>
-        <p>I am WAY too tired to be coding right now. Use this at your own risk. Access tokens are stored in the browser if 'auto-login' is enabled. For the list of things to do: <button onClick={() => {showTodo = !showTodo}}>
-        {showTodo? 'hide' : 'show'}
-        TODO</button></p>
-
-        <div if={showTodo} style="margin-left:5%;width:90%">
-            <h1>TODO</h1>
-            <ul>
-                <li><strike>Get React involved and start creating a login process, forget registration for now</strike><br>NAH let's use RIOT(.js) instead</strike></li>
-                <li><strike>Establish a room as a blog. A blog could be 'My cooking blog', and the only admin is the owner of said blog.</strike></li>
-                <li><strike>Blog posts are just rich (html formatted) m.room.messages type=text created by the admin, and so get special treatment.</strike></li>
-                <li><strike>Other m.room.messages from people in the room are effectively comments, and must somehow refer to the original blog posts. (Maybe something like content.parent = id).</strike></li>
-                <li>Show room directory as available blogs from everyone ever. Problem here is that there needs to be a bit of roomState to indicate that it is a blog, otherwise all rooms will appear on this list... Maybe we could regex the room alias for 'blog'? Doing getState on every public room shown is probably a bad thing. But you literally only get visibility from the room directory. So it looks like we'll need something else for searching for blogs.</li>
-            </ul>
-        </div>
-
-        <button if={isLoggedIn} onClick={doLogout}>logout</button>
+        <h3>
+            j - journalism for cool people
+            <button if={isLoggedIn} onClick={doLogout}>logout</button>
+        </h3>
+        <p>I am WAY too tired to be coding right now. Use this at your own risk. Access tokens are stored in the browser if 'auto-login' is enabled. For the list of things to do: <a href="https://github.com/lukebarnard1/j">github.com/lukebarnard1/j</a></p>
 
         <div if={!isLoggedIn}>
             <p>login here:</p>
@@ -45,9 +33,9 @@
                 <option value="public_chat" selected="selected">Public</option>
                 <option value="private_chat">Private</option>
             </select>
-            <button onClick={doCreateBlog}>Create Blog</button>
+            <button onClick={doCreateBlog}>create blog</button>
             <input type="text" name="view_room_id" placeholder="!roomtoview:matrix.org" value="!qJXdPYrthkbuFjdrxj:matrix.org"/>
-            <button onClick={viewBlogButtonClick}>View Blog</button>
+            <button onClick={viewBlogButtonClick}>view blog</button>
 
             <h1>{room.name}</h1>
 
@@ -75,13 +63,13 @@
             </div>
 
             <div if={isOwnerOfCurrentBlog}>
-                <h2>Create a new blog post here:</h2>
+                <h2>write new blog posts here:</h2>
                 <div
                     contenteditable="true"
                     name="new_blog_post_content"
                     style="background-color:#fff; color:#333; border-radius:5px;border:1px solid #ccc; outline:0px; padding:5px"
                 ></div>
-                <button onClick={doNewBlogPost}>Post</button>
+                <button onClick={doNewBlogPost}>spread the word</button>
             </div>
         </div>
     </div>
