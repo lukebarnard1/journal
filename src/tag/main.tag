@@ -59,7 +59,7 @@
             </div>
 
             <div if={entries.length==0} style="text-align:center">
-                ---------------------no blogs yet---------------------
+                {noBlogsMsg}
             </div>
 
             <div if={isOwnerOfCurrentBlog}>
@@ -87,6 +87,10 @@
                 }
             }
         );
+
+        self.update({
+            noBlogsMsg : "---------------------no-blog-posts-yet---------------------"
+        });
 
         let hsUrl = "https://matrix.org";
 
