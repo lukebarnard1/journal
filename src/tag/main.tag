@@ -38,6 +38,7 @@
             <button onClick={viewBlogButtonClick}>view blog</button>
 
             <h1>{room.name}</h1>
+            <img src={room.getAvatarUrl("http://matrix.org", 250, 250, "scale", false)}/>
 
             <div each={entries}>
                 <raw content={html}/>
@@ -255,7 +256,9 @@
                     "room": {
                         "rooms": trackedRooms,
                         "timeline": {
-                            "types": ["m.room.message"],
+                            "types": [
+                                "m.room.message"
+                            ],
                         }
                     }
                 });
