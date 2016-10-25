@@ -10,12 +10,19 @@
 </comment>
 
 <main name="content">
-    <div style="width:80%;padding-left:10%">
+    <div style="width:60%;padding-left:20%">
         <h3>
             j - journalism for cool people
             <button if={isLoggedIn} onClick={doLogout}>logout</button>
         </h3>
-        <p>I am WAY too tired to be coding right now. Use this at your own risk. Access tokens are stored in the browser if 'auto-login' is enabled. For the list of things to do: <a href="https://github.com/lukebarnard1/j">github.com/lukebarnard1/j</a></p>
+        <p>I am WAY too tired to be coding right now. Use this at your own risk. Access tokens are stored in the browser if 'auto-login' is enabled. For the list of things to do: <a href="https://github.com/lukebarnard1/j">github.com/lukebarnard1/j</a>.</p>
+
+        <span if={roomList.length !== 0}>
+        Visited blogs:</span>
+        <span each={roomList} style="padding-right:10px">
+            <a href="/journal/{roomId}">{name}</a>
+        </span>
+        <button if={isLoggedIn} onClick={()=>{showCreateRoomForm = !showCreateRoomForm}}>{showCreateRoomForm?'hide':'create your own blog'}</button>
 
         <div if={!isLoggedIn}>
             <p>login here:</p>
@@ -28,14 +35,16 @@
         </div>
 
         <div if={isLoggedIn}>
-            <input type="text" name="room_name_input" placeholder="blog title"/>
-            <select name="room_join_rule_input">
-                <option value="public_chat" selected="selected">public</option>
-                <option value="private_chat">private</option>
-            </select>
-            <button onClick={doCreateBlog}>create blog</button>
-            <input type="text" name="view_room_id" placeholder="!roomtoview:matrix.org" value="!qJXdPYrthkbuFjdrxj:matrix.org"/>
-            <button onClick={viewBlogButtonClick}>view blog</button>
+            <div if={showCreateRoomForm}>
+                <input type="text" name="room_name_input" placeholder="blog title"/>
+                <select name="room_join_rule_input">
+                    <option value="public_chat" selected="selected">public</option>
+                    <option value="private_chat">private</option>
+                </select>
+                <button onClick={doCreateBlog}>create blog</button>
+                <input type="text" name="view_room_id" placeholder="!roomtoview:matrix.org" value="!qJXdPYrthkbuFjdrxj:matrix.org"/>
+                <button onClick={viewBlogButtonClick}>view blog</button>
+            </div>
 
             <h1>{room.name}</h1>
             <img src={room.getAvatarUrl("http://matrix.org", 250, 250, "scale", false)}/>
@@ -123,8 +132,9 @@
         self.update({
             entries: [],
             canCreateNewPost: false,
-            isLoggedIn: false}
-        );
+            isLoggedIn: false,
+            showCreateRoomForm: false
+        });
 
         let ueDebounce = null;
         let updateEntriesDebounce = (delay) => {
@@ -207,7 +217,7 @@
             console.log(body);
             body = body.split('<br>');
 
-            body[0] = '<h1>' + body[0] + '</h1><p>';
+            body[0] = '<h2>' + body[0] + '</h2><p>';
             body = body.join('</p><p>') + '<p>';
 
             cli.sendMessage(
@@ -219,7 +229,9 @@
                     // TODO: sanitise self
                     formatted_body: body,
                 }
-            );
+            ).done(() => {
+                self.new_blog_post_content.innerHTML = "";
+            });
 
         }
 
@@ -227,6 +239,10 @@
             riot.route('/journal/'+this.view_room_id.value);
             doViewBlog();
         }
+
+        let trackedRooms = [];
+        let roomList = [];
+        self.update({roomList : roomList});
 
         doViewBlog = () => {
             if (!self.isLoggedIn) {
@@ -236,18 +252,16 @@
 
             let room = null;
             cli.joinRoom(self.view_room_id.value).done((room) => {
-                let trackedRooms = localStorage.getItem('mx_tracked_rooms');
-
-                self.update({trackedRooms : trackedRooms});
-
-                if (!trackedRooms) {
+                let trackedRoomsJSON = localStorage.getItem('mx_tracked_rooms');
+                if (!trackedRoomsJSON) {
                     trackedRooms = [room.roomId];
                 } else {
-                    trackedRooms = JSON.parse(trackedRooms);
+                    trackedRooms = JSON.parse(trackedRoomsJSON);
                     if (trackedRooms.indexOf(room.roomId) === -1) {
                         trackedRooms.push(room.roomId);
                     }
                 }
+
                 localStorage.setItem('mx_tracked_rooms', JSON.stringify(trackedRooms));
 
                 // Fudge a filter into the syncApi
@@ -294,10 +308,14 @@
         }
 
         doDeleteEntry = (id) => {
-            console.log('redacting...');
+            console.log('Redacting...');
             return cli.redactEvent(self.view_room_id.value, id).done(
                 () => {
                     console.log('Redacted');
+                    events[self.view_room_id.value] = events[self.view_room_id.value].filter(
+                        (e) => e.getId() !== id
+                    );
+                    updateEntries();
                 }
             );
         }
@@ -365,6 +383,13 @@
                 if (e.getRoomId() === self.view_room_id.value) {
                     updateEntriesDebounce(1000);
                 }
+            });
+            cli.on("Room", function(room) {
+                self.update({
+                    roomList : cli.getRooms().filter(
+                        (r) => trackedRooms.indexOf(r.roomId) !== -1
+                        )
+                });
             });
             cli.on("Room.name", function(room) {
                 if (room.roomId === self.view_room_id.value) {

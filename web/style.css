@@ -1,7 +1,19 @@
 h1,h2,h3,h4,h5 {
-	font-family:sans-serif;
+	font-family:serif;
+	line-height:1.3em;
 }
 
-p {
-	font-family:'Helvetica';
+span, p, div {
+	font-family:'Calibri';
+	font-size:11pt;
+	line-height:1.2em;
+}
+
+a {
+	color:#7D8;
+	text-decoration:underline;
+}
+
+a:hover {
+	color:#F00;
 }
