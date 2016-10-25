@@ -41,6 +41,10 @@
 
         <div if={isLoggedIn}>
             <input type="text" name="room_name_input" placeholder="My First Mlog"/>
+            <select name="room_join_rule_input">
+                <option value="public_chat" selected="selected">Public</option>
+                <option value="private_chat">Private</option>
+            </select>
             <button onClick={doCreateBlog}>Create Blog</button>
             <input type="text" name="view_room_id" placeholder="!roomtoview:matrix.org" value="!qJXdPYrthkbuFjdrxj:matrix.org"/>
             <button onClick={viewBlogButtonClick}>View Blog</button>
@@ -105,6 +109,7 @@
         doCreateBlog = () => {
             cli.createRoom({
                 visibility: 'public',
+                preset: self.room_join_rule_input.value,
                 name: self.room_name_input.value
             }).then((resp) => {
                 riot.route('/journal/'+this.view_room_id.value);
