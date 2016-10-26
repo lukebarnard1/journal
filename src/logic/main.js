@@ -24,17 +24,6 @@ module.exports = (self) => {
        baseUrl: hsUrl
     });
 
-    doCreateBlog = () => {
-        cli.createRoom({
-            visibility: 'public',
-            preset: self.room_join_rule_input.value,
-            name: self.room_name_input.value
-        }).then((resp) => {
-            riot.route('/journal/'+this.view_room_id.value);
-            doViewBlog();
-        }).catch(console.error);
-    }
-
     // let entries = []; // Blog posts and comments
     let admins = []; // Authors of the current blog
 
@@ -44,12 +33,16 @@ module.exports = (self) => {
 
     let access_token = null;
 
+    let trackedRooms = [];
+    let roomList = [];
+
     // Initial loaded state
     self.update({
         entries: [],
         canCreateNewPost: false,
         isLoggedIn: false,
-        showCreateRoomForm: false
+        showCreateRoomForm: false,
+        roomList : roomList
     });
 
     let ueDebounce = null;
@@ -128,6 +121,17 @@ module.exports = (self) => {
         self.update({entries: entries});
     }
 
+    doCreateBlog = () => {
+        cli.createRoom({
+            visibility: 'public',
+            preset: self.room_join_rule_input.value,
+            name: self.room_name_input.value
+        }).then((resp) => {
+            riot.route('/journal/'+this.view_room_id.value);
+            doViewBlog();
+        }).catch(console.error);
+    }
+
     doNewBlogPost = () => {
         let body = self.new_blog_post_content.innerHTML;
         console.log(body);
@@ -155,10 +159,6 @@ module.exports = (self) => {
         riot.route('/journal/'+this.view_room_id.value);
         doViewBlog();
     }
-
-    let trackedRooms = [];
-    let roomList = [];
-    self.update({roomList : roomList});
 
     doViewBlog = () => {
         if (!self.isLoggedIn) {
