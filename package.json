@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "watch": "watchify src/index.js --debug -o web/bundle.js -t [ riotify ] -v",
+    "build": "browserify src/index.js -o web/bundle.js -t [ riotify ] -v",
     "run": "node index.js",
     "dev": "npm run-script run & npm run-script watch"
   },
