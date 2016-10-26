@@ -22,15 +22,23 @@
         <span each={roomList} style="padding-right:10px">
             <a href="/journal/{roomId}">{name}</a>
         </span>
-        <button if={isLoggedIn} onClick={()=>{showCreateRoomForm = !showCreateRoomForm}}>{showCreateRoomForm?'hide':'create your own blog'}</button>
+        <button if={isLoggedIn} onClick={()=>{this.showCreateRoomForm = !this.showCreateRoomForm}}>{this.showCreateRoomForm?'hide':'create your own blog'}</button>
 
-        <div if={!isLoggedIn}>
+        <div if={!isLoggedIn} class="j_login_form">
             <p>login here:</p>
-            <input type="text" name="user_id" placeholder="@person1234:matrix.org"/></br>
-            <input type="password" name="password" placeholder="password" /></br>
-
-            <label>auto-login next time:</label>
-            <input type="checkbox" name="shouldRememberMe"/><br>
+            <div>
+                <input class="j_100_width" type="text" name="user_id" placeholder="@person1234:matrix.org"/>
+            </div><div>
+                <input class="j_100_width" type="password" name="password" placeholder="password"/>
+            </div><div>
+                <input class="j_100_width" type="text" name="homeserver_url_input" placeholder="https://matrix.org" value="https://matrix.org"/>
+            </div>
+            <div>
+                <label for="shouldRememberMe">
+                    auto-login next time:
+                </label>
+                <input type="checkbox" name="shouldRememberMe" style="float:right"/>
+            </div>
             <button onClick={doLoginWithPassword}>login</button>
         </div>
 

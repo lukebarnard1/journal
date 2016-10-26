@@ -17,3 +17,11 @@ a {
 a:hover {
 	color:#F00;
 }
+
+.j_100_width {
+	width:100%;
+}
+
+.j_login_form {
+	width:200px;
+}

@@ -18,10 +18,8 @@ module.exports = (self) => {
         noBlogsMsg : "---------------------no-blog-posts-yet---------------------"
     });
 
-    let hsUrl = "https://matrix.org";
-
     let cli = matrixSdk.createClient({
-       baseUrl: hsUrl
+       baseUrl: self.homeserver_url_input.value
     });
 
     // let entries = []; // Blog posts and comments
@@ -127,7 +125,7 @@ module.exports = (self) => {
             preset: self.room_join_rule_input.value,
             name: self.room_name_input.value
         }).then((resp) => {
-            riot.route('/journal/'+this.view_room_id.value);
+            riot.route('/journal/'+self.view_room_id.value);
             doViewBlog();
         }).catch(console.error);
     }
@@ -156,7 +154,7 @@ module.exports = (self) => {
     }
 
     viewBlogButtonClick = () => {
-        riot.route('/journal/'+this.view_room_id.value);
+        riot.route('/journal/'+self.view_room_id.value);
         doViewBlog();
     }
 
@@ -249,12 +247,16 @@ module.exports = (self) => {
     }
 
     doLoginWithPassword = () => {
+        cli = matrixSdk.createClient({
+           baseUrl: self.homeserver_url_input.value
+        });
+
         localStorage.setItem("auto_login", self.shouldRememberMe.checked);
         cli.loginWithPassword(
             self.user_id.value, self.password.value
         ).done((resp) => {
             cli = matrixSdk.createClient({
-               baseUrl: hsUrl,
+               baseUrl: self.homeserver_url_input.value,
                accessToken: resp.access_token,
                userId: resp.user_id
             });
@@ -263,9 +265,9 @@ module.exports = (self) => {
     };
 
     doLoginWithOpts = (opts) => {
-
+        console.log(self.homeserver_url_input.value);
         cli = matrixSdk.createClient({
-           baseUrl: hsUrl,
+           baseUrl: self.homeserver_url_input.value,
            accessToken: opts.access_token,
            userId: opts.user_id
         });
@@ -279,6 +281,7 @@ module.exports = (self) => {
             console.log('Storing access token and user id');
             localStorage.setItem("mx_access_token", creds.access_token);
             localStorage.setItem("mx_user_id", creds.user_id);
+            localStorage.setItem("mx_hs", self.homeserver_url_input.value);
         } else {
             self.user_id.value = "";
             self.password.value = "";
@@ -326,6 +329,8 @@ module.exports = (self) => {
         localStorage.removeItem("mx_access_token");
         localStorage.removeItem("mx_user_id");
         self.update({isLoggedIn: false});
+        cli.logout();
+        cli.stopClient();
     }
 
     showTodo = false;
@@ -337,6 +342,7 @@ module.exports = (self) => {
     if (localStorage) {
         access_token = localStorage.getItem("mx_access_token");
         user_id = localStorage.getItem("mx_user_id");
+        self.homeserver_url_input.value = localStorage.getItem("mx_hs") || "https://matrix.org";
 
         if (access_token && user_id) {
             doLoginWithOpts({
