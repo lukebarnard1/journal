@@ -73,7 +73,9 @@ module.exports = (self) => {
             let isBlogPost = e.event.content.format === 'org.matrix.custom.html';
             isBlogPost = isBlogPost && (admins.indexOf(e.event.sender) !== -1);
             let comments = events[self.view_room_id.value].filter(
-                    (e2) => e2.event.content.parent === e.getId()
+                (e2) => e2.event.content.parent === e.getId()
+            ).sort(
+                (a, b) => a.getTs() - b.getTs()
             ).map(
                 (e2) => {
                     return {
