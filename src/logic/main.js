@@ -59,19 +59,16 @@ module.exports = (self) => {
         }
 
         let entries = events[self.view_room_id.value];
-
         entries = entries.filter((e) => {
             return e.event.type === 'm.room.message'
                 && e.event.content.parent === undefined
-                && e.event.content.formatted_body; // remove comments
-        }).sort((a,b) => b.getTs() - a.getTs());
-
-        console.log(entries);
+                && e.event.content.format === 'org.matrix.custom.html'
+                && e.event.content.formatted_body
+                && admins.indexOf(e.event.sender) !== -1; // remove comments
+        }).sort((a, b) => b.getTs() - a.getTs());
 
         // Transform into view
         entries = entries.map((e) => {
-            let isBlogPost = e.event.content.format === 'org.matrix.custom.html';
-            isBlogPost = isBlogPost && (admins.indexOf(e.event.sender) !== -1);
             let comments = events[self.view_room_id.value].filter(
                 (e2) => e2.event.content.parent === e.getId()
             ).sort(
@@ -95,7 +92,6 @@ module.exports = (self) => {
             return {
                 id : e.getId(),
                 isMine : e.event.sender === creds.user_id,
-                isBlogPost : isBlogPost,
                 // TODO: sanitise self
                 html : e.event.content.formatted_body,
                 text : e.event.content.body,
@@ -341,7 +337,7 @@ module.exports = (self) => {
     riot.route.start();
     riot.route.exec();
 
-    let testing = true;
+    let testing = false;
     if (testing) {
         events[self.view_room_id.value] = [{
             event: {
@@ -380,6 +376,17 @@ module.exports = (self) => {
             },
             getTs: () => 2,
             getId: () => 2,
+            getSender: () => '@testuser2:server.name'
+        },
+        {
+            event: {
+                type: 'm.room.message',
+                content: {
+                    body: 'Comment in room: THIS SHOULD NOT BE VISIBLE',
+                }
+            },
+            getTs: () => 4,
+            getId: () => 4,
             getSender: () => '@testuser2:server.name'
         }];
 
