@@ -358,7 +358,20 @@ module.exports = (self) => {
                 type: 'm.room.message',
                 content: {
                     parent: 1,
-                    body: 'I am a comment',
+                    body: 'I am another, later comment',
+                    format: 'org.matrix.custom.html'
+                }
+            },
+            getTs: () => 3,
+            getId: () => 3,
+            getSender: () => '@testuser3:server.name'
+        },
+        {
+            event: {
+                type: 'm.room.message',
+                content: {
+                    parent: 1,
+                    body: 'I am an earlier comment',
                     formatted_body: '<h1>THIS SHOULD NOT BE VISIBLE</h1>',
                     format: 'org.matrix.custom.html'
                 }
@@ -366,19 +379,6 @@ module.exports = (self) => {
             getTs: () => 2,
             getId: () => 2,
             getSender: () => '@testuser2:server.name'
-        },
-        {
-            event: {
-                type: 'm.room.message',
-                content: {
-                    parent: 1,
-                    body: 'I am another, earlier comment',
-                    format: 'org.matrix.custom.html'
-                }
-            },
-            getTs: () => 1,
-            getId: () => 3,
-            getSender: () => '@testuser3:server.name'
         }];
 
         creds = {};
