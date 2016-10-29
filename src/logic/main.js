@@ -339,6 +339,55 @@ module.exports = (self) => {
     riot.route.start();
     riot.route.exec();
 
+    let testing = true;
+    if (testing) {
+        events[self.view_room_id.value] = [{
+            event: {
+                type: 'm.room.message',
+                content: {
+                    formatted_body: '<h1>Test blog</h1><p>This is a test 😁</p><p>Second paragraph here</p>',
+                    format: 'org.matrix.custom.html'
+                }
+            },
+            getTs: () => 1,
+            getId: () => 1,
+            getSender: () => '@testuser1:server.name'
+        },
+        {
+            event: {
+                type: 'm.room.message',
+                content: {
+                    parent: 1,
+                    body: 'I am a comment',
+                    formatted_body: '<h1>THIS SHOULD NOT BE VISIBLE</h1>',
+                    format: 'org.matrix.custom.html'
+                }
+            },
+            getTs: () => 2,
+            getId: () => 2,
+            getSender: () => '@testuser2:server.name'
+        },
+        {
+            event: {
+                type: 'm.room.message',
+                content: {
+                    parent: 1,
+                    body: 'I am another, earlier comment',
+                    format: 'org.matrix.custom.html'
+                }
+            },
+            getTs: () => 1,
+            getId: () => 3,
+            getSender: () => '@testuser3:server.name'
+        }];
+
+        creds = {};
+        self.update({isLoggedIn : true});
+
+        updateEntries();
+        return;
+    }
+
     if (localStorage) {
         access_token = localStorage.getItem("mx_access_token");
         user_id = localStorage.getItem("mx_user_id");
