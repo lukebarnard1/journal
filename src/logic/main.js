@@ -64,6 +64,7 @@ module.exports = (self) => {
                 && e.event.content.parent === undefined
                 && e.event.content.format === 'org.matrix.custom.html'
                 && e.event.content.formatted_body
+                && e.event.content.formatted_body.split('</p><p>').length > 1
                 && admins.indexOf(e.event.sender) !== -1; // remove comments
         }).sort((a, b) => b.getTs() - a.getTs());
 
