@@ -26,7 +26,7 @@ module.exports = (self) => {
     let admins = []; // Authors of the current blog
 
     let events = {};
-    let rooms = {};
+    let currentRoom = null;
     let creds = null;
 
     let access_token = null;
@@ -61,11 +61,7 @@ module.exports = (self) => {
         let entries = events[self.view_room_id.value];
         entries = entries.filter((e) => {
             return e.event.type === 'm.room.message'
-                && e.event.content.parent === undefined
-                && e.event.content.format === 'org.matrix.custom.html'
-                && e.event.content.formatted_body
-                && e.event.content.formatted_body.split('</p><p>').length > 1
-                && admins.indexOf(e.event.sender) !== -1; // remove comments
+                && e.event.content.is_blog
         }).sort((a, b) => b.getTs() - a.getTs());
 
         // Transform into view
@@ -96,17 +92,17 @@ module.exports = (self) => {
                 // TODO: sanitise self
                 html : e.event.content.formatted_body,
                 text : e.event.content.body,
-
                 comments : comments,
-
                 deleteEntry : () => {
                     doDeleteEntry(e.getId());
                 },
-
-                comment : function () {
+                comment : function (ev) {
                     doNewComment(
                         e.getId(),
-                        self.comment_text.value
+                        // TODO: fix fun hack to get the input box
+                        Array.from(ev.target.parentElement.children).find(
+                            (e) => e.name==='comment_text'
+                        ).value
                     );
                 }
             }
@@ -114,6 +110,19 @@ module.exports = (self) => {
 
         console.log('Number of blog posts:', entries.length);
         console.log(entries);
+
+        if (entries.length === 0) {
+            console.log('Scrolling back...', currentRoom.oldState.paginationToken)
+            cli.scrollback(currentRoom, 100).then(
+                (r) => {
+                    console.log('Scrollback done')
+                    if (r.oldState.paginationToken) {
+                        // TODO: continue polling, unless the rendered posts would
+                        // not be visible, and would require actual scolling.
+                    }
+                }
+            );
+        }
 
         self.update({entries: entries});
     }
@@ -130,17 +139,21 @@ module.exports = (self) => {
     }
 
     doNewBlogPost = () => {
-        let body = self.new_blog_post_content.innerHTML;
-        console.log(body);
-        body = body.split('<br>');
+        let body = self.new_blog_post_content.innerText;
+        body = body.split('\n').map(
+            (line) => line.trim()
+        ).filter(
+            (line) => line.length > 0
+        );
 
-        body[0] = '<h2>' + body[0] + '</h2><p>';
-        body = body.join('</p><p>') + '<p>';
+        body[0] = '<h3>' + body[0] + '</h3><p>';
+        body = body.join('</p><p>') + '</p>';
 
         cli.sendMessage(
             self.view_room_id.value,
             {
                 msgtype: 'm.text',
+                is_blog: true,
                 body: 'no plaintext',
                 format: 'org.matrix.custom.html',
                 // TODO: sanitise self
@@ -149,7 +162,6 @@ module.exports = (self) => {
         ).done(() => {
             self.new_blog_post_content.innerHTML = "";
         });
-
     }
 
     viewBlogButtonClick = () => {
@@ -163,8 +175,8 @@ module.exports = (self) => {
         }
         console.log('Viewing ',self.view_room_id.value);
 
-        let room = null;
         cli.joinRoom(self.view_room_id.value).done((room) => {
+            currentRoom = room;
             let trackedRoomsJSON = localStorage.getItem('mx_tracked_rooms');
             if (!trackedRoomsJSON) {
                 trackedRooms = [room.roomId];
@@ -186,13 +198,14 @@ module.exports = (self) => {
                         "types": [
                             "m.room.message"
                         ],
+                        "limit": 100
+                    },
+                    "presence": {
+                        "limit": 0
                     }
                 }
             });
 
-            // TODO: This needs to be put into matrix-js-sdk
-            //  1. stopping the client should set sync token to null in the store. This allows for a clean restart
-            //  2. passing a filter to a client will filter all future calls to /sync. This is useful when you want to limit the rooms to a subset of client-tracked rooms.
             cli.stopClient();
             cli.store.setSyncToken(null);
             cli.startClient({
@@ -303,10 +316,11 @@ module.exports = (self) => {
             }
         });
         cli.on("Room", function(room) {
+            roomList = cli.getRooms().filter(
+                (r) => trackedRooms.indexOf(r.roomId) !== -1
+            );
             self.update({
-                roomList : cli.getRooms().filter(
-                    (r) => trackedRooms.indexOf(r.roomId) !== -1
-                    )
+                roomList : roomList
             });
         });
         cli.on("Room.name", function(room) {
