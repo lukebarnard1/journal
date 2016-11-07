@@ -68,6 +68,7 @@ module.exports = (self) => {
         entries = entries.map((e) => {
             let comments = events[self.view_room_id.value].filter(
                 (e2) => e2.event.content.parent === e.getId()
+                        || e2.event.content.in_response_to === e.getId()
             ).sort(
                 (a, b) => a.getTs() - b.getTs()
             ).map(
@@ -253,7 +254,7 @@ module.exports = (self) => {
             {
                 msgtype: 'm.text',
                 body: text,
-                parent: id
+                in_response_to: id
             }
         );
     }
@@ -370,7 +371,7 @@ module.exports = (self) => {
             event: {
                 type: 'm.room.message',
                 content: {
-                    parent: 1,
+                    in_response_to: 1,
                     body: 'I am another, later comment',
                     format: 'org.matrix.custom.html'
                 }
@@ -383,7 +384,7 @@ module.exports = (self) => {
             event: {
                 type: 'm.room.message',
                 content: {
-                    parent: 1,
+                    in_response_to: 1,
                     body: 'I am an earlier comment',
                     formatted_body: '<h1>THIS SHOULD NOT BE VISIBLE</h1>',
                     format: 'org.matrix.custom.html'
