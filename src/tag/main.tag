@@ -13,8 +13,11 @@
     <div style="width:60%;padding-left:20%">
         <h3>
             j - journalism for cool people
-            <button if={isLoggedIn} onClick={doLogout}>logout</button>
         </h3>
+        <span if={isLoggedIn}>
+            logged in as {userId}
+            <button onClick={doLogout}>logout</button>
+        </span>
         <p>I am WAY too tired to be coding right now. Use this at your own risk. Access tokens are stored in the browser if 'auto-login' is enabled. For the list of things to do: <a href="https://github.com/lukebarnard1/j">github.com/lukebarnard1/j</a>.</p>
 
         <span if={roomList.length !== 0}>
@@ -40,6 +43,8 @@
                 <input type="checkbox" name="shouldRememberMe" style="float:right"/>
             </div>
             <button onClick={doLoginWithPassword}>login</button>
+            <p>or</p>
+            <button onClick={doLoginAsGuest}>login as guest</button>
         </div>
 
         <div if={isLoggedIn}>

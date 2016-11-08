@@ -209,6 +209,7 @@ module.exports = (self) => {
 
             cli.stopClient();
             cli.store.setSyncToken(null);
+            console.log('Using filter ', f.getDefinition());
             cli.startClient({
                 filter : f,
                 pollTimeout : 5000
@@ -277,6 +278,32 @@ module.exports = (self) => {
         });
     };
 
+    doLoginAsGuest = () => {
+
+        try {
+            tryAutoLogin();
+        }
+        catch (err) {
+            console.error(err);
+            cli = matrixSdk.createClient({
+               baseUrl: self.homeserver_url_input.value
+            });
+
+            cli.registerGuest().then(
+                (resp) => {
+                    cli = matrixSdk.createClient({
+                       baseUrl: self.homeserver_url_input.value,
+                       accessToken: resp.access_token,
+                       userId: resp.user_id
+                    });
+                    cli.setGuest(true);
+
+                    loggedIn(resp, true);
+                }
+            );
+        }
+    };
+
     doLoginWithOpts = (opts) => {
         console.log(self.homeserver_url_input.value);
         cli = matrixSdk.createClient({
@@ -285,15 +312,19 @@ module.exports = (self) => {
            userId: opts.user_id
         });
 
-        loggedIn(opts);
+        let isGuest = localStorage.getItem("mx_is_guest") === 'true';
+        cli.setGuest(isGuest);
+
+        loggedIn(opts, isGuest);
     };
 
-    let loggedIn = (loginCreds) => {
+    let loggedIn = (loginCreds, isGuest) => {
         creds = loginCreds;
-        if (localStorage.getItem("auto_login")) {
+        if (localStorage.getItem("auto_login") || isGuest) {
             console.log('Storing access token and user id');
             localStorage.setItem("mx_access_token", creds.access_token);
             localStorage.setItem("mx_user_id", creds.user_id);
+            localStorage.setItem("mx_is_guest", Boolean(isGuest));
             localStorage.setItem("mx_hs", self.homeserver_url_input.value);
         } else {
             self.user_id.value = "";
@@ -333,16 +364,28 @@ module.exports = (self) => {
             console.log('ignoring redaction');
         });
 
-        self.update({isLoggedIn: true});
-        console.log('Logged in!');
+        self.update({
+            isLoggedIn: true,
+            isGuest: Boolean(isGuest),
+            userId: creds.user_id,
+        });
+        console.log('Logged in as ' + creds.user_id);
 
         doViewBlog().catch(console.error);
     }
 
     doLogout = () => {
-        localStorage.removeItem("mx_access_token");
-        localStorage.removeItem("mx_user_id");
         self.update({isLoggedIn: false});
+        // Guests cannot logout and we need to keep guest creds
+        // so that the guests don't pile up for a single user.
+        if (localStorage.getItem("mx_is_guest")) {
+            cli.stopClient();
+            return;
+        }
+        if (!localStorage.getItem("auto_login")) {
+            localStorage.removeItem("mx_access_token");
+            localStorage.removeItem("mx_user_id");
+        }
         cli.logout();
         cli.stopClient();
     }
@@ -413,7 +456,7 @@ module.exports = (self) => {
         return;
     }
 
-    if (localStorage) {
+    function tryAutoLogin() {
         access_token = localStorage.getItem("mx_access_token");
         user_id = localStorage.getItem("mx_user_id");
         self.homeserver_url_input.value = localStorage.getItem("mx_hs") || "https://matrix.org";
@@ -423,6 +466,17 @@ module.exports = (self) => {
                 access_token: access_token,
                 user_id: user_id
             });
+        } else {
+            throw new Error('No credentials in localStorage');
+        }
+    }
+
+    if (localStorage) {
+        try {
+            tryAutoLogin();
+        }
+        catch (err) {
+            console.error(err);
         }
     }
 }
