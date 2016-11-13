@@ -7,4 +7,4 @@ npm install
 npm run-script dev
 ```
 
-![alt-text](https://matrix.org/_matrix/media/v1/download/matrix.org/bIdFrGkGBVaVDdcAuORobifg "Screenshot of j")
+![alt-text](https://matrix.org/_matrix/media/v1/download/matrix.org/zKBrLtdlZntqvcRsXdTWUDlz "Screenshot of j")
