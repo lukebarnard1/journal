@@ -10,41 +10,55 @@
 </comment>
 
 <main name="content">
-    <div style="width:60%;padding-left:20%">
-        <h3>
-            j - journalism for cool people
-        </h3>
-        <span if={isLoggedIn}>
+    <div class="j_container">
+        <strong>
+            <a href="https://github.com/lukebarnard1/j">j - journalism for cool people</a>
+        </strong>
+        <span style="float:right" if={isLoggedIn}>
             logged in as {userId}
             <button onClick={doLogout}>logout</button>
         </span>
-        <p>I am WAY too tired to be coding right now. Use this at your own risk. Access tokens are stored in the browser if 'auto-login' is enabled. For the list of things to do: <a href="https://github.com/lukebarnard1/j">github.com/lukebarnard1/j</a>.</p>
-
-        <span if={roomList.length !== 0}>
-        Visited blogs:</span>
-        <span each={roomList} style="padding-right:10px">
-            <a href="/journal/{roomId}">{name}</a>
-        </span>
+        <div if={isLoggedIn} style="clear:both">
+            <span if={roomList.length !== 0}>
+            visited:</span>
+            <span each={roomList} style="padding-right:10px">
+                <a href="/journal/{roomId}">{name}</a>
+            </span>
+        </div>
         <button if={isLoggedIn} onClick={()=>{this.showCreateRoomForm = !this.showCreateRoomForm}}>{this.showCreateRoomForm?'hide':'create your own blog'}</button>
 
+        <h1 if={!isLoggedIn} style="text-align:center">login with <a href="http://matrix.org">[matrix]</a> to use j</h1>
         <div if={!isLoggedIn} class="j_login_form">
-            <p>login here:</p>
             <div>
+                <label for="user_id">
+                    user ID:
+                </label>
                 <input class="j_100_width" type="text" name="user_id" placeholder="@person1234:matrix.org"/>
             </div><div>
+                <label for="password">
+                    password:
+                </label>
                 <input class="j_100_width" type="password" name="password" placeholder="password"/>
             </div><div>
+                <label for="homeserver_url_input">
+                    homesever:
+                </label>
                 <input class="j_100_width" type="text" name="homeserver_url_input" placeholder="https://matrix.org" value="https://matrix.org"/>
             </div>
             <div>
                 <label for="shouldRememberMe">
-                    auto-login next time:
+                    auto-login next time*:
                 </label>
                 <input type="checkbox" name="shouldRememberMe" style="float:right"/>
             </div>
-            <button onClick={doLoginWithPassword}>login</button>
-            <p>or</p>
-            <button onClick={doLoginAsGuest}>login as guest</button>
+            <p>
+                *access tokens are stored in the browser if enabled.
+            </p>
+            <div style="text-align: center">
+                <button onClick={doLoginWithPassword}>login</button>
+                <p style="text-align: center">or</p>
+                <button onClick={doLoginAsGuest}>login as guest</button>
+            </div>
         </div>
 
         <div if={isLoggedIn}>
@@ -58,12 +72,19 @@
                 <input type="text" name="view_room_id" placeholder="!roomtoview:matrix.org" value="!qJXdPYrthkbuFjdrxj:matrix.org"/>
                 <button onClick={viewBlogButtonClick}>view blog</button>
             </div>
-
-            <h1>{room.name}</h1>
-            <img src={room.getAvatarUrl("http://matrix.org", 250, 250, "scale", false)}/>
+            <div class="j_blog_header">
+                <img if={room_avatar_url} src={room_avatar_url}/>
+                <h1>{room.name}</h1>
+            </div>
 
             <div each={entries}>
-                <raw content={html}/>
+                <div class="j_blog_post_content">
+                    <div class="j_user_avatar_container">
+                        <img class="j_user_avatar" src={author.avatar_url}/>
+                    </div>
+                    <raw content={html}/>
+                    <div class="j_blog_post_written_by">written by <strong>{author.displayname}</strong></div>
+                </div>
                 <div each={comments} style="padding-left: 50px">
                     <comment
                         content={content}

@@ -1,5 +1,6 @@
 module.exports = (self) => {
     const matrixSdk = require('matrix-js-sdk');
+    const ContentRepo = matrixSdk.ContentRepo;
     const riot = require('riot');
 
     let l = riot.route.create();
@@ -33,6 +34,7 @@ module.exports = (self) => {
 
     let trackedRooms = [];
     let roomList = [];
+    let cachedMembers = {};
 
     // Initial loaded state
     self.update({
@@ -77,16 +79,15 @@ module.exports = (self) => {
                         content : e2.event.content.body,
                         id : e2.getId(),
                         isMine : e2.getSender() === creds.user_id,
-
                         deleteEntry : () => {
                             doDeleteEntry(e2.getId());
                         },
-
-                        sender : e2.getSender()
+                        sender : e2.getSender(),
+                        author : cachedMembers[e2.getSender()]
                     };
                 }
             );
-
+            console.log('Author:', e.sender.events.member.event.content);
             return {
                 id : e.getId(),
                 isMine : e.event.sender === creds.user_id,
@@ -105,7 +106,8 @@ module.exports = (self) => {
                             (e) => e.name==='comment_text'
                         ).value
                     );
-                }
+                },
+                author : e.sender.events.member.event.content,
             }
         });
 
@@ -197,7 +199,8 @@ module.exports = (self) => {
                     "rooms": trackedRooms,
                     "timeline": {
                         "types": [
-                            "m.room.message"
+                            "m.room.message",
+                            "m.room.avatar"
                         ],
                         "limit": 100
                     },
@@ -215,9 +218,26 @@ module.exports = (self) => {
                 pollTimeout : 5000
             });
 
-            room.name = "loading...";
+            // Assumes that things are loading when the room name is a room ID
+            // When the m.room.name is received, it is assumed things are done loading
+            room.name = room.name[0] === '!'?"loading...":room.name;
+            self.update({
+                room : room
+            });
 
-            self.update({room : room});
+            let pollRoomAvatar = () => {
+                console.log('Polling for room avatar...', currentRoom.roomId);
+                let url = currentRoom.getAvatarUrl(self.homeserver_url_input.value, 250, 250, "crop", false);
+                self.update({
+                    room_avatar_url: url
+                });
+                console.log('Room avatar set to', url)
+                if (!url) {
+                    setTimeout(pollRoomAvatar, 1000);
+                }
+            }
+
+            pollRoomAvatar();
 
             // Update the view - we might not receive any events to trigger an update
             updateEntries();
@@ -335,6 +355,17 @@ module.exports = (self) => {
         cli.on("event", (e) => {
             console.log(e.event.type, 'in', e.event.room_id);
             if (!events[e.getRoomId()]) events[e.getRoomId()] = [];
+
+            if (e.getType() === 'm.room.member') {
+                e.event.content.avatar_url = ContentRepo.getHttpUriForMxc(
+                    self.homeserver_url_input.value,
+                    e.event.content.avatar_url,
+                    250,
+                    250,
+                    'crop'
+                )
+                cachedMembers[e.getSender()] = e.event.content;
+            }
 
             // No duplicates
             if (!events[e.getRoomId()].find((e2) => {
@@ -459,7 +490,10 @@ module.exports = (self) => {
     function tryAutoLogin() {
         access_token = localStorage.getItem("mx_access_token");
         user_id = localStorage.getItem("mx_user_id");
+
         self.homeserver_url_input.value = localStorage.getItem("mx_hs") || "https://matrix.org";
+        self.user_id.value = user_id || "";
+        self.shouldRememberMe.checked = localStorage.getItem("auto_login") || false;
 
         if (access_token && user_id) {
             doLoginWithOpts({
