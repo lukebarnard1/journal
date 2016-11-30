@@ -75,6 +75,7 @@
             <div class="j_blog_header">
                 <img if={room_avatar_url} src={room_avatar_url}/>
                 <h1>{room.name}</h1>
+                <small if={room.subscribers}>{room.subscribers} people subscribed</small>
             </div>
 
             <div each={entries}>

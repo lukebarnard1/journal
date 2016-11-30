@@ -221,6 +221,8 @@ module.exports = (self) => {
             // Assumes that things are loading when the room name is a room ID
             // When the m.room.name is received, it is assumed things are done loading
             room.name = room.name[0] === '!'?"loading...":room.name;
+
+            room.subscribers = room.getJoinedMembers().length;
             self.update({
                 room : room
             });
