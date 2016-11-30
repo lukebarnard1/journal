@@ -203,10 +203,12 @@ module.exports = (self) => {
                             "m.room.avatar"
                         ],
                         "limit": 100
-                    },
-                    "presence": {
-                        "limit": 0
                     }
+                },
+                "presence": {
+                    "not_types": [
+                        "*"
+                    ]
                 }
             });
 
