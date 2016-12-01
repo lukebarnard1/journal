@@ -130,6 +130,18 @@ module.exports = (self) => {
         self.update({entries: entries});
     }
 
+    let updateCurrentRoom = (room) => {
+        console.log('Updating room')
+        // Assumes that things are loading when the room name is a room ID
+        // When the m.room.name is received, it is assumed things are done loading
+        room.name = room.name[0] === '!'?"loading...":room.name;
+
+        room.subscribers = room.getJoinedMembers().length;
+        self.update({
+            room : room
+        });
+    }
+
     doCreateBlog = () => {
         cli.createRoom({
             visibility: 'public',
@@ -196,7 +208,7 @@ module.exports = (self) => {
             let f = new matrixSdk.Filter(creds.user_id);
             f.setDefinition({
                 "room": {
-                    "rooms": trackedRooms,
+                    "rooms": [self.view_room_id.value],
                     "timeline": {
                         "types": [
                             "m.room.message",
@@ -220,28 +232,7 @@ module.exports = (self) => {
                 pollTimeout : 5000
             });
 
-            // Assumes that things are loading when the room name is a room ID
-            // When the m.room.name is received, it is assumed things are done loading
-            room.name = room.name[0] === '!'?"loading...":room.name;
-
-            room.subscribers = room.getJoinedMembers().length;
-            self.update({
-                room : room
-            });
-
-            let pollRoomAvatar = () => {
-                console.log('Polling for room avatar...', currentRoom.roomId);
-                let url = currentRoom.getAvatarUrl(self.homeserver_url_input.value, 250, 250, "crop", false);
-                self.update({
-                    room_avatar_url: url
-                });
-                console.log('Room avatar set to', url)
-                if (!url) {
-                    setTimeout(pollRoomAvatar, 1000);
-                }
-            }
-
-            pollRoomAvatar();
+            updateCurrentRoom(room);
 
             // Update the view - we might not receive any events to trigger an update
             updateEntries();
@@ -369,6 +360,17 @@ module.exports = (self) => {
                     'crop'
                 )
                 cachedMembers[e.getSender()] = e.event.content;
+            } else if (e.getType() === 'm.room.avatar') {
+                if (e.getRoomId() === currentRoom.roomId) {
+                    // Force the state to be added
+                    currentRoom.currentState.setStateEvents([e]);
+                    // Update the room URL
+                    self.update({
+                        room_avatar_url : currentRoom.getAvatarUrl(
+                            self.homeserver_url_input.value, 250, 250, "crop", false
+                        )
+                    });
+                }
             }
 
             // No duplicates
@@ -392,7 +394,7 @@ module.exports = (self) => {
         });
         cli.on("Room.name", function(room) {
             if (room.roomId === self.view_room_id.value) {
-                self.update({room : room});
+                updateCurrentRoom(room);
             }
         });
         cli.on("Room.redaction", function(e) {
