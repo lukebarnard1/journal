@@ -76,6 +76,10 @@ a:hover {
 	margin-bottom: 10px;
 }
 
+.j_blog_post_content img {
+	max-width: 100%;
+}
+
 .j_blog_post_written_by {
 	opacity: 0.8;
 }

@@ -42,7 +42,8 @@ module.exports = (self) => {
         canCreateNewPost: false,
         isLoggedIn: false,
         showCreateRoomForm: false,
-        roomList : roomList
+        roomList : roomList,
+        showCreateBlogForm: false
     });
 
     let ueDebounce = null;
@@ -87,7 +88,12 @@ module.exports = (self) => {
                     };
                 }
             );
-            console.log('Author:', e.sender.events.member.event.content);
+            let author = null;
+            if (e.sender && e.sender.events) {
+                author = e.sender.events.member.event.content;
+            } else {
+                console.warn('No sender member event on event', e);
+            }
             return {
                 id : e.getId(),
                 isMine : e.event.sender === creds.user_id,
@@ -107,7 +113,7 @@ module.exports = (self) => {
                         ).value
                     );
                 },
-                author : e.sender.events.member.event.content,
+                author : author,
             }
         });
 
@@ -153,18 +159,8 @@ module.exports = (self) => {
         }).catch(console.error);
     }
 
-    doNewBlogPost = () => {
-        let body = self.new_blog_post_content.innerText;
-        body = body.split('\n').map(
-            (line) => line.trim()
-        ).filter(
-            (line) => line.length > 0
-        );
-
-        body[0] = '<h3>' + body[0] + '</h3><p>';
-        body = body.join('</p><p>') + '</p>';
-
-        cli.sendMessage(
+    doNewBlogPost = (body) => {
+        return cli.sendMessage(
             self.view_room_id.value,
             {
                 msgtype: 'm.text',
@@ -175,7 +171,9 @@ module.exports = (self) => {
                 formatted_body: body,
             }
         ).done(() => {
-            self.new_blog_post_content.innerHTML = "";
+            this.update({
+                showCreateBlogForm: false
+            });
         });
     }
 

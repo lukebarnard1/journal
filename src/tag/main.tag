@@ -9,6 +9,36 @@
     </button>
 </comment>
 
+<editor>
+    <textarea
+        id={opts.taid}
+        name={opts.taname}
+        ref="ta"
+    ></textarea>
+    <button onClick={() => {this.submit()}}>spread the word</button>
+
+    var marked = require("marked");
+    marked.setOptions({
+        sanitize: true, // Sanitize the output of marked, this does not protect against XSS
+    });
+    var SimpleMDE = require("simplemde");
+
+    this.submit = function() {
+        let md = marked(this.simplemde.value());
+            opts.submit(md).done(
+            () => {
+                this.simplemde.value("");
+            }
+        );
+    }
+
+    this.on('mount', () => {
+        this.simplemde = new SimpleMDE({
+            element: document.getElementById(opts.taid)
+        });
+    });
+</editor>
+
 <main name="content">
     <div class="j_container">
         <strong>
@@ -26,6 +56,7 @@
             </span>
         </div>
         <button if={isLoggedIn} onClick={()=>{this.showCreateRoomForm = !this.showCreateRoomForm}}>{this.showCreateRoomForm?'hide':'create your own blog'}</button>
+        <button if={isLoggedIn && isOwnerOfCurrentBlog} onClick={()=>{this.showCreateBlogForm = !this.showCreateBlogForm}}>{this.showCreateBlogForm?'hide':'write a new blog post'}</button>
 
         <h1 if={!isLoggedIn} style="text-align:center">login with <a href="http://matrix.org">[matrix]</a> to use j</h1>
         <div if={!isLoggedIn} class="j_login_form">
@@ -77,7 +108,9 @@
                 <h1>{room.name}</h1>
                 <small if={room.subscribers}>{room.subscribers} people subscribed</small>
             </div>
-
+            <div if={isOwnerOfCurrentBlog && showCreateBlogForm}>
+                <editor taid="main-editor" taname="new_blog_post_content" submit={doNewBlogPost}/>
+            </div>
             <div each={entries}>
                 <div class="j_blog_post_content">
                     <div class="j_user_avatar_container">
@@ -105,16 +138,6 @@
 
             <div if={entries.length==0} style="text-align:center">
                 {noBlogsMsg}
-            </div>
-
-            <div if={isOwnerOfCurrentBlog}>
-                <h2>write new blog posts here:</h2>
-                <div
-                    contenteditable="true"
-                    name="new_blog_post_content"
-                    style="background-color:#fff; color:#333; border-radius:5px;border:1px solid #ccc; outline:0px; padding:5px"
-                ></div>
-                <button onClick={doNewBlogPost}>spread the word</button>
             </div>
         </div>
     </div>
