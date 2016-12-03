@@ -120,6 +120,12 @@ module.exports = (self) => {
         console.log('Number of blog posts:', entries.length);
         console.log(entries);
 
+        window.addEventListener('scroll', () => {
+            if (document.body.scrollTop > document.body.scrollHeight - document.body.clientHeight) {
+                cli.scrollback(currentRoom);
+            }
+        });
+
         if (entries.length === 0) {
             console.log('Scrolling back...', currentRoom.oldState.paginationToken)
             cli.scrollback(currentRoom, 100).then(
