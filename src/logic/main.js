@@ -205,14 +205,22 @@ module.exports = (self) => {
             // Fudge a filter into the syncApi
             let f = new matrixSdk.Filter(creds.user_id);
             f.setDefinition({
+                "account_data": {
+                    "not_types": [
+                      "*"
+                    ],
+                },
                 "room": {
+                    "account_data": {
+                        "limit": 0
+                    },
                     "rooms": [self.view_room_id.value],
                     "timeline": {
                         "types": [
                             "m.room.message",
                             "m.room.avatar"
                         ],
-                        "limit": 100
+                        "limit": 10
                     }
                 },
                 "presence": {
@@ -227,7 +235,7 @@ module.exports = (self) => {
             console.log('Using filter ', f.getDefinition());
             cli.startClient({
                 filter : f,
-                pollTimeout : 5000
+                pollTimeout : 10000
             });
 
             updateCurrentRoom(room);
