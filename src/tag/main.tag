@@ -3,10 +3,20 @@
 </raw>
 
 <comment>
-    <span style="font-weight: 700">comment from {opts.sender}: </span><span>{opts.content}</span>
-    <button if={opts.mine} onClick={opts.delete}>
-        delete comment
-    </button>
+    <div class="j_comment">
+        <div class="j_comment_sender">
+            <div class="j_comment_sender_avatar_container">
+                <img class="j_comment_sender_avatar" src="{opts.author.avatar_url}">
+            </div>
+            <span class="j_comment_sender_name">
+                {opts.author.displayname}
+            </span>
+        </div>
+        <span class="j_comment_content">{opts.content}</span>
+        <button if={opts.mine} onClick={opts.delete}>
+            delete comment
+        </button>
+    </div>
 </comment>
 
 <editor>
@@ -64,17 +74,17 @@
                 <label for="user_id">
                     user ID:
                 </label>
-                <input class="j_100_width" type="text" name="user_id" placeholder="@person1234:matrix.org"/>
+                <input type="text" name="user_id" placeholder="@person1234:matrix.org"/>
             </div><div>
                 <label for="password">
                     password:
                 </label>
-                <input class="j_100_width" type="password" name="password" placeholder="password"/>
+                <input type="password" name="password" placeholder="password"/>
             </div><div>
                 <label for="homeserver_url_input">
                     homesever:
                 </label>
-                <input class="j_100_width" type="text" name="homeserver_url_input" placeholder="https://matrix.org" value="https://matrix.org"/>
+                <input type="text" name="homeserver_url_input" placeholder="https://matrix.org" value="https://matrix.org"/>
             </div>
             <div>
                 <label for="shouldRememberMe">
@@ -125,6 +135,7 @@
                         mine={isMine}
                         delete={deleteEntry}
                         sender={sender}
+                        author={author}
                     />
                 </div>
                 <button if={isMine} onClick={deleteEntry}>

@@ -16,6 +16,7 @@ span, p, div {
 }
 
 p {
+	clear: both;
 	text-align: justify;
 }
 
@@ -48,6 +49,12 @@ a:hover {
 .j_login_form {
 	width:200px;
 	margin:auto;
+}
+
+.j_login_form input {
+	clear: both;
+	display: block;
+	width:98%;
 }
 
 .j_user_avatar {
@@ -83,3 +90,27 @@ a:hover {
 .j_blog_post_written_by {
 	opacity: 0.8;
 }
+
+.j_comment button {
+	float: right;
+}
+
+.j_comment_sender_avatar_container {
+	margin:5px;
+	float: left;
+	border-radius: 30%;
+	overflow:hidden;
+    -webkit-transform: rotate(7deg); /* Chrome, Opera */
+    transform: rotate(7deg);
+}
+
+.j_comment_sender_name {
+	font-weight: 700;
+	line-height: 3.4em;
+}
+
+.j_comment_sender_avatar {
+	width: 32px;
+	height: auto;
+}
+
