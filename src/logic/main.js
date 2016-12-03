@@ -67,6 +67,8 @@ module.exports = (self) => {
                 && e.event.content.is_blog
         }).sort((a, b) => b.getTs() - a.getTs());
 
+        console.log('Events:', entries);
+
         // Transform into view
         entries = entries.map((e) => {
             let comments = events[self.view_room_id.value].filter(
@@ -114,6 +116,7 @@ module.exports = (self) => {
                     );
                 },
                 author : author,
+                datetime : new Date(e.getTs()).toLocaleString(),
             }
         });
 

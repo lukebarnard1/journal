@@ -117,7 +117,7 @@
                         <img class="j_user_avatar" src={author.avatar_url}/>
                     </div>
                     <raw content={html}/>
-                    <div class="j_blog_post_written_by">written by <strong>{author.displayname}</strong></div>
+                    <div class="j_blog_post_written_by">written by <strong>{author.displayname}</strong> on {datetime}</div>
                 </div>
                 <div each={comments} style="padding-left: 50px">
                     <comment
