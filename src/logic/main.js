@@ -23,10 +23,8 @@ module.exports = (self) => {
        baseUrl: self.homeserver_url_input.value
     });
 
-    // let entries = []; // Blog posts and comments
     let admins = []; // Authors of the current blog
 
-    let events = {};
     let currentRoom = null;
     let creds = null;
 
@@ -54,15 +52,42 @@ module.exports = (self) => {
         );
     };
 
+    let getCurrentTimeline = () => {
+        const room = cli.getRoom(self.view_room_id.value);
+        if (!room) return null;
+        return room.getLiveTimeline();
+    }
+
+    let scrollback = () => {
+        if (document.body.scrollTop > document.body.scrollHeight - document.body.clientHeight) {
+            const room = cli.getRoom(self.view_room_id.value);
+            if (!room.oldState.paginationToken) {
+                console.log('End of timeline');
+                return;
+            }
+            const l = room.timeline.length;
+            cli.scrollback(room).done(() => {
+                console.log("Scrollback done");
+                if (room.timeline.length !== l) {
+                    updateEntriesDebounce(200);
+                }
+            });
+        }
+    }
+
+    window.addEventListener('scroll', () => {
+        scrollback();
+    });
+
     let updateEntries = () => {
         console.log('updateEntries');
-        if (!events[self.view_room_id.value]) {
+        if (!getCurrentTimeline() || !getCurrentTimeline().getEvents()) {
             console.warn('No events received yet');
             return; // No events yet
         }
 
-        let entries = events[self.view_room_id.value];
-        entries = entries.filter((e) => {
+        let allEntries = getCurrentTimeline().getEvents();
+        entries = allEntries.filter((e) => {
             return e.event.type === 'm.room.message'
                 && e.event.content.is_blog
         }).sort((a, b) => b.getTs() - a.getTs());
@@ -71,7 +96,7 @@ module.exports = (self) => {
 
         // Transform into view
         entries = entries.map((e) => {
-            let comments = events[self.view_room_id.value].filter(
+            let comments = allEntries.filter(
                 (e2) => e2.event.content.parent === e.getId()
                         || e2.event.content.in_response_to === e.getId()
             ).sort(
@@ -123,23 +148,9 @@ module.exports = (self) => {
         console.log('Number of blog posts:', entries.length);
         console.log(entries);
 
-        window.addEventListener('scroll', () => {
-            if (document.body.scrollTop > document.body.scrollHeight - document.body.clientHeight) {
-                cli.scrollback(currentRoom);
-            }
-        });
-
-        if (entries.length === 0) {
+        if (entries.length < 10) {
             console.log('Scrolling back...', currentRoom.oldState.paginationToken)
-            cli.scrollback(currentRoom, 100).then(
-                (r) => {
-                    console.log('Scrollback done')
-                    if (r.oldState.paginationToken) {
-                        // TODO: continue polling, unless the rendered posts would
-                        // not be visible, and would require actual scolling.
-                    }
-                }
-            );
+            scrollback();
         }
 
         self.update({entries: entries});
@@ -163,7 +174,8 @@ module.exports = (self) => {
             preset: self.room_join_rule_input.value,
             name: self.room_name_input.value
         }).then((resp) => {
-            riot.route('/journal/'+self.view_room_id.value);
+            console.log("New room created: " + resp.room_id);
+            riot.route('/journal/' + resp.room_id);
             doViewBlog();
         }).catch(console.error);
     }
@@ -179,8 +191,8 @@ module.exports = (self) => {
                 // TODO: sanitise self
                 formatted_body: body,
             }
-        ).done(() => {
-            this.update({
+        ).then(() => {
+            self.update({
                 showCreateBlogForm: false
             });
         });
@@ -269,10 +281,8 @@ module.exports = (self) => {
         console.log('Redacting...');
         return cli.redactEvent(self.view_room_id.value, id).done(
             () => {
+                getCurrentTimeline().removeEvent(id);
                 console.log('Redacted');
-                events[self.view_room_id.value] = events[self.view_room_id.value].filter(
-                    (e) => e.getId() !== id
-                );
                 updateEntries();
             }
         );
@@ -309,7 +319,6 @@ module.exports = (self) => {
     };
 
     doLoginAsGuest = () => {
-
         try {
             tryAutoLogin();
         }
@@ -364,7 +373,6 @@ module.exports = (self) => {
         //TODO: Hook these on load, not on login
         cli.on("event", (e) => {
             console.log(e.event.type, 'in', e.event.room_id);
-            if (!events[e.getRoomId()]) events[e.getRoomId()] = [];
 
             if (e.getType() === 'm.room.member') {
                 e.event.content.avatar_url = ContentRepo.getHttpUriForMxc(
@@ -386,13 +394,6 @@ module.exports = (self) => {
                         )
                     });
                 }
-            }
-
-            // No duplicates
-            if (!events[e.getRoomId()].find((e2) => {
-                return e2.getId() === e.getId()
-            })) {
-                events[e.getRoomId()].push(e);
             }
 
             if (e.getRoomId() === self.view_room_id.value) {
@@ -447,66 +448,6 @@ module.exports = (self) => {
     console.log('Routing starting...');
     riot.route.start();
     riot.route.exec();
-
-    let testing = false;
-    if (testing) {
-        events[self.view_room_id.value] = [{
-            event: {
-                type: 'm.room.message',
-                content: {
-                    formatted_body: '<h1>Test blog</h1><p>This is a test 😁</p><p>Second paragraph here</p>',
-                    format: 'org.matrix.custom.html'
-                }
-            },
-            getTs: () => 1,
-            getId: () => 1,
-            getSender: () => '@testuser1:server.name'
-        },
-        {
-            event: {
-                type: 'm.room.message',
-                content: {
-                    in_response_to: 1,
-                    body: 'I am another, later comment',
-                    format: 'org.matrix.custom.html'
-                }
-            },
-            getTs: () => 3,
-            getId: () => 3,
-            getSender: () => '@testuser3:server.name'
-        },
-        {
-            event: {
-                type: 'm.room.message',
-                content: {
-                    in_response_to: 1,
-                    body: 'I am an earlier comment',
-                    formatted_body: '<h1>THIS SHOULD NOT BE VISIBLE</h1>',
-                    format: 'org.matrix.custom.html'
-                }
-            },
-            getTs: () => 2,
-            getId: () => 2,
-            getSender: () => '@testuser2:server.name'
-        },
-        {
-            event: {
-                type: 'm.room.message',
-                content: {
-                    body: 'Comment in room: THIS SHOULD NOT BE VISIBLE',
-                }
-            },
-            getTs: () => 4,
-            getId: () => 4,
-            getSender: () => '@testuser2:server.name'
-        }];
-
-        creds = {};
-        self.update({isLoggedIn : true});
-
-        updateEntries();
-        return;
-    }
 
     function tryAutoLogin() {
         access_token = localStorage.getItem("mx_access_token");

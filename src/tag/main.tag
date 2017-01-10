@@ -35,7 +35,7 @@
 
     this.submit = function() {
         let md = marked(this.simplemde.value());
-            opts.submit(md).done(
+            opts.submit(md).then(
             () => {
                 this.simplemde.value("");
             }
