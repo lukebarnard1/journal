@@ -5,11 +5,13 @@
 <comment>
     <div class="j_comment">
         <div class="j_comment_sender">
-            <div class="j_comment_sender_avatar_container">
+            <div if={opts.author.avatar_url} class="j_comment_sender_avatar_container">
                 <img class="j_comment_sender_avatar" src="{opts.author.avatar_url}">
             </div>
-            <span class="j_comment_sender_name">
-                {opts.author.displayname}
+            <span class={
+                "j_comment_sender_name" + (opts.author.is_guest ? " guest" : "")
+            }>
+                {opts.author.display_name}
             </span>
         </div>
         <span class="j_comment_content">{opts.content}</span>
@@ -127,7 +129,7 @@
                         <img class="j_user_avatar" src={author.avatar_url}/>
                     </div>
                     <raw content={html}/>
-                    <div class="j_blog_post_written_by">written by <strong>{author.displayname}</strong> on {datetime}</div>
+                    <div class="j_blog_post_written_by">written by <strong>{author.display_name}</strong> on {datetime}</div>
                 </div>
                 <div each={comments} style="padding-left: 50px">
                     <comment

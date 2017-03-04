@@ -109,6 +109,10 @@ a:hover {
 	line-height: 3.4em;
 }
 
+.j_comment_sender_name.guest {
+	line-height: 1.2em;
+}
+
 .j_comment_sender_avatar {
 	width: 32px;
 	height: auto;

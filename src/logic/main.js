@@ -97,12 +97,14 @@ module.exports = (self) => {
         // Transform into view
         entries = entries.map((e) => {
             let comments = allEntries.filter(
-                (e2) => e2.event.content.parent === e.getId()
-                        || e2.event.content.in_response_to === e.getId()
+                (e2) => (e2.event.content.parent === e.getId() ||
+                        e2.event.content.in_response_to === e.getId())
+                        && e2.event.content.body.trim() !== ''
             ).sort(
                 (a, b) => a.getTs() - b.getTs()
             ).map(
                 (e2) => {
+                    const commenter = cachedMembers[e2.getSender()];
                     return {
                         content : e2.event.content.body,
                         id : e2.getId(),
@@ -111,16 +113,12 @@ module.exports = (self) => {
                             doDeleteEntry(e2.getId());
                         },
                         sender : e2.getSender(),
-                        author : cachedMembers[e2.getSender()]
+                        author : commenter
                     };
                 }
             );
-            let author = null;
-            if (e.sender && e.sender.events) {
-                author = e.sender.events.member.event.content;
-            } else {
-                console.warn('No sender member event on event', e);
-            }
+            let author = cachedMembers[e.getSender()];
+
             return {
                 id : e.getId(),
                 isMine : e.event.sender === creds.user_id,
@@ -382,7 +380,11 @@ module.exports = (self) => {
                     250,
                     'crop'
                 )
-                cachedMembers[e.getSender()] = e.event.content;
+                const memberEvent = e.event.content;
+                memberEvent.is_guest = !memberEvent.displayname;
+                memberEvent.display_name = memberEvent.displayname || 'Guest';
+
+                cachedMembers[e.getSender()] = memberEvent
             } else if (e.getType() === 'm.room.avatar') {
                 if (e.getRoomId() === currentRoom.roomId) {
                     // Force the state to be added
