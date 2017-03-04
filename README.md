@@ -36,7 +36,14 @@ The code below builds an instance of j in the [web](./web) directory.
 git clone git@github.com:lukebarnard1/j.git
 cd j
 npm install
-npm run-script build
+
+# build matrix-js-sdk
+cd node_modules/matrix-js-sdk
+npm run build
+cd ..
+
+# build j
+npm run build
 ```
 
 To host an instance, the `dev` script can be used to run j on port 4000 (port specified in [index.js](./index.js)).
