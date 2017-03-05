@@ -252,15 +252,18 @@ module.exports = (self) => {
             cli.stopClient();
             cli.store.setSyncToken(null);
             console.log('Using filter ', f.getDefinition());
-            cli.startClient({
-                filter : f,
-                pollTimeout : 10000
+            const storeStartupPromise = cli.store.startup();
+            storeStartupPromise.catch((err) => { console.error(err); });
+            storeStartupPromise.finally(() => {
+                cli.startClient({
+                    filter : f,
+                    pollTimeout : 10000
+                });
+                updateCurrentRoom(room);
+
+                // Update the view - we might not receive any events to trigger an update
+                updateEntries();
             });
-
-            updateCurrentRoom(room);
-
-            // Update the view - we might not receive any events to trigger an update
-            updateEntries();
         });
 
         return cli.getStateEvent(self.view_room_id.value, 'm.room.power_levels').then(
@@ -298,6 +301,20 @@ module.exports = (self) => {
         );
     }
 
+    createClient = (opts) => {
+        if (window.indexedDB && localStorage) {
+            Object.assign(opts, {
+                store: new matrixSdk.IndexedDBStore(
+                    new matrixSdk.IndexedDBStoreBackend(window.indexedDB),
+                    new matrixSdk.SyncAccumulator(), {
+                        localStorage: localStorage,
+                    }
+                ),
+            });
+        }
+        return matrixSdk.createClient(opts);
+    }
+
     doLoginWithPassword = () => {
         cli = matrixSdk.createClient({
            baseUrl: self.homeserver_url_input.value
@@ -307,7 +324,7 @@ module.exports = (self) => {
         cli.loginWithPassword(
             self.user_id.value, self.password.value
         ).done((resp) => {
-            cli = matrixSdk.createClient({
+            cli = createClient({
                baseUrl: self.homeserver_url_input.value,
                accessToken: resp.access_token,
                userId: resp.user_id
@@ -322,13 +339,13 @@ module.exports = (self) => {
         }
         catch (err) {
             console.error(err);
-            cli = matrixSdk.createClient({
+            cli = createClient({
                baseUrl: self.homeserver_url_input.value
             });
 
             cli.registerGuest().then(
                 (resp) => {
-                    cli = matrixSdk.createClient({
+                    cli = createClient({
                        baseUrl: self.homeserver_url_input.value,
                        accessToken: resp.access_token,
                        userId: resp.user_id
@@ -343,7 +360,7 @@ module.exports = (self) => {
 
     doLoginWithOpts = (opts) => {
         console.log(self.homeserver_url_input.value);
-        cli = matrixSdk.createClient({
+        cli = createClient({
            baseUrl: self.homeserver_url_input.value,
            accessToken: opts.access_token,
            userId: opts.user_id
