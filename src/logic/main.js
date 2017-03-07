@@ -32,7 +32,6 @@ module.exports = (self) => {
 
     let trackedRooms = [];
     let roomList = [];
-    let cachedMembers = {};
 
     // Initial loaded state
     self.update({
@@ -79,6 +78,18 @@ module.exports = (self) => {
         scrollback();
     });
 
+    const getAuthor = (userId) => {
+        const member = currentRoom.getMember(userId);
+        const au = member.getAvatarUrl(self.homeserver_url_input.value,
+            250, 250, 'crop', false
+        );
+        return {
+            display_name: member.name,
+            avatar_url: au,
+            is_guest: !member.name
+        }
+    };
+
     let updateEntries = () => {
         console.log('updateEntries');
         if (!getCurrentTimeline() || !getCurrentTimeline().getEvents()) {
@@ -104,7 +115,7 @@ module.exports = (self) => {
                 (a, b) => a.getTs() - b.getTs()
             ).map(
                 (e2) => {
-                    const commenter = cachedMembers[e2.getSender()];
+                    const commenter = getAuthor(e2.getSender());
                     return {
                         content : e2.event.content.body,
                         id : e2.getId(),
@@ -117,7 +128,7 @@ module.exports = (self) => {
                     };
                 }
             );
-            let author = cachedMembers[e.getSender()];
+            let author = getAuthor(e.getSender());
 
             return {
                 id : e.getId(),
@@ -156,6 +167,7 @@ module.exports = (self) => {
 
     let updateCurrentRoom = (room) => {
         console.log('Updating room')
+        currentRoom = room;
         // Assumes that things are loading when the room name is a room ID
         // When the m.room.name is received, it is assumed things are done loading
         room.name = room.name[0] === '!'?"loading...":room.name;
@@ -290,6 +302,10 @@ module.exports = (self) => {
     }
 
     doNewComment = (id, text) => {
+        text = text.trim();
+        if (!text) {
+            return;
+        }
         console.log('commenting...');
         return cli.sendMessage(
             self.view_room_id.value,
@@ -389,20 +405,7 @@ module.exports = (self) => {
         cli.on("event", (e) => {
             console.log(e.event.type, 'in', e.event.room_id);
 
-            if (e.getType() === 'm.room.member') {
-                e.event.content.avatar_url = ContentRepo.getHttpUriForMxc(
-                    self.homeserver_url_input.value,
-                    e.event.content.avatar_url,
-                    250,
-                    250,
-                    'crop'
-                )
-                const memberEvent = e.event.content;
-                memberEvent.is_guest = !memberEvent.displayname;
-                memberEvent.display_name = memberEvent.displayname || 'Guest';
-
-                cachedMembers[e.getSender()] = memberEvent
-            } else if (e.getType() === 'm.room.avatar') {
+            if (e.getType() === 'm.room.avatar') {
                 if (e.getRoomId() === currentRoom.roomId) {
                     // Force the state to be added
                     currentRoom.currentState.setStateEvents([e]);

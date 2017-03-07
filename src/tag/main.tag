@@ -21,6 +21,34 @@
     </div>
 </comment>
 
+<blog>
+    <div>
+        <div class="j_blog_post_content">
+            <div class="j_user_avatar_container">
+                <img class="j_user_avatar" src={author.avatar_url}/>
+            </div>
+            <raw content={html}/>
+            <div class="j_blog_post_written_by">written by <strong>{author.display_name}</strong> on {datetime}</div>
+        </div>
+        <div each={comments} style="padding-left: 50px">
+            <comment
+                content={content}
+                mine={isMine}
+                delete={deleteEntry}
+                sender={sender}
+                author={author}
+            />
+        </div>
+        <button if={isMine} onClick={deleteEntry}>
+            delete post
+        </button>
+        <input type="text" name="comment_text"/>
+        <button onClick={comment}>
+            comment on post
+        </button>
+    </div>
+</blog>
+
 <editor>
     <textarea
         id={opts.taid}
@@ -123,32 +151,7 @@
             <div if={isOwnerOfCurrentBlog && showCreateBlogForm}>
                 <editor taid="main-editor" taname="new_blog_post_content" submit={doNewBlogPost}/>
             </div>
-            <div each={entries}>
-                <div class="j_blog_post_content">
-                    <div class="j_user_avatar_container">
-                        <img class="j_user_avatar" src={author.avatar_url}/>
-                    </div>
-                    <raw content={html}/>
-                    <div class="j_blog_post_written_by">written by <strong>{author.display_name}</strong> on {datetime}</div>
-                </div>
-                <div each={comments} style="padding-left: 50px">
-                    <comment
-                        content={content}
-                        mine={isMine}
-                        delete={deleteEntry}
-                        sender={sender}
-                        author={author}
-                    />
-                </div>
-                <button if={isMine} onClick={deleteEntry}>
-                    delete post
-                </button>
-                <input type="text" name="comment_text"/>
-                <button onClick={comment}>
-                    comment on post
-                </button>
-            </div>
-
+            <blog each={entries}></blog>
             <div if={entries.length==0} style="text-align:center">
                 {noBlogsMsg}
             </div>
