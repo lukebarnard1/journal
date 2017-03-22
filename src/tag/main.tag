@@ -24,7 +24,7 @@
 <blog>
     <div>
         <div class="j_blog_post_content">
-            <div class="j_user_avatar_container">
+            <div if={author.avatar_url} class="j_user_avatar_container">
                 <img class="j_user_avatar" src={author.avatar_url}/>
             </div>
             <raw content={html}/>
@@ -79,60 +79,142 @@
     });
 </editor>
 
+<editable>
+    <span>
+        {this.opts.prefix}<input
+            contenteditable="true"
+            class="j_text_input"
+            onchange={onChange}
+            value={this.opts.initialValue}
+            placeholder="blog-alias"
+        />{this.opts.suffix}
+    </span>
+</editable>
+
+<aliasInput>
+    <editable
+        prefix={window.location.origin + '/#/journal/'}
+        suffix={':' + this.opts.domain}
+        onChange={onChange}
+        initial-value={this.opts.initialValue}
+    />
+
+    onChange(e) {
+        if (e.target.value) {
+            dis.dispatch({
+                type: 'alias_change',
+                payload: {
+                    value: '#' + e.target.value + ':' + this.opts.domain,
+                },
+            });
+        }
+    }
+</aliasInput>
+
+<loginPanel>
+    <h1 style="text-align:center">login with <a href="http://matrix.org">[matrix]</a> to use j</h1>
+    <div class="j_login_form">
+        <div>
+            <label for="user_id">
+                user ID:
+            </label>
+            <input type="text" name="user_id" ref="user_id" placeholder="@person1234:matrix.org" value={userId}/>
+        </div><div>
+            <label for="password">
+                password:
+            </label>
+            <input
+                type="password"
+                name="password"
+                ref="password"
+                placeholder="password"
+            />
+        </div><div>
+            <label for="homeserver_url_input">
+                homeserver:
+            </label>
+            <input type="text" name="homeserver_url_input" ref="homeserver_url_input" placeholder="https://matrix.org" value={homeserverUrl}/>
+        </div>
+        <div>
+            <label for="remember_me">
+                auto-login next time*:
+            </label>
+            <input type="checkbox" name="remember_me" ref="remember_me" style="float:right" checked={rememberMe}/>
+        </div>
+        <p>
+            *access tokens are stored in the browser if enabled.
+        </p>
+        <div style="text-align: center">
+            <button onClick={doLoginWithPassword}>login</button>
+            <p style="text-align: center">or</p>
+            <button onClick={doLoginAsGuest}>login as guest</button>
+        </div>
+    </div>
+    <script>
+        this.userId = localStorage.getItem('mx_user_id');
+        this.homeserverUrl = localStorage.getItem('mx_hs') || "https://matrix.org";
+        this.rememberMe = localStorage.getItem('auto_login');
+
+        doLoginWithPassword(e) {
+            dis.dispatch({
+                type: 'login_password',
+                payload: {
+                    userId: this.refs.user_id.value,
+                    password: this.refs.password.value,
+                    homeserverUrl: this.refs.homeserver_url_input.value,
+                    rememberMe: this.refs.remember_me.value,
+                }
+            });
+        }
+
+        doLoginAsGuest(e) {
+            dis.dispatch({
+                type: 'login_guest',
+                payload: {
+                    homeserverUrl: this.refs.homeserver_url_input.value,
+                }
+            });
+        }
+    </script>
+</loginPanel>
+
+<topBar>
+    <span style="float:right">
+        logged in as {loggedInAs}
+        <button onClick={doLogout}>logout</button>
+    </span>
+    <div style="clear:both">
+        <span if={this.opts.roomList.length !== 0}>
+        visited:</span>
+        <span each={this.opts.roomList} style="padding-right:10px">
+            <a href="/#/journal/{roomId}">{name}</a>
+        </span>
+    </div>
+    <button onClick={()=>{showCreateRoomForm = !showCreateRoomForm}}>{showCreateRoomForm?'hide':'create your own blog'}</button>
+    <button if={isOwnerOfCurrentBlog} onClick={()=>{showCreateBlogForm = !showCreateBlogForm}}>{showCreateBlogForm?'hide':'write a new blog post'}</button>
+
+    showCreateRoomForm = false;
+    showCreateBlogForm = false;
+    loggedInAs = this.opts.loggedInAs;
+
+    doLogout(e) {
+        dis.dispatch({
+            type: 'logout',
+        });
+    }
+</topBar>
+
 <main name="content">
     <div class="j_container">
         <strong>
             <a href="https://github.com/lukebarnard1/j">j - journalism for cool people</a>
         </strong>
-        <span style="float:right" if={isLoggedIn}>
-            logged in as {userId}
-            <button onClick={doLogout}>logout</button>
-        </span>
-        <div if={isLoggedIn} style="clear:both">
-            <span if={roomList.length !== 0}>
-            visited:</span>
-            <span each={roomList} style="padding-right:10px">
-                <a href="/journal/{roomId}">{name}</a>
-            </span>
-        </div>
-        <button if={isLoggedIn} onClick={()=>{this.showCreateRoomForm = !this.showCreateRoomForm}}>{this.showCreateRoomForm?'hide':'create your own blog'}</button>
-        <button if={isLoggedIn && isOwnerOfCurrentBlog} onClick={()=>{this.showCreateBlogForm = !this.showCreateBlogForm}}>{this.showCreateBlogForm?'hide':'write a new blog post'}</button>
 
-        <h1 if={!isLoggedIn} style="text-align:center">login with <a href="http://matrix.org">[matrix]</a> to use j</h1>
-        <div if={!isLoggedIn} class="j_login_form">
-            <div>
-                <label for="user_id">
-                    user ID:
-                </label>
-                <input type="text" name="user_id" placeholder="@person1234:matrix.org"/>
-            </div><div>
-                <label for="password">
-                    password:
-                </label>
-                <input type="password" name="password" placeholder="password"/>
-            </div><div>
-                <label for="homeserver_url_input">
-                    homesever:
-                </label>
-                <input type="text" name="homeserver_url_input" placeholder="https://matrix.org" value="https://matrix.org"/>
-            </div>
-            <div>
-                <label for="shouldRememberMe">
-                    auto-login next time*:
-                </label>
-                <input type="checkbox" name="shouldRememberMe" style="float:right"/>
-            </div>
-            <p>
-                *access tokens are stored in the browser if enabled.
-            </p>
-            <div style="text-align: center">
-                <button onClick={doLoginWithPassword}>login</button>
-                <p style="text-align: center">or</p>
-                <button onClick={doLoginAsGuest}>login as guest</button>
-            </div>
-        </div>
+        <loginPanel if={!isLoggedIn}/>
 
         <div if={isLoggedIn}>
+            <topBar room-list={roomList} logged-in-as={userId}/>
+
             <div if={showCreateRoomForm}>
                 <input type="text" name="room_name_input" placeholder="blog title"/>
                 <select name="room_join_rule_input">
@@ -140,13 +222,15 @@
                     <option value="private_chat">private</option>
                 </select>
                 <button onClick={doCreateBlog}>create blog</button>
-                <input type="text" name="view_room_id" placeholder="!roomtoview:matrix.org" value="!qJXdPYrthkbuFjdrxj:matrix.org"/>
-                <button onClick={viewBlogButtonClick}>view blog</button>
+                <input type="text" ref="room_id_input" placeholder="!roomtoview:matrix.org" value="!qJXdPYrthkbuFjdrxj:matrix.org" onchange={onChangeRoomId}/>
             </div>
-            <div class="j_blog_header">
+            <div if={currentRoom} class="j_blog_header">
                 <img if={room_avatar_url} src={room_avatar_url}/>
-                <h1>{room.name}</h1>
-                <small if={room.subscribers}>{room.subscribers} people subscribed</small>
+                <h1>{currentRoom.name}</h1>
+                <div>
+                    <aliasInput if={isOwnerOfCurrentBlog} domain={domain} initial-value={aliasInputValue}/>
+                </div>
+                <small if={currentRoom.subscribers}>{currentRoom.subscribers} people subscribed</small>
             </div>
             <div if={isOwnerOfCurrentBlog && showCreateBlogForm}>
                 <editor taid="main-editor" taname="new_blog_post_content" submit={doNewBlogPost}/>
@@ -157,7 +241,8 @@
             </div>
         </div>
     </div>
-    <script>
+
+    this.on('mount', () => {
         require('../logic/main.js')(this);
-    </script>
+    });
 </main>

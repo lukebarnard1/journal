@@ -21,7 +21,11 @@
     "bluebird": "^3.4.6",
     "express": "^4.14.0",
     "marked": "^0.3.6",
-    "matrix-js-sdk": "matrix-org/matrix-js-sdk#develop",
+    "matrix-js-sdk": "github:matrix-org/matrix-js-sdk#develop",
+    "riot": "^3.3.2",
+    "riot-compiler": "^3.2.1",
+    "riot-route": "^3.1.1",
+    "riotify": "^2.0.0",
     "simplemde": "^1.11.2"
   }
 }
