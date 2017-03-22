@@ -14,7 +14,7 @@
   "license": "ISC",
   "devDependencies": {
     "browserify": "^13.1.1",
-    "riotify": "^1.0.1",
+    "riotify": "^2.0.0",
     "watchify": "v3.6.1"
   },
   "dependencies": {
@@ -25,7 +25,6 @@
     "riot": "^3.3.2",
     "riot-compiler": "^3.2.1",
     "riot-route": "^3.1.1",
-    "riotify": "^2.0.0",
     "simplemde": "^1.11.2"
   }
 }
