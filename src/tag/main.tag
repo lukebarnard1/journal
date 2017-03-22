@@ -209,11 +209,11 @@
         <strong>
             <a href="https://github.com/lukebarnard1/j">j - journalism for cool people</a>
         </strong>
+        <topBar if={isLoggedIn} room-list={roomList} logged-in-as={userId}/>
 
         <loginPanel if={!isLoggedIn}/>
 
         <div if={isLoggedIn}>
-            <topBar room-list={roomList} logged-in-as={userId}/>
 
             <div if={showCreateRoomForm}>
                 <input type="text" name="room_name_input" placeholder="blog title"/>
