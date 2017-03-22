@@ -190,11 +190,6 @@
             <a href="/#/journal/{roomId}">{name}</a>
         </span>
     </div>
-    <button onClick={()=>{showCreateRoomForm = !showCreateRoomForm}}>{showCreateRoomForm?'hide':'create your own blog'}</button>
-    <button if={isOwnerOfCurrentBlog} onClick={()=>{showCreateBlogForm = !showCreateBlogForm}}>{showCreateBlogForm?'hide':'write a new blog post'}</button>
-
-    showCreateRoomForm = false;
-    showCreateBlogForm = false;
     loggedInAs = this.opts.loggedInAs;
 
     doLogout(e) {
@@ -214,7 +209,8 @@
         <loginPanel if={!isLoggedIn}/>
 
         <div if={isLoggedIn}>
-
+            <button onClick={()=>{this.showCreateRoomForm = !this.showCreateRoomForm}}>{this.showCreateRoomForm?'hide':'create your own blog'}</button>
+            <button if={isOwnerOfCurrentBlog} onClick={()=>{this.showCreateBlogForm = !this.showCreateBlogForm}}>{this.showCreateBlogForm?'hide':'write a new blog post'}</button>
             <div if={showCreateRoomForm}>
                 <input type="text" name="room_name_input" placeholder="blog title"/>
                 <select name="room_join_rule_input">
