@@ -208,6 +208,7 @@ module.exports = (self) => {
                 },
                 author : author,
                 datetime : new Date(e.getTs()).toLocaleString(),
+                seenBy : self.currentRoom.getReceiptsForEvent(e).length,
             }
         });
 

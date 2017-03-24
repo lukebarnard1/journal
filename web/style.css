@@ -89,6 +89,9 @@ a:hover {
 
 .j_blog_post_written_by {
 	opacity: 0.8;
+	width: 50%;
+	float: right;
+	text-align: right;
 }
 
 .j_comment button {
