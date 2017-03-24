@@ -82,7 +82,8 @@
 
     this.on('mount', () => {
         this.simplemde = new SimpleMDE({
-            element: document.getElementById(opts.taid)
+            element: document.getElementById(opts.taid),
+            autofocus: true,
         });
     });
 </editor>
