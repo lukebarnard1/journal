@@ -14,13 +14,13 @@ A web client for writing news stories, personal blogs and more, built on Matrix.
 j is a website that can be used to display content stored on [Matrix](https://matrix.org) servers. Matrix is a distributed messaging protocol that allows messages to be sent to others across a network of homeservers across the globe. The distributed nature of Matrix makes it ideal for hosting published content, with no central server that could fail. j is an attempt to use Matrix for viewing, creating and publishing journalistic writing and blogs.
 
 ### But what _is_ j?
-The [demo](http://ldbco.de:4000) shows one example of j running in the wild. With this website users can read blogs that are already public on Matrix and interact with other subscribers and the authors using the comment functionality and create their own blogs. To access the Matrix network, users can login to the matrix.org homeserver with their Matrix user/password combination or login as a guest. Users can also specify their own homeserver to use as an entry point into the network. The login is necessary as part of the Matrix protocol to authenticate and identify users within the system.
+The [demo](http://ldbco.de) shows one example of j running in the wild. With this website users can read blogs that are already public on Matrix and interact with other subscribers and the authors using the comment functionality and create their own blogs. To access the Matrix network, users can login to the matrix.org homeserver with their Matrix user/password combination or login as a guest. Users can also specify their own homeserver to use as an entry point into the network. The login is necessary as part of the Matrix protocol to authenticate and identify users within the system.
 
 It may also be argued that j is an extension/adaptation of the Matrix protocol. It uses the flexibility of the Matrix protocol to embed published materials and comments with meta-data that serve to enhance the functionality of j. There are other Matrix clients of course, but none that use the same meta-data as j (yet).
 
 ### Use Cases
 #### Personal Blog
-j can be used to create a personal blog website. The blog creator need only find a hosted instance of j (like the one on [ldbco.de](http://ldbco.de:4000)) to be able to publish material. Alternatively, if the creator is willing, they may want to run their own j allowing personal touches like modification to the look-and-feel of the website.
+j can be used to create a personal blog website. The blog creator need only find a hosted instance of j (like the one on [ldbco.de](http://ldbco.de)) to be able to publish material. Alternatively, if the creator is willing, they may want to run their own j allowing personal touches like modification to the look-and-feel of the website.
 
 #### Blog/News Site
 j can be used to create an entire website dedicated to viewing, creating and publishing journalistic writing and blogs! In truth, even if j _is_ used as a personal blog site, users are still able to create their own blogs through the same interface. So really, even the personal blogs are entire blog websites.
