@@ -227,7 +227,6 @@
                     <option value="private_chat">private</option>
                 </select>
                 <button onClick={doCreateBlog}>create blog</button>
-                <input type="text" ref="room_id_input" placeholder="!roomtoview:matrix.org" value="!qJXdPYrthkbuFjdrxj:matrix.org" onchange={onChangeRoomId}/>
             </div>
             <div if={currentRoom} class="j_blog_header">
                 <img if={room_avatar_url} src={room_avatar_url}/>

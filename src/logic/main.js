@@ -261,10 +261,6 @@ module.exports = (self) => {
         });
     }
 
-    onChangeRoomId = () => {
-        route('/journal/' + self.refs.room_id_input.value);
-    }
-
     doViewBlog = () => {
         if (!self.isLoggedIn) {
             throw new Error('Cannot view blog, not logged in');
