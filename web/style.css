@@ -1,7 +1,7 @@
 
 h1,h2,h3,h4,h5 {
-	font-family:serif;
-	line-height:1.3em;
+	font-family: serif;
+	line-height: 1.3em;
 }
 
 /* Blog headers */
@@ -10,9 +10,9 @@ h3 {
 }
 
 span, p, div {
-	font-family:'Calibri';
-	font-size:11pt;
-	line-height:1.2em;
+	font-family: 'Calibri';
+	font-size: 11pt;
+	line-height: 1.2em;
 }
 
 p {
@@ -43,33 +43,33 @@ a:hover {
 }
 
 .j_100_width {
-	width:100%;
+	width: 100%;
 }
 
 .j_login_form {
-	width:200px;
-	margin:auto;
+	width: 200px;
+	margin: auto;
 }
 
 .j_login_form input {
 	clear: both;
 	display: block;
-	width:98%;
+	width: 98%;
 }
 
 .j_user_avatar {
-	width:100px;
-	height:auto;
+	width: 100px;
+	height: auto;
 }
 
 .j_user_avatar_container {
-	float:left;
+	float: left;
 	position: relative;
-	left:-5px;
-    margin:5px;
-	width:100px;
-	height:100px;
-	border-radius:10%;
+	left: -5px;
+    margin: 5px;
+	width: 100px;
+	height: 100px;
+	border-radius: 10%;
 	overflow:hidden;
     -webkit-transform: rotate(7deg); /* Chrome, Opera */
     transform: rotate(7deg);
@@ -93,7 +93,7 @@ a:hover {
 
 .j_blog_post_written_by {
 	opacity: 0.8;
-	width: 50%;
+	width: 80%;
 	float: right;
 	text-align: right;
 }
@@ -103,7 +103,7 @@ a:hover {
 }
 
 .j_comment_sender_avatar_container {
-	margin:5px;
+	margin: 5px;
 	float: left;
 	border-radius: 30%;
 	overflow:hidden;
