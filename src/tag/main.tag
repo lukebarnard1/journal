@@ -124,7 +124,7 @@
 </aliasInput>
 
 <loginPanel>
-    <h1 style="text-align:center">login with <a href="http://matrix.org">[matrix]</a> to use j</h1>
+    <h1 style="text-align:center">login with <a href="http://matrix.org">[matrix]</a> to use journal</h1>
     <div class="j_login_form">
         <div>
             <label for="user_id">
