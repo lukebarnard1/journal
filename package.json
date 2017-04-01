@@ -1,7 +1,7 @@
 {
-  "name": "j",
+  "name": "journal",
   "version": "0.0.1",
-  "description": "Blogs for [matrix]",
+  "description": "a blogging platform built on [matrix]",
   "main": "index.js",
   "scripts": {
     "watch": "watchify src/index.js --debug -o web/bundle.js -t [ riotify ] -v",
@@ -10,7 +10,7 @@
     "dev": "npm run-script run & npm run-script watch"
   },
   "author": "Luke Barnard",
-  "repository": "git@github.com:lukebarnard1/j.git",
+  "repository": "git@github.com:lukebarnard1/journal.git",
   "license": "ISC",
   "devDependencies": {
     "browserify": "^13.1.1",
