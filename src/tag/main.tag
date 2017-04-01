@@ -95,8 +95,9 @@
             class="j_text_input"
             onchange={onChange}
             value={this.opts.initialValue}
-            placeholder="blog-alias"
-        />{this.opts.suffix}
+            placeholder={this.opts.placeholder}
+            if={this.opts.enabled}
+        /><span if={!this.opts.enabled}>{this.opts.initialValue}</span>{this.opts.suffix}
     </span>
 </editable>
 
@@ -106,6 +107,8 @@
         suffix={':' + this.opts.domain}
         onChange={onChange}
         initial-value={this.opts.initialValue}
+        placeholder="my-blog"
+        enabled={this.opts.enabled}
     />
 
     onChange(e) {
@@ -231,8 +234,15 @@
             <div if={currentRoom} class="j_blog_header">
                 <img if={room_avatar_url} src={room_avatar_url}/>
                 <h1>{currentRoom.name}</h1>
+                <div class="j_blog_topic">
+                    <editable
+                        initial-value={currentRoom.topic}
+                        placeholder="The topic of your blog"
+                        enabled={isOwnerOfCurrentBlog}
+                    />
+                </div>
                 <div>
-                    <aliasInput if={isOwnerOfCurrentBlog} domain={domain} initial-value={aliasInputValue}/>
+                    <aliasInput enabled={isOwnerOfCurrentBlog} domain={domain} initial-value={aliasInputValue}/>
                 </div>
                 <small if={currentRoom.subscribers}>{currentRoom.subscribers} people subscribed</small>
             </div>

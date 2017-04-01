@@ -229,6 +229,10 @@ module.exports = (self) => {
         self.currentRoom = room;
         self.currentRoom.name = room.name[0] === '!'?"loading...":room.name;
         self.currentRoom.subscribers = room.getJoinedMembers().length;
+
+        const topicEvent = room.currentState.getStateEvents('m.room.topic', '');
+        self.currentRoom.topic = topicEvent ? topicEvent.getContent().topic : null;
+
         self.update();
     }
 
@@ -300,12 +304,14 @@ module.exports = (self) => {
                             "m.room.canonical_alias",
                             "m.room.member",
                             "m.room.name",
+                            "m.room.topic",
                             "m.room.avatar",
                         ]
                     },
                     "timeline": {
                         "types": [
                             "m.room.message",
+                            "m.room.redaction",
                             "m.room.canonical_alias",
                         ],
                         "limit": 10

@@ -79,6 +79,10 @@ a:hover {
 	text-align: center;
 }
 
+.j_blog_topic {
+	margin-bottom: 25px;
+}
+
 .j_blog_post_content {
 	margin-bottom: 10px;
 }
