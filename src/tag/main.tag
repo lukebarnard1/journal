@@ -214,7 +214,7 @@
 <main name="content">
     <div class="j_container">
         <strong>
-            <a href="https://github.com/lukebarnard1/j">j - journalism for cool people</a>
+            <a href="https://github.com/lukebarnard1/journal">journal - a blogging platform built on [matrix]</a>
         </strong>
         <topBar if={isLoggedIn} room-list={roomList} logged-in-as={userId}/>
 
