@@ -4,7 +4,6 @@
         name={opts.taname}
         ref="ta"
     ></textarea>
-    <button onClick={() => {this.submit()}}>spread the word</button>
 
     var marked = require("marked");
     marked.setOptions({
@@ -21,10 +20,31 @@
         );
     }
 
+    this.cancel = function() {
+        opts.cancel();
+    }
+
     this.on('mount', () => {
         this.simplemde = new SimpleMDE({
             element: document.getElementById(opts.taid),
             autofocus: true,
+            status: false,
+            toolbar: [
+                "bold", "italic", "heading", "|",
+                "quote", "unordered-list", "ordered-list", "|",
+                "link", "image", "|", "preview", "|" , "guide", "|",
+                {
+                    name: "send",
+                    action: this.submit.bind(this),
+                    className: "fa fa-paper-plane",
+                    title: "Send",
+                }, {
+                    name: "cancel",
+                    action: this.cancel.bind(this),
+                    className: "fa fa-times",
+                    title: "Cancel",
+                }
+            ],
         });
     });
 </editor>
@@ -63,6 +83,26 @@
         }
     }
 </aliasInput>
+
+<topicInput>
+    <editable
+        initial-value={this.opts.initialValue}
+        placeholder="The topic of your blog"
+        onChange={onChange}
+        enabled={this.opts.enabled}
+    />
+
+    onChange(e) {
+        if (e.target.value) {
+            dis.dispatch({
+                type: 'topic_change',
+                payload: {
+                    value: e.target.value,
+                },
+            });
+        }
+    }
+</topicInput>
 
 <loginPanel>
     <h1 style="text-align:center">login with <a href="http://matrix.org">[matrix]</a> to use journal</h1>
@@ -134,7 +174,7 @@
 <topBar>
     <span style="float:right">
         logged in as {loggedInAs}
-        <button onClick={doLogout}>logout</button>
+        <button onClick={doLogout}><i class="fa fa-sign-out" aria-hidden="true"></i></button>
     </span>
     <div style="clear:both">
         <span if={this.opts.roomList.length !== 0}>
@@ -154,33 +194,30 @@
 
 <main name="content">
     <div class="j_container">
+        <i class="fa fa-newspaper-o" aria-hidden="true"></i>
         <strong>
             <a href="https://github.com/lukebarnard1/journal">journal - a blogging platform built on [matrix]</a>
         </strong>
+        <button title="Create a new blog" onClick={()=>{this.showCreateRoomForm = !this.showCreateRoomForm}}><i class="fa fa-file-text-o" aria-hidden="true"></i></button>
+        <button title="Write a post" if={isOwnerOfCurrentBlog} onClick={()=>{this.showCreateBlogForm = !this.showCreateBlogForm}}><i class="fa fa-pencil-square-o"></i></button>
         <topBar if={isLoggedIn} room-list={roomList} logged-in-as={userId}/>
 
         <loginPanel if={!isLoggedIn}/>
 
         <div if={isLoggedIn}>
-            <button onClick={()=>{this.showCreateRoomForm = !this.showCreateRoomForm}}>{this.showCreateRoomForm?'hide':'create your own blog'}</button>
-            <button if={isOwnerOfCurrentBlog} onClick={()=>{this.showCreateBlogForm = !this.showCreateBlogForm}}>{this.showCreateBlogForm?'hide':'write a new blog post'}</button>
             <div if={showCreateRoomForm}>
-                <input type="text" name="room_name_input" placeholder="blog title"/>
-                <select name="room_join_rule_input">
+                <input type="text" ref="room_name_input" placeholder="blog title"/>
+                <select ref="room_join_rule_input">
                     <option value="public_chat" selected="selected">public</option>
                     <option value="private_chat">private</option>
                 </select>
-                <button onClick={doCreateBlog}>create blog</button>
+                <button onClick={doCreateBlog}><i class="fa fa-plus" aria-hidden="true"></i></button>
             </div>
             <div if={currentRoom} class="j_blog_header">
                 <img if={room_avatar_url} src={room_avatar_url}/>
                 <h1>{currentRoom.name}</h1>
                 <div class="j_blog_topic">
-                    <editable
-                        initial-value={currentRoom.topic}
-                        placeholder="The topic of your blog"
-                        enabled={isOwnerOfCurrentBlog}
-                    />
+                    <topicInput enabled={isOwnerOfCurrentBlog} initial-value={currentRoom.topic}/>
                 </div>
                 <div>
                     <aliasInput enabled={isOwnerOfCurrentBlog} domain={domain} initial-value={aliasInputValue}/>
@@ -188,7 +225,7 @@
                 <small if={currentRoom.subscribers}>{currentRoom.subscribers} people subscribed</small>
             </div>
             <div if={isOwnerOfCurrentBlog && showCreateBlogForm}>
-                <editor taid="main-editor" taname="new_blog_post_content" submit={doNewBlogPost}/>
+                <editor taid="main-editor" taname="new_blog_post_content" submit={doNewBlogPost} cancel={()=>{this.showCreateBlogForm = false;this.update();}}/>
             </div>
             <blog each={entries}></blog>
             <div if={entries.length==0} style="text-align:center">

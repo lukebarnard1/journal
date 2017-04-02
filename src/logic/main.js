@@ -81,8 +81,10 @@ module.exports = (self) => {
                     });
                 }, (err) => {
                     console.error(err);
-                }
-                );
+                });
+            break;
+            case 'topic_change':
+                cli.setRoomTopic(currentRoomId, action.payload.value);
             break;
             case 'view_blog':
                 route('/journal/' + action.payload.addr);
@@ -201,7 +203,7 @@ module.exports = (self) => {
                     doNewComment(
                         e.getId(),
                         // TODO: fix fun hack to get the input box
-                        Array.from(ev.target.parentElement.children).find(
+                        Array.from(ev.currentTarget.parentElement.children).find(
                             (e) => e.name==='comment_text'
                         ).value
                     );
@@ -239,8 +241,8 @@ module.exports = (self) => {
     doCreateBlog = () => {
         cli.createRoom({
             visibility: 'public',
-            preset: self.room_join_rule_input.value,
-            name: self.room_name_input.value
+            preset: self.refs.room_join_rule_input.value,
+            name: self.refs.room_name_input.value
         }).then((resp) => {
             console.log("New room created: " + resp.room_id);
             route('/journal/' + resp.room_id);

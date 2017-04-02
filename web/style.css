@@ -25,6 +25,13 @@ a {
 	text-decoration:underline;
 }
 
+button {
+    font-size: inherit;
+    background-color: #eee;
+    border-radius: 5px;
+    border: none;
+}
+
 a:hover {
 	color:#F00;
 }

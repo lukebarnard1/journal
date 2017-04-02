@@ -12,6 +12,9 @@
                 <span title={comments.length + " comments"}>
                     <i class="fa fa-comments-o" aria-hidden="true"></i> {comments.length}
                 </span>
+		        <button if={isMine} onClick={deleteEntry} title="Delete post">
+		            <i class="fa fa-trash" aria-hidden="true"></i>
+		        </button>
                 <span class="j_blog_post_written_by">written by <strong>{author.display_name}</strong> on {datetime}</span>
             </div>
         </div>
@@ -24,12 +27,9 @@
                 author={author}
             />
         </div>
-        <button if={isMine} onClick={deleteEntry}>
-            delete post
-        </button>
         <input type="text" name="comment_text"/>
-        <button onClick={comment}>
-            comment on post
+        <button onClick={comment} title="Post comment">
+            <i class="fa fa-comment-o" aria-hidden="true"></i>
         </button>
     </div>
 </blog>

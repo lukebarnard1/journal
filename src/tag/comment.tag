@@ -11,8 +11,8 @@
             </span>
         </div>
         <span class="j_comment_content">{opts.content}</span>
-        <button if={opts.mine} onClick={opts.delete}>
-            delete comment
+        <button if={opts.mine} onClick={opts.delete} title="Delete comment">
+            <i class="fa fa-trash" aria-hidden="true"></i>
         </button>
     </div>
 </comment>
