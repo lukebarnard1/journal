@@ -192,6 +192,38 @@
     }
 </topBar>
 
+<roomAvatarPicker>
+    <div class="j_room_avatar_picker" onClick={doFilePicker}>
+        <img if={this.opts.roomAvatar} class="j_room_avatar" src={this.opts.roomAvatar}/>
+        <div if={!this.opts.roomAvatar} class="j_room_avatar_placeholder">
+            <span if={this.state === 'unset'}>
+                <i class="fa fa-camera fa-3x"></i>
+                <i class="fa fa-plus fa-2x"></i>
+            </span>
+            <span if={this.state === 'file_upload'}>
+                <i class="fa fa-circle-o-notch fa-spin fa-3x"></i>
+            </span>
+        </div>
+        <input style="display:none" ref="file_input" type="file" accept="image/*" onChange={doFileSelected}/>
+    </div>
+
+    this.state = this.opts.roomAvatar ? 'set' : 'unset';
+    doFilePicker(e) {
+        this.refs.file_input.click();
+    }
+
+    doFileSelected(e) {
+        const file = e.target.files[0];
+        this.state = 'file_upload';
+        dis.dispatch({
+            type: 'room_avatar_change',
+            payload: {
+                file: file,
+            }
+        });
+    }
+</roomAvatarPicker>
+
 <main name="content">
     <div class="j_container">
         <i class="fa fa-newspaper-o" aria-hidden="true"></i>
@@ -214,15 +246,21 @@
                 <button onClick={doCreateBlog}><i class="fa fa-plus" aria-hidden="true"></i></button>
             </div>
             <div if={currentRoom} class="j_blog_header">
-                <img if={room_avatar_url} src={room_avatar_url}/>
-                <h1>{currentRoom.name}</h1>
-                <div class="j_blog_topic">
-                    <topicInput enabled={isOwnerOfCurrentBlog} initial-value={currentRoom.topic}/>
+                <div class="j_flex_row">
+                    <div class="j_col">
+                        <roomAvatarPicker room-avatar={room_avatar_url}/>
+                    </div>
+                    <div class="j_col_expand">
+                        <h1>{currentRoom.name}</h1>
+                        <div class="j_blog_topic">
+                            <topicInput enabled={isOwnerOfCurrentBlog} initial-value={currentRoom.topic}/>
+                        </div>
+                        <div>
+                            <aliasInput enabled={isOwnerOfCurrentBlog} domain={domain} initial-value={aliasInputValue}/>
+                        </div>
+                        <small if={currentRoom.subscribers}>{currentRoom.subscribers} people subscribed</small>
+                    </div>
                 </div>
-                <div>
-                    <aliasInput enabled={isOwnerOfCurrentBlog} domain={domain} initial-value={aliasInputValue}/>
-                </div>
-                <small if={currentRoom.subscribers}>{currentRoom.subscribers} people subscribed</small>
             </div>
             <div if={isOwnerOfCurrentBlog && showCreateBlogForm}>
                 <editor taid="main-editor" taname="new_blog_post_content" submit={doNewBlogPost} cancel={()=>{this.showCreateBlogForm = false;this.update();}}/>

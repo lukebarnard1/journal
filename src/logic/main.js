@@ -82,6 +82,11 @@ module.exports = (self) => {
                 }, (err) => {
                     console.error(err);
                 });
+            case 'room_avatar_change':
+                cli.uploadContent(action.payload.file).then(function(url) {
+                    self.update({room_avatar_url: cli.mxcUrlToHttp(url)});
+                    return cli.sendStateEvent(currentRoomId, 'm.room.avatar', {url: url}, '');
+                });
             break;
             case 'topic_change':
                 cli.setRoomTopic(currentRoomId, action.payload.value);
@@ -462,7 +467,6 @@ module.exports = (self) => {
 
         cli.on("event", (e) => {
             console.log(e.event.type, 'in', e.event.room_id);
-
             if (e.getType() === 'm.room.avatar') {
                 if (e.getRoomId() === self.currentRoom.roomId) {
                     // Force the state to be added

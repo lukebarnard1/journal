@@ -32,6 +32,21 @@ button {
     border: none;
 }
 
+.j_flex_row {
+	display: flex;
+	flex_direction: row;
+}
+
+.j_col {
+	order: 1;
+	flex-grow: 0;
+}
+
+.j_col_expand {
+	order: 1;
+	flex-grow: 1;
+}
+
 a:hover {
 	color:#F00;
 }
@@ -84,6 +99,30 @@ a:hover {
 
 .j_blog_header {
 	text-align: center;
+	margin-top: 5px;
+}
+
+.j_room_avatar_picker {
+    cursor: pointer;
+    min-width: 150px;
+}
+
+.j_room_avatar_placeholder {
+	background-color: #77dd88;
+    border-radius: 5px;
+    color: white;
+    width: 150px;
+    height: 150px;
+}
+
+.j_room_avatar {
+    width: 100%;
+    height: auto;
+    max-width: 150px;
+}
+
+.j_room_avatar_placeholder i {
+    margin-top: 55px;
 }
 
 .j_blog_topic {
