@@ -163,11 +163,19 @@ module.exports = (self) => {
             return; // No events yet
         }
 
-        let allEntries = getCurrentTimeline().getEvents();
+        let allEntries = getCurrentTimeline().getEvents().sort((a, b) => b.getTs() - a.getTs());
+
+        let seenByAcc = 0;
+        allEntries.forEach((e) => {
+            seenByAcc += self.currentRoom.getReceiptsForEvent(e).length;
+            console.info(e.getContent(), self.currentRoom.getReceiptsForEvent(e).map((r) => r.userId));
+            e.seenByAcc = seenByAcc;
+        });
+
         entries = allEntries.filter((e) => {
             return e.event.type === 'm.room.message'
                 && e.event.content.is_blog
-        }).sort((a, b) => b.getTs() - a.getTs());
+        });
 
         // Transform into view
         entries = entries.map((e) => {
@@ -215,7 +223,7 @@ module.exports = (self) => {
                 },
                 author : author,
                 datetime : new Date(e.getTs()).toLocaleString(),
-                seenBy : self.currentRoom.getReceiptsForEvent(e).length,
+                seenBy : e.seenByAcc,
             }
         });
 
@@ -322,6 +330,11 @@ module.exports = (self) => {
                             "m.room.canonical_alias",
                         ],
                         "limit": 10
+                    },
+                    "ephemeral": {
+                        "types": [
+                            "m.receipt"
+                        ]
                     }
                 },
                 "presence": {
