@@ -196,7 +196,8 @@ module.exports = (self) => {
                             doDeleteEntry(e2.getId());
                         },
                         sender : e2.getSender(),
-                        author : commenter
+                        author : commenter,
+                        datetime : new Date(e2.getTs()).toLocaleString(),
                     };
                 }
             );

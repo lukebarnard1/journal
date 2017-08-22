@@ -9,6 +9,7 @@
             }>
                 {opts.author.display_name}
             </span>
+            <span class="j_comment_timestamp"> on {opts.datetime}</span>
         </div>
         <span class="j_comment_content">{opts.content}</span>
         <button if={opts.mine} onClick={opts.delete} title="Delete comment">

@@ -25,6 +25,7 @@
                 delete={deleteEntry}
                 sender={sender}
                 author={author}
+                datetime={datetime}
             />
         </div>
         <input type="text" name="comment_text"/>
