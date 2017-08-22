@@ -168,7 +168,6 @@ module.exports = (self) => {
         let seenByAcc = 0;
         allEntries.forEach((e) => {
             seenByAcc += self.currentRoom.getReceiptsForEvent(e).length;
-            console.info(e.getContent(), self.currentRoom.getReceiptsForEvent(e).map((r) => r.userId));
             e.seenByAcc = seenByAcc;
         });
 
