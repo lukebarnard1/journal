@@ -91,10 +91,6 @@ a:hover {
     margin: 5px;
 	width: 100px;
 	height: 100px;
-	border-radius: 10%;
-	overflow:hidden;
-    -webkit-transform: rotate(7deg); /* Chrome, Opera */
-    transform: rotate(7deg);
 }
 
 .j_blog_header {
@@ -151,10 +147,6 @@ a:hover {
 .j_comment_sender_avatar_container {
 	margin: 5px;
 	float: left;
-	border-radius: 30%;
-	overflow:hidden;
-    -webkit-transform: rotate(7deg); /* Chrome, Opera */
-    transform: rotate(7deg);
 }
 
 .j_comment_sender_name {
