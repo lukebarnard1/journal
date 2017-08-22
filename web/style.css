@@ -79,6 +79,10 @@ a:hover {
 	width: 98%;
 }
 
+.j_toolbar {
+	margin-top: 8px;
+}
+
 .j_user_avatar {
 	width: 100px;
 	height: auto;

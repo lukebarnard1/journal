@@ -172,13 +172,17 @@
 </loginPanel>
 
 <topBar>
+    <i class="fa fa-newspaper-o" aria-hidden="true"></i>
+    <strong>
+        journal
+    </strong>
     <span style="float:right">
         logged in as {loggedInAs}
         <button onClick={doLogout}><i class="fa fa-sign-out" aria-hidden="true"></i></button>
     </span>
     <div style="clear:both">
         <span if={this.opts.roomList.length !== 0}>
-        visited:</span>
+        history:</span>
         <span each={this.opts.roomList} style="padding-right:10px">
             <a href="/#/journal/{roomId}">{name}</a>
         </span>
@@ -226,13 +230,11 @@
 
 <main name="content">
     <div class="j_container">
-        <i class="fa fa-newspaper-o" aria-hidden="true"></i>
-        <strong>
-            <a href="https://github.com/lukebarnard1/journal">journal - a blogging platform built on [matrix]</a>
-        </strong>
-        <button title="Create a new blog" onClick={()=>{this.showCreateRoomForm = !this.showCreateRoomForm}}><i class="fa fa-file-text-o" aria-hidden="true"></i></button>
-        <button title="Write a post" if={isOwnerOfCurrentBlog} onClick={()=>{this.showCreateBlogForm = !this.showCreateBlogForm}}><i class="fa fa-pencil-square-o"></i></button>
         <topBar if={isLoggedIn} room-list={roomList} logged-in-as={userId}/>
+        <div class="j_toolbar">
+            <button title="Create a new blog" onClick={()=>{this.showCreateRoomForm = !this.showCreateRoomForm}}><i class="fa fa-file-text-o" aria-hidden="true"></i></button>
+            <button title="Write a post" if={isOwnerOfCurrentBlog} onClick={()=>{this.showCreateBlogForm = !this.showCreateBlogForm}}><i class="fa fa-pencil-square-o"></i></button>
+        </div>
 
         <loginPanel if={!isLoggedIn}/>
 
