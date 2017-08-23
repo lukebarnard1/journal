@@ -403,12 +403,9 @@ module.exports = (self) => {
     createClient = (opts) => {
         if (window.indexedDB && localStorage) {
             Object.assign(opts, {
-                store: new matrixSdk.IndexedDBStore(
-                    new matrixSdk.IndexedDBStoreBackend(window.indexedDB),
-                    new matrixSdk.SyncAccumulator(), {
-                        localStorage: localStorage,
-                    }
-                ),
+                store: new matrixSdk.IndexedDBStore({
+                    indexedDB: window.indexedDB,
+                }),
             });
         }
         return matrixSdk.createClient(opts);
