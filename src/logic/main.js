@@ -157,9 +157,7 @@ module.exports = (self) => {
     };
 
     let updateEntries = () => {
-        console.log('updateEntries');
         if (!getCurrentTimeline() || !getCurrentTimeline().getEvents()) {
-            console.warn('No events received yet');
             return; // No events yet
         }
 
@@ -476,7 +474,6 @@ module.exports = (self) => {
         }
 
         cli.on("event", (e) => {
-            console.log(e.event.type, 'in', e.event.room_id);
             if (e.getType() === 'm.room.avatar') {
                 if (e.getRoomId() === self.currentRoom.roomId) {
                     // Force the state to be added
