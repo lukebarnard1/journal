@@ -47,13 +47,30 @@ button {
 	flex-grow: 1;
 }
 
+.j_text_input {
+    min-width: 50px;
+}
+
+.j_text_input {
+	outline: 0px;
+}
+
+.j_text_input:empty:before {
+	content: attr(placeholder);
+	color: #888;
+}
+
+.j_text_input:focus {
+	border-bottom: 1px solid #ddd;
+}
+
 a:hover {
 	color:#F00;
 }
 
 .j_container {
-	width: 60%;
-	margin-left: 20%;
+	max-width: 800px;
+	margin: auto;
 }
 
 @media only screen and (max-width: 768px) {
@@ -104,29 +121,33 @@ a:hover {
 
 .j_room_avatar_picker {
     cursor: pointer;
-    min-width: 150px;
+    min-width: 50px;
 }
 
 .j_room_avatar_placeholder {
 	background-color: #77dd88;
     border-radius: 5px;
     color: white;
-    width: 150px;
-    height: 150px;
+    width: 50px;
+    height: 50px;
 }
 
 .j_room_avatar {
-    width: 100%;
-    height: auto;
-    max-width: 150px;
+    width: 50px;
+    height: 50px;
 }
 
 .j_room_avatar_placeholder i {
-    margin-top: 55px;
+    margin-top: 14px;
 }
 
 .j_blog_topic {
 	margin-bottom: 25px;
+}
+
+.j_blog_topic::before,
+.j_user_count::before {
+    content: "\00b7";
 }
 
 .j_blog_post_content {

@@ -201,11 +201,10 @@
         <img if={this.opts.roomAvatar} class="j_room_avatar" src={this.opts.roomAvatar}/>
         <div if={!this.opts.roomAvatar} class="j_room_avatar_placeholder">
             <span if={this.state === 'unset'}>
-                <i class="fa fa-camera fa-3x"></i>
-                <i class="fa fa-plus fa-2x"></i>
+                <i class="fa fa-camera"></i>
             </span>
             <span if={this.state === 'file_upload'}>
-                <i class="fa fa-circle-o-notch fa-spin fa-3x"></i>
+                <i class="fa fa-circle-o-notch fa-spin"></i>
             </span>
         </div>
         <input style="display:none" ref="file_input" type="file" accept="image/*" onChange={doFileSelected}/>
@@ -252,16 +251,18 @@
                     <div class="j_col">
                         <roomAvatarPicker room-avatar={room_avatar_url}/>
                     </div>
-                    <div class="j_col_expand">
-                        <h1>{currentRoom.name}</h1>
-                        <div class="j_blog_topic">
+                    <div class="j_col_expand j_room_name_container">
+                        <span class="j_room_name">{currentRoom.name}</span>
+                        <span class="j_blog_topic">
                             <topicInput enabled={isOwnerOfCurrentBlog} initial-value={currentRoom.topic}/>
-                        </div>
-                        <div>
-                            <aliasInput enabled={isOwnerOfCurrentBlog} domain={domain} initial-value={aliasInputValue}/>
-                        </div>
-                        <small if={currentRoom.subscribers}>{currentRoom.subscribers} people subscribed</small>
+                        </span>
+                        <span class="j_user_count" if={currentRoom.subscribers}>
+                            <i class="fa fa-users" aria-hidden="true"></i> {currentRoom.subscribers}
+                        </span>
                     </div>
+                </div>
+                <div>
+                    <aliasInput enabled={isOwnerOfCurrentBlog} domain={domain} initial-value={aliasInputValue}/>
                 </div>
             </div>
             <div if={isOwnerOfCurrentBlog && showCreateBlogForm}>
