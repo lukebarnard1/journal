@@ -51,36 +51,43 @@
 
 <editable>
     <span>
-        {this.opts.prefix}<input
+        {this.opts.prefix}<span
+            ref="input" name="input"
+            style={{minWidth: '100px'}}
             contenteditable="true"
             class="j_text_input"
-            onchange={onChange}
-            value={this.opts.initialValue}
+            onfocus={onFocus}
+            onblur={onBlur}
             placeholder={this.opts.placeholder}
-            if={this.opts.enabled}
-        /><span if={!this.opts.enabled}>{this.opts.initialValue}</span>{this.opts.suffix}
+        >{this.opts.initialValue}</span>{this.opts.suffix}
     </span>
+    <script>
+        onClick(e) {
+            this.refs.input.focus();
+        }
+        onBlur(e) {
+            this.opts.onChange(this.refs.input.innerText);
+        }
+    </script>
 </editable>
 
 <aliasInput>
     <editable
         prefix={window.location.origin + '/#/journal/'}
         suffix={':' + this.opts.domain}
-        onChange={onChange}
+        on-change={onChange}
         initial-value={this.opts.initialValue}
         placeholder="my-blog"
         enabled={this.opts.enabled}
     />
 
-    onChange(e) {
-        if (e.target.value) {
-            dis.dispatch({
-                type: 'alias_change',
-                payload: {
-                    value: '#' + e.target.value + ':' + this.opts.domain,
-                },
-            });
-        }
+    onChange(value) {
+        dis.dispatch({
+            type: 'alias_change',
+            payload: {
+                value: '#' + value + ':' + this.opts.domain,
+            },
+        });
     }
 </aliasInput>
 
@@ -88,19 +95,12 @@
     <editable
         initial-value={this.opts.initialValue}
         placeholder="The topic of your blog"
-        onChange={onChange}
+        on-change={onChange}
         enabled={this.opts.enabled}
     />
 
-    onChange(e) {
-        if (e.target.value) {
-            dis.dispatch({
-                type: 'topic_change',
-                payload: {
-                    value: e.target.value,
-                },
-            });
-        }
+    onChange(value) {
+        dis.dispatch({type: 'topic_change', payload: {value}});
     }
 </topicInput>
 
