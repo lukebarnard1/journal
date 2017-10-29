@@ -207,7 +207,7 @@
 </topBar>
 
 <roomAvatarPicker>
-    <div class="j_room_avatar_picker" onClick={doFilePicker}>
+    <div if={this.opts.enabled} class="j_room_avatar_picker" onClick={doFilePicker}>
         <img if={this.opts.roomAvatar} class="j_room_avatar" src={this.opts.roomAvatar}/>
         <div if={!this.opts.roomAvatar} class="j_room_avatar_placeholder">
             <span if={this.state === 'unset'}>
@@ -220,6 +220,7 @@
         </div>
         <input style="display:none" ref="file_input" type="file" accept="image/*" onChange={doFileSelected}/>
     </div>
+    <img if={!this.opts.enabled && this.opts.roomAvatar} class="j_room_avatar" src={this.opts.roomAvatar}/>
 
     this.state = this.opts.roomAvatar ? 'set' : 'unset';
     doFilePicker(e) {
@@ -260,7 +261,7 @@
             <div if={currentRoom} class="j_blog_header">
                 <div class="j_flex_row">
                     <div class="j_col">
-                        <roomAvatarPicker room-avatar={room_avatar_url}/>
+                        <roomAvatarPicker enabled={isOwnerOfCurrentBlog} room-avatar={room_avatar_url}/>
                     </div>
                     <div class="j_col_expand j_blog_details">
                         <span class="j_blog_name">{currentRoom.name}</span>
