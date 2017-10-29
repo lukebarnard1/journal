@@ -49,10 +49,7 @@ button {
 
 .j_text_input {
     min-width: 50px;
-}
-
-.j_text_input {
-	outline: 0px;
+   	outline: 0px;
 }
 
 .j_text_input:empty:before {

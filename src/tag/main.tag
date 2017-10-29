@@ -54,7 +54,7 @@
         {this.opts.prefix}<span
             ref="input" name="input"
             style={{minWidth: '100px'}}
-            contenteditable="true"
+            contenteditable={this.opts.enabled}
             class="j_text_input"
             onfocus={onFocus}
             onblur={onBlur}
