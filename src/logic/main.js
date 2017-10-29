@@ -27,8 +27,8 @@ module.exports = (self) => {
             doViewBlog();
         }
     );
-    route('/journal',   () => {route('/journal/!qJXdPYrthkbuFjdrxj:matrix.org');});
-    route('/',          () => {route('/journal/!qJXdPYrthkbuFjdrxj:matrix.org');});
+    route('/journal',   () => {route('/journal/journal:ldbco.de');});
+    route('/',          () => {route('/journal/journal:ldbco.de');});
 
     self.update({
         noBlogsMsg : "---------------------no-blog-posts-yet---------------------"
