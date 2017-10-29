@@ -163,22 +163,20 @@ module.exports = (self) => {
 
         let allEntries = getCurrentTimeline().getEvents().sort((a, b) => b.getTs() - a.getTs());
 
+
         let seenByAcc = 0;
         allEntries.forEach((e) => {
             seenByAcc += self.currentRoom.getReceiptsForEvent(e).length;
             e.seenByAcc = seenByAcc;
         });
 
-        entries = allEntries.filter((e) => {
-            return e.event.type === 'm.room.message'
-                && e.event.content.is_blog
-        });
+        entries = allEntries.filter((e) => e.event.type === 'j.blog.post');
 
         // Transform into view
         entries = entries.map((e) => {
             let comments = allEntries.filter(
-                (e2) => (e2.event.content.parent === e.getId() ||
-                        e2.event.content.in_response_to === e.getId())
+                (e2) => e2.event.type === 'j.blog.comment'
+                        && (e2.event.content.parent === e.getId() || e2.event.content.in_response_to === e.getId())
                         && e2.event.content.body.trim() !== ''
             ).sort(
                 (a, b) => a.getTs() - b.getTs()
@@ -204,8 +202,7 @@ module.exports = (self) => {
                 id : e.getId(),
                 isMine : e.event.sender === creds.user_id,
                 // TODO: sanitise self
-                html : e.event.content.formatted_body,
-                text : e.event.content.body,
+                html : e.event.content.body,
                 comments : comments,
                 deleteEntry : () => {
                     doDeleteEntry(e.getId());
@@ -257,21 +254,38 @@ module.exports = (self) => {
         }).then((resp) => {
             console.log("New room created: " + resp.room_id);
             route('/journal/' + resp.room_id);
+            cli.sendStateEvent(
+                resp.room_id, "m.room.power_levels", {
+                    "state_default": 50,
+                    "events_default": 0,
+                    "users_default": 0,
+                    "invite": 0,
+                    "redact": 50,
+                    "kick": 50,
+                    "ban": 50,
+                    "events": {
+                        "m.room.power_levels": 100,
+                        "m.room.history_visibility": 100,
+                        "m.room.avatar": 50,
+                        "m.room.name": 50,
+                        "m.room.topic": 50,
+                        "m.room.canonical_alias": 50,
+
+                        // journal-specific
+                        "j.blog.post": 50,
+                        "j.blog.comment": 0,
+                    },
+                    "users": {
+                        [cli.credentials.userId]: 100,
+                    }
+                  }
+                ,  ""
+            );
         }).catch(console.error);
     }
 
     doNewBlogPost = (body) => {
-        return cli.sendMessage(
-            currentRoomId,
-            {
-                msgtype: 'm.text',
-                is_blog: true,
-                body: 'no plaintext',
-                format: 'org.matrix.custom.html',
-                // TODO: sanitise self
-                formatted_body: body,
-            }
-        ).then(() => {
+        return cli.sendEvent(currentRoomId, "j.blog.post", {body}).then(() => {
             self.update({
                 showCreateBlogForm: false
             });
@@ -323,7 +337,8 @@ module.exports = (self) => {
                     },
                     "timeline": {
                         "types": [
-                            "m.room.message",
+                            "j.blog.post",
+                            "j.blog.comment",
                             "m.room.redaction",
                             "m.room.canonical_alias",
                         ],
@@ -388,14 +403,7 @@ module.exports = (self) => {
             return;
         }
         console.log('commenting...');
-        return cli.sendMessage(
-            currentRoomId,
-            {
-                msgtype: 'm.text',
-                body: text,
-                in_response_to: id
-            }
-        );
+        return cli.sendEvent(currentRoomId, "j.blog.comment", {body: text, in_response_to: id});
     }
 
     createClient = (opts) => {
