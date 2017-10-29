@@ -271,7 +271,9 @@
                         <span class="j_user_count" if={currentRoom.subscribers}>
                             <i class="fa fa-users" aria-hidden="true"></i> {currentRoom.subscribers}
                         </span>
-                        <aliasInput enabled={isOwnerOfCurrentBlog} domain={domain} initial-value={aliasInputValue}/>
+                        <div>
+                            <aliasInput enabled={isOwnerOfCurrentBlog} domain={domain} initial-value={aliasInputValue}/>
+                        </div>
                     </div>
                 </div>
             </div>
