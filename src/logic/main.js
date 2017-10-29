@@ -555,6 +555,12 @@ module.exports = (self) => {
             }, homeserverUrl);
         } else {
             console.info('Could not auto-login, user_id or access_token missing');
+            dis.dispatch({
+                type: 'login_guest',
+                payload: {
+                    homeserverUrl
+                }
+            });
         }
     }
 
