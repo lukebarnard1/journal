@@ -72,23 +72,26 @@
 </editable>
 
 <aliasInput>
-    <editable
-        prefix={window.location.origin + '/#/journal/'}
-        suffix={':' + this.opts.domain}
-        on-change={onChange}
-        initial-value={this.opts.initialValue}
-        placeholder="my-blog"
-        enabled={this.opts.enabled}
-    />
-
-    onChange(value) {
-        dis.dispatch({
-            type: 'alias_change',
-            payload: {
-                value: '#' + value + ':' + this.opts.domain,
-            },
-        });
-    }
+    <a href={'/#/journal/' + this.opts.initialValue}>
+        <editable
+            prefix={window.location.origin + '/#/journal/'}
+            suffix={':' + this.opts.domain}
+            on-change={onChange}
+            initial-value={this.opts.initialValue}
+            placeholder="my-blog"
+            enabled={this.opts.enabled}
+        />
+    </a>
+    <script>
+        onChange(value) {
+            dis.dispatch({
+                type: 'alias_change',
+                payload: {
+                    value: '#' + value + ':' + this.opts.domain,
+                },
+            });
+        }
+    </script>
 </aliasInput>
 
 <topicInput>
