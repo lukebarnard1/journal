@@ -72,7 +72,7 @@
 </editable>
 
 <aliasInput>
-    <a href={'/#/journal/' + this.opts.initialValue}>
+    <a href={this.opts.initialValue ? '/#/journal/' + this.opts.initialValue : ""}>
         <editable
             prefix={window.location.origin + '/#/journal/'}
             suffix={':' + (initialDomain || this.opts.domain)}
