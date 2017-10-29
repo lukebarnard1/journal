@@ -212,6 +212,7 @@
         <div if={!this.opts.roomAvatar} class="j_room_avatar_placeholder">
             <span if={this.state === 'unset'}>
                 <i class="fa fa-camera"></i>
+                <i class="fa fa-plus"></i>
             </span>
             <span if={this.state === 'file_upload'}>
                 <i class="fa fa-circle-o-notch fa-spin"></i>
