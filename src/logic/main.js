@@ -482,8 +482,8 @@ module.exports = (self) => {
         }
 
         cli.on("event", (e) => {
-            if (e.getType() === 'm.room.avatar') {
-                if (e.getRoomId() === self.currentRoom.roomId) {
+            if (e.getRoomId() === currentRoomId) {
+                if (e.getType() === 'm.room.avatar') {
                     // Force the state to be added
                     self.currentRoom.currentState.setStateEvents([e]);
                     // Update the room URL
@@ -492,10 +492,10 @@ module.exports = (self) => {
                             homeserverUrl, 250, 250, "crop", false
                         )
                     });
+                } else if (e.getType() === 'm.room.topic') {
+                    updateCurrentRoom(room);
                 }
-            }
 
-            if (e.getRoomId() === currentRoomId) {
                 updateEntriesDebounce(1000);
             }
         });
