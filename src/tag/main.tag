@@ -251,18 +251,16 @@
                     <div class="j_col">
                         <roomAvatarPicker room-avatar={room_avatar_url}/>
                     </div>
-                    <div class="j_col_expand j_room_name_container">
-                        <span class="j_room_name">{currentRoom.name}</span>
+                    <div class="j_col_expand j_blog_details">
+                        <span class="j_blog_name">{currentRoom.name}</span>
                         <span class="j_blog_topic">
                             <topicInput enabled={isOwnerOfCurrentBlog} initial-value={currentRoom.topic}/>
                         </span>
                         <span class="j_user_count" if={currentRoom.subscribers}>
                             <i class="fa fa-users" aria-hidden="true"></i> {currentRoom.subscribers}
                         </span>
+                        <aliasInput enabled={isOwnerOfCurrentBlog} domain={domain} initial-value={aliasInputValue}/>
                     </div>
-                </div>
-                <div>
-                    <aliasInput enabled={isOwnerOfCurrentBlog} domain={domain} initial-value={aliasInputValue}/>
                 </div>
             </div>
             <div if={isOwnerOfCurrentBlog && showCreateBlogForm}>
