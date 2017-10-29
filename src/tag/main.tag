@@ -75,14 +75,21 @@
     <a href={'/#/journal/' + this.opts.initialValue}>
         <editable
             prefix={window.location.origin + '/#/journal/'}
-            suffix={':' + this.opts.domain}
+            suffix={':' + (initialDomain || this.opts.domain)}
             on-change={onChange}
-            initial-value={this.opts.initialValue}
+            initial-value={initialValue}
             placeholder="my-blog"
             enabled={this.opts.enabled}
         />
     </a>
     <script>
+        this.on('update', function() {
+            this.initialDomain = this.opts.initialValue ?
+                this.opts.initialValue.slice(this.opts.initialValue.indexOf(':') + 1) : undefined;
+            this.initialValue = this.opts.initialValue ?
+                this.opts.initialValue.slice(0, this.opts.initialValue.indexOf(':')) : undefined;
+        });
+
         onChange(value) {
             dis.dispatch({
                 type: 'alias_change',

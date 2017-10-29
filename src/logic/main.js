@@ -232,7 +232,7 @@ module.exports = (self) => {
         const alias = self.currentRoom.getCanonicalAlias();
         self.update({
             entries: entries,
-            aliasInputValue: alias ? alias.slice(1).slice(0, alias.indexOf(':') - 1) : null,
+            aliasInputValue: alias ? alias.slice(1) : null,
         });
     }
 
