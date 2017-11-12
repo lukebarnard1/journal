@@ -75,4 +75,4 @@ Please feel free to submit patches for any of the issues with journal. Follow th
 
 ## Screenshot
 
-![alt-text](https://matrix.org/_matrix/media/v1/download/ldbco.de/wTcxfofwvDkOqcmjFMxQDxrA "Screenshot of journal")
+![alt-text](https://matrix.org/_matrix/media/v1/download/ldbco.de/ORIIKvQNqCfjebmDIgUhvUIa "Screenshot of journal")
