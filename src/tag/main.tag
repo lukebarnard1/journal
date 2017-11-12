@@ -181,11 +181,33 @@
     </script>
 </loginPanel>
 
+<connectionStatus>
+    <span class={className}>{text}</span>
+    <script>
+        this.on('update', () => {
+            this.text = {
+                "CONNECTION_STATUS_UNKNOWN": "unknown",
+                "CONNECTION_STATUS_CONNECTED": "connected",
+                "CONNECTION_STATUS_RECONNECTING": "reconnecting",
+                "CONNECTION_STATUS_DISCONNECTED": "disconnected"
+            }[this.opts.status];
+
+            this.className = "j_connection_status " + {
+                "CONNECTION_STATUS_UNKNOWN": "j_connection_status_unknown",
+                "CONNECTION_STATUS_CONNECTED": "j_connection_status_connected",
+                "CONNECTION_STATUS_RECONNECTING": "j_connection_status_reconnecting",
+                "CONNECTION_STATUS_DISCONNECTED": "j_connection_status_disconnected"
+            }[this.opts.status];
+        });
+    </script>
+</connectionStatus>
+
 <topBar>
     <i class="fa fa-newspaper-o" aria-hidden="true"></i>
     <strong>
         journal
     </strong>
+    <connectionStatus status={this.opts.connectionStatus}/>
     <span style="float:right">
         logged in as {loggedInAs}
         <button onClick={doLogout}><i class="fa fa-sign-out" aria-hidden="true"></i></button>
@@ -241,7 +263,7 @@
 
 <main name="content">
     <div class="j_container">
-        <topBar if={isLoggedIn} room-list={roomList} logged-in-as={userId}/>
+        <topBar if={isLoggedIn} room-list={roomList} logged-in-as={userId} connection-status={connectionStatus}/>
         <div class="j_toolbar">
             <button title="Create a new blog" onClick={()=>{this.showCreateRoomForm = !this.showCreateRoomForm}}><i class="fa fa-file-text-o" aria-hidden="true"></i></button>
             <button title="Write a post" if={isOwnerOfCurrentBlog} onClick={()=>{this.showCreateBlogForm = !this.showCreateBlogForm}}><i class="fa fa-pencil-square-o"></i></button>

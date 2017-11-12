@@ -226,6 +226,18 @@ button {
     min-width: 28px;
 }
 
+.j_connection_status {
+	opacity: 0.5;
+}
+.j_connection_status_reconnecting {
+	opacity: 0.9;
+	color: #f80;
+}
+.j_connection_status_disconnected {
+	opacity: 0.9;
+	color: #f30;
+}
+
 .j_room_avatar_placeholder i {
     margin-top: 44px;
 }

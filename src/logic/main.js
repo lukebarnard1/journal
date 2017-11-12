@@ -499,6 +499,23 @@ module.exports = (self) => {
                 updateEntriesDebounce(1000);
             }
         });
+        cli.on("sync", function(state) {
+            let connectionStatus = "CONNECTION_STATUS_UNKNOWN";
+            switch (state) {
+                case "SYNCING":
+                case "PREPARED":
+                    connectionStatus = "CONNECTION_STATUS_CONNECTED";
+                    break;
+                case "RECONNECTING":
+                    connectionStatus = "CONNECTION_STATUS_RECONNECTING";
+                    break;
+                case "ERROR":
+                    connectionStatus = "CONNECTION_STATUS_DISCONNECTED";
+                    break;
+            }
+
+            self.update({connectionStatus});
+        });
         cli.on("Room", function(room) {
             self.roomList = cli.getRooms().filter(
                 (r) => trackedRooms.indexOf(r.roomId) !== -1
@@ -519,6 +536,7 @@ module.exports = (self) => {
             isGuest: Boolean(isGuest),
             userId: creds.user_id,
             domain: cli.getDomain(),
+            connectionStatus: "CONNECTION_STATUS_CONNECTED",
         });
         console.log('Logged in as ' + creds.user_id);
 
