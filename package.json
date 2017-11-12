@@ -18,6 +18,7 @@
     "watchify": "v3.6.1"
   },
   "dependencies": {
+    "babel-runtime": "^6.26.0",
     "bluebird": "^3.4.6",
     "express": "^4.14.0",
     "marked": "^0.3.6",
@@ -26,6 +27,7 @@
     "riot-compiler": "^3.2.1",
     "riot-route": "^3.1.1",
     "sanitize-html": "^1.14.1",
-    "simplemde": "^1.11.2"
+    "simplemde": "^1.11.2",
+    "sourceify": "^0.1.0"
   }
 }
