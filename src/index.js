@@ -1,6 +1,10 @@
 const riot = require('riot');
 const route = require('riot-route');
 
+// Disable annoying bluebird warnings
+const Promise = require('bluebird');
+Promise.config({warnings: false});
+
 require('./tag/test.tag');
 require('./tag/raw.tag');
 require('./tag/comment.tag');
