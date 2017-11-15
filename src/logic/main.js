@@ -129,6 +129,9 @@ module.exports = (self) => {
                 return;
             }
             const l = room.timeline.length;
+            self.update({
+                loadingStatus: "LOADING_STATUS_LOADING",
+            });
             cli.scrollback(room).done(() => {
                 if (room.timeline.length !== l) {
                     updateEntriesDebounce(200);
@@ -230,20 +233,17 @@ module.exports = (self) => {
         self.update({
             entries: entries,
             aliasInputValue: alias ? alias.slice(1) : null,
+            loadingStatus: "LOADING_STATUS_DONE",
         });
     }
 
     let updateCurrentRoom = (room) => {
-        // Assumes that things are loading when the room name is a room ID
-        // When the m.room.name is received, it is assumed things are done loading
         self.currentRoom = room;
-        self.currentRoom.name = room.name[0] === '!'?"loading...":room.name;
+        self.currentRoom.name = room.name;
         self.currentRoom.subscribers = room.getJoinedMembers().length;
 
         const topicEvent = room.currentState.getStateEvents('m.room.topic', '');
         self.currentRoom.topic = topicEvent ? topicEvent.getContent().topic : null;
-
-        self.update();
     }
 
     doCreateBlog = () => {
@@ -537,6 +537,7 @@ module.exports = (self) => {
             userId: creds.user_id,
             domain: cli.getDomain(),
             connectionStatus: "CONNECTION_STATUS_CONNECTED",
+            loadingStatus: "LOADING_STATUS_LOADING",
         });
         console.log('Logged in as ' + creds.user_id);
 

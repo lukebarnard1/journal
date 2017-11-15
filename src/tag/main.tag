@@ -202,6 +202,17 @@
     </script>
 </connectionStatus>
 
+<loadingBar>
+    <div class={className}>&nbsp;</div>
+    <script>
+        this.on('update', () => {
+            className = "j_loading_bar " + {
+                "LOADING_STATUS_LOADING": "j_loading_bar_loading",
+            }[this.opts.status];
+        });
+    </script>
+</loadingBar>
+
 <topBar>
     <i class="fa fa-newspaper-o" aria-hidden="true"></i>
     <strong>
@@ -212,6 +223,7 @@
         logged in as {loggedInAs}
         <button onClick={doLogout}><i class="fa fa-sign-out" aria-hidden="true"></i></button>
     </span>
+    <loadingBar status={this.opts.loadingStatus}/>
     <div style="clear:both">
         <span if={this.opts.roomList.length !== 0}>
         history:</span>
@@ -219,13 +231,17 @@
             <a href="/#/journal/{roomId}">{name}</a>
         </span>
     </div>
-    loggedInAs = this.opts.loggedInAs;
-
-    doLogout(e) {
-        dis.dispatch({
-            type: 'logout',
+    <script>
+        this.on('update', () => {
+            loggedInAs = this.opts.loggedInAs;
         });
-    }
+
+        doLogout(e) {
+            dis.dispatch({
+                type: 'logout',
+            });
+        }
+    </script>
 </topBar>
 
 <roomAvatarPicker>
@@ -263,7 +279,7 @@
 
 <main name="content">
     <div class="j_container">
-        <topBar if={isLoggedIn} room-list={roomList} logged-in-as={userId} connection-status={connectionStatus}/>
+        <topBar if={isLoggedIn} room-list={roomList} logged-in-as={userId} connection-status={connectionStatus} loading-status={loadingStatus}/>
         <div class="j_toolbar">
             <button title="Create a new blog" onClick={()=>{this.showCreateRoomForm = !this.showCreateRoomForm}}><i class="fa fa-file-text-o" aria-hidden="true"></i></button>
             <button title="Write a post" if={isOwnerOfCurrentBlog} onClick={()=>{this.showCreateBlogForm = !this.showCreateBlogForm}}><i class="fa fa-pencil-square-o"></i></button>

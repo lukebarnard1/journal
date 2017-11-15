@@ -226,6 +226,37 @@ button {
     min-width: 28px;
 }
 
+.j_loading_bar {
+	height: 2px;
+	transition: border-bottom 0.2s ease-in-out, height 0.2s ease-in-out;
+	border-bottom: 0px solid #00f5bc;
+
+	animation-duration: 1s;
+	animation-name: animation_loading_bar;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+	animation-timing-function: ease-in-out;
+	animation-play-state: paused;
+}
+
+.j_loading_bar_loading {
+	height: 0px;
+	border-bottom: 2px solid #00f5bc;
+	animation-play-state: running;
+}
+
+@keyframes animation_loading_bar {
+	from {
+		margin-left: 0%;
+		width: 20%;
+	}
+
+	to {
+		margin-left: 80%;
+		width: 20%;
+	}
+}
+
 .j_connection_status {
 	opacity: 0.5;
 }
