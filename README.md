@@ -56,7 +56,8 @@ This will build journal using [browserify](http://browserify.org/) and will watc
 The `dev` script is enough to deploy, and requires node with Express installed. Otherwise, any other web server is perfectly fine -- when built, journal is simply a collection of files to be served over HTTP.
 
 #### Style Modifications
-Overriding CSS can be placed in the CSS style sheet located in [custom.css](./web/custom.css). To include it in the running version of journal, uncomment the relevant line in the `<head>` tag of [index.html](./web/index.html). Alternatively, the main style sheet [style.css](./web/style.css) can be edited.
+
+To modify the style of the app, the CSS in [style.css](./web/style.css) can be changed.
 
 ### Contributing
 journal needs some love!
