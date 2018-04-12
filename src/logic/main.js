@@ -10,10 +10,32 @@ module.exports = (self) => {
 
     let reduxState = {};
 
+    // The redux store has been updated, map state to view state
+    // XXX: When React is introduced, .update will be replaced
+    // with .setState
+    function updateView() {
+        const STATUS_UNKNOWN = 'CONNECTION_STATUS_UNKNOWN';
+        const STATUS_CONNECTED = 'CONNECTION_STATUS_CONNECTED';
+        const STATUS_RECONNECTING = 'CONNECTION_STATUS_RECONNECTING';
+        const STATUS_DISCONNECTED = 'CONNECTION_STATUS_DISCONNECTED';
+        self.update({
+            connectionStatus: {
+                SYNCING: STATUS_CONNECTED,
+                PREPARED: STATUS_CONNECTED,
+                RECONNECTING: STATUS_RECONNECTING,
+                ERROR: STATUS_DISCONNECTED,
+            }[reduxState.mrw.wrapped_state.sync.state] || STATUS_UNKNOWN
+        });
+    }
+
+    // XXX: For now, register a listener to keep redux store state and call
+    // `update` on the view.
     dis.registerStore({
         onAction: (action) => {
             reduxState = matrixReduce(action, reduxState);
-        }
+
+            updateView();
+        },
     });
 
     dis.registerStore(self);
@@ -514,23 +536,6 @@ module.exports = (self) => {
 
                 updateEntriesDebounce(1000);
             }
-        });
-        cli.on("sync", function(state) {
-            let connectionStatus = "CONNECTION_STATUS_UNKNOWN";
-            switch (state) {
-                case "SYNCING":
-                case "PREPARED":
-                    connectionStatus = "CONNECTION_STATUS_CONNECTED";
-                    break;
-                case "RECONNECTING":
-                    connectionStatus = "CONNECTION_STATUS_RECONNECTING";
-                    break;
-                case "ERROR":
-                    connectionStatus = "CONNECTION_STATUS_DISCONNECTED";
-                    break;
-            }
-
-            self.update({connectionStatus});
         });
         cli.on("Room", function(room) {
             self.roomList = cli.getRooms().filter(
