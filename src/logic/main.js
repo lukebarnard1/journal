@@ -6,6 +6,16 @@ module.exports = (self) => {
     // Global access for the singleton dispatcher
     window.dis = require('./dispatcher.js');
 
+    const { matrixReduce, wrapSyncingClient } = require('matrix-redux-wrap');
+
+    let reduxState = {};
+
+    dis.registerStore({
+        onAction: (action) => {
+            reduxState = matrixReduce(action, reduxState);
+        }
+    });
+
     dis.registerStore(self);
 
     route.base('#/');
@@ -49,6 +59,7 @@ module.exports = (self) => {
     let trackedRooms = JSON.parse(localStorage.getItem('mx_tracked_rooms')) || [];
 
     self.onAction = (action) => {
+        if (!action) return;
         switch(action.type) {
             case 'login_password':
                 doLoginWithPassword(
@@ -96,6 +107,9 @@ module.exports = (self) => {
             break;
         }
     }
+
+    // Init redux store
+    dis.dispatch(undefined);
 
     // Initial loaded state
     self.update({
@@ -480,6 +494,8 @@ module.exports = (self) => {
             self.refs.user_id.value = "";
             self.refs.password.value = "";
         }
+
+        wrapSyncingClient(cli, dis.dispatch);
 
         cli.on("event", (e) => {
             if (e.getRoomId() === currentRoomId) {
