@@ -23,6 +23,7 @@
     "express": "^4.14.0",
     "marked": "^0.3.6",
     "matrix-js-sdk": "^0.8.5",
+    "matrix-redux-wrap": "^1.0.1",
     "riot": "^3.3.2",
     "riot-compiler": "^3.2.1",
     "riot-route": "^3.1.1",
