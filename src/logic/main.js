@@ -530,8 +530,6 @@ module.exports = (self) => {
                             homeserverUrl, 250, 250, "crop", false
                         )
                     });
-                } else if (e.getType() === 'm.room.topic') {
-                    updateCurrentRoom(room);
                 }
 
                 updateEntriesDebounce(1000);
