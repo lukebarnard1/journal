@@ -543,9 +543,6 @@ module.exports = (self) => {
                 updateCurrentRoom(room);
             }
         });
-        cli.on("Room.redaction", function(e) {
-            console.log('ignoring redaction');
-        });
 
         self.update({
             isLoggedIn: true,
