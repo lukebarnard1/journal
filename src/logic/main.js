@@ -26,6 +26,10 @@ module.exports = (self) => {
                 ERROR: STATUS_DISCONNECTED,
             }[reduxState.mrw.wrapped_state.sync.state] || STATUS_UNKNOWN
         });
+
+        self.update({
+            roomList: trackedRooms.map(roomId => reduxState.mrw.wrapped_state.rooms[roomId]);
+        });
     }
 
     // XXX: For now, register a listener to keep redux store state and call
@@ -531,15 +535,8 @@ module.exports = (self) => {
                         )
                     });
                 }
-
                 updateEntriesDebounce(1000);
             }
-        });
-        cli.on("Room", function(room) {
-            self.roomList = cli.getRooms().filter(
-                (r) => trackedRooms.indexOf(r.roomId) !== -1
-            );
-            self.update();
         });
         cli.on("Room.name", function(room) {
             if (room.roomId === currentRoomId) {
