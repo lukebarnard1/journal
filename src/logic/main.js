@@ -357,7 +357,7 @@ module.exports = (self) => {
                     ],
                 },
                 "room": {
-                    "rooms": [currentRoomId],
+                    "rooms": trackedRooms,
                     "account_data": {
                         "limit": 0,
                     },
