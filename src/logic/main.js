@@ -28,7 +28,7 @@ module.exports = (self) => {
         });
 
         self.update({
-            roomList: trackedRooms.map(roomId => reduxState.mrw.wrapped_state.rooms[roomId]);
+            roomList: trackedRooms.map(roomId => reduxState.mrw.wrapped_state.rooms[roomId]),
         });
     }
 
