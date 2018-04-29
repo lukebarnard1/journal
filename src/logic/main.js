@@ -34,27 +34,129 @@ module.exports = (self) => {
         const STATUS_CONNECTED = 'CONNECTION_STATUS_CONNECTED';
         const STATUS_RECONNECTING = 'CONNECTION_STATUS_RECONNECTING';
         const STATUS_DISCONNECTED = 'CONNECTION_STATUS_DISCONNECTED';
+
+        const currentRoom = reduxState.mrw.wrapped_state.rooms[currentRoomId];
+
+        let allEntries = currentRoom ?
+            currentRoom.timeline.sort((a, b) => b.ts - a.ts) : [];
+
+        let seenByAcc = 0;
+        allEntries.forEach((e) => {
+            const eventReceipts = currentRoom.receipts[e.id]
+            if (!eventReceipts) return;
+            const readReceipts = eventReceipts['m.read'];
+            if (!readReceipts) return;
+
+            seenByAcc += Object.keys(eventReceipts).length;
+            e.seenByAcc = seenByAcc;
+        });
+
+        const entries = allEntries
+            .filter((e) => e.type === 'j.blog.post')
+            .map(
+        (e) => {
+            let comments = allEntries.filter(
+                (e2) => {
+                    return e2.type === 'j.blog.comment'
+                        && (e2.content.parent === e.id || e2.content.in_response_to === e.id)
+                        && e2.content.body.trim() !== ''
+                }
+            ).sort(
+                (a, b) => a.ts - b.ts
+            ).map(
+                (e2) => {
+                    const commenter = getAuthor(currentRoom.members[e2.sender]);
+                    return {
+                        content : e2.content.body,
+                        id : e2.id,
+                        isMine : e2.sender === creds.user_id,
+                        deleteEntry : () => {
+                            doDeleteEntry(e2.id);
+                        },
+                        sender : e2.sender,
+                        author : commenter,
+                        datetime : new Date(e2.ts).toLocaleString(),
+                    };
+                }
+            );
+            let author = getAuthor(currentRoom.members[e.sender]);
+
+            return {
+                id : e.id,
+                isMine : e.sender === creds.user_id,
+                // TODO: sanitise self
+                html : e.content.body,
+                comments : comments,
+                deleteEntry : () => {
+                    doDeleteEntry(e.id);
+                },
+                comment : function (ev) {
+                    doNewComment(
+                        e.id,
+                        // TODO: fix fun hack to get the input box
+                        Array.from(ev.currentTarget.parentElement.children).find(
+                            (e) => e.name==='comment_text'
+                        ).value
+                    );
+                },
+                author : author,
+                datetime : new Date(e.ts).toLocaleString(),
+                seenBy : e.seenByAcc,
+            }
+        });
+
+        const aliasContent = currentRoom ?
+            getStateEventContent(currentRoom, 'm.room.canonical_alias') || {} : {};
+        const topicContent = currentRoom ?
+            getStateEventContent(currentRoom, 'm.room.topic') || {} : {};
+        const nameContent = currentRoom ?
+            getStateEventContent(currentRoom, 'm.room.name') || {} : {};
+        const avatarContent = currentRoom ?
+            getStateEventContent(currentRoom, 'm.room.avatar') || {} : {};
+
         self.update({
+            noBlogsMsg : "---------------------no-blog-posts-yet---------------------",
+
             connectionStatus: {
                 SYNCING: STATUS_CONNECTED,
                 PREPARED: STATUS_CONNECTED,
                 RECONNECTING: STATUS_RECONNECTING,
                 ERROR: STATUS_DISCONNECTED,
-            }[reduxState.mrw.wrapped_state.sync.state] || STATUS_UNKNOWN
-        });
+            }[reduxState.mrw.wrapped_state.sync.state] || STATUS_UNKNOWN,
 
-        self.update({
-            roomList: trackedRooms.map(roomId => reduxState.mrw.wrapped_state.rooms[roomId]),
+            isLoggedIn: Boolean(cli.credentials),
+
+            roomList: trackedRooms
+                .map(roomId => ({
+                    roomId,
+                    name: reduxState.mrw.wrapped_state.rooms[roomId] ?
+                        reduxState.mrw.wrapped_state.rooms[roomId].name : null,
+                })),
+
+            aliasInputValue: aliasContent.alias ? aliasContent.alias.slice(1) : null,
+            topicInputValue: topicContent.topic || null,
+
+            roomHttpAvatar: avatarContent.url ? cli.mxcUrlToHttp(avatarContent.url) : null,
+            roomName: nameContent.name || null,
+            roomMemberCount: currentRoom ? currentRoom.members.length : null,
+            entries,
+
+            loadingStatus: "LOADING_STATUS_DONE",
         });
     }
 
+    let updateDebounce;
     // XXX: For now, register a listener to keep redux store state and call
     // `update` on the view.
     dis.registerStore({
         onAction: (action) => {
             reduxState = matrixReduce(action, reduxState);
 
-            updateView();
+            if (updateDebounce) clearTimeout(updateDebounce);
+            updateDebounce = setTimeout(
+                () => updateView(),
+                200
+            );
         },
     });
 
@@ -64,7 +166,7 @@ module.exports = (self) => {
     route(
         '/journal/*',
         (path) => {
-            if (!self.isLoggedIn) {
+            if (!cli || !cli.credentials) {
                 return;
             }
             console.log('Now viewing', path);
@@ -82,18 +184,11 @@ module.exports = (self) => {
     route('/journal',   () => {route('/journal/journal:ldbco.de');});
     route('/',          () => {route('/journal/journal:ldbco.de');});
 
-    self.update({
-        noBlogsMsg : "---------------------no-blog-posts-yet---------------------"
-    });
-
     let cli = null;
 
     let admins = []; // Authors of the current blog
 
     let currentRoomId = "";
-    self.currentRoom = null;
-    self.roomList = [];
-    self.homeserverUrl = null;
 
     let creds = null;
 
@@ -137,7 +232,6 @@ module.exports = (self) => {
                 });
             case 'room_avatar_change':
                 cli.uploadContent(action.payload.file).then(function(url) {
-                    self.update({room_avatar_url: cli.mxcUrlToHttp(url)});
                     return cli.sendStateEvent(currentRoomId, 'm.room.avatar', {url: url}, '');
                 });
             break;
@@ -156,19 +250,11 @@ module.exports = (self) => {
     // Initial loaded state
     self.update({
         entries: [],
-        canCreateNewPost: false,
-        isLoggedIn: false,
         showCreateRoomForm: false,
         showCreateBlogForm: false,
+        loadingStatus: "LOADING_STATUS_LOADING",
+        connectionStatus: "CONNECTION_STATUS_UNKNOWN",
     });
-
-    let ueDebounce = null;
-    let updateEntriesDebounce = (delay) => {
-        clearTimeout(ueDebounce);
-        ueDebounce = setTimeout(
-            updateEntries, delay
-        );
-    };
 
     let getCurrentTimeline = () => {
         const room = cli.getRoom(currentRoomId);
@@ -190,7 +276,9 @@ module.exports = (self) => {
             });
             cli.scrollback(room).done(() => {
                 if (room.timeline.length !== l) {
-                    updateEntriesDebounce(200);
+                    self.update({
+                        loadingStatus: "LOADING_STATUS_DONE",
+                    });
                 }
             });
         }
@@ -199,108 +287,6 @@ module.exports = (self) => {
     window.addEventListener('scroll', () => {
         scrollback();
     });
-
-    const getAuthor = (userId) => {
-        const member = self.currentRoom.getMember(userId);
-        if (!member) {
-            return {};
-        }
-        const au = member.getAvatarUrl(self.homeserverUrl,
-            250, 250, 'crop', false
-        );
-        return {
-            display_name: member.name,
-            avatar_url: au,
-            is_guest: !member.name
-        }
-    };
-
-    let updateEntries = () => {
-        if (!getCurrentTimeline() || !getCurrentTimeline().getEvents()) {
-            return; // No events yet
-        }
-
-        let allEntries = getCurrentTimeline().getEvents().sort((a, b) => b.getTs() - a.getTs());
-
-
-        let seenByAcc = 0;
-        allEntries.forEach((e) => {
-            seenByAcc += self.currentRoom.getReceiptsForEvent(e).length;
-            e.seenByAcc = seenByAcc;
-        });
-
-        entries = allEntries.filter((e) => e.event.type === 'j.blog.post');
-
-        // Transform into view
-        entries = entries.map((e) => {
-            let comments = allEntries.filter(
-                (e2) => e2.event.type === 'j.blog.comment'
-                        && (e2.event.content.parent === e.getId() || e2.event.content.in_response_to === e.getId())
-                        && e2.event.content.body.trim() !== ''
-            ).sort(
-                (a, b) => a.getTs() - b.getTs()
-            ).map(
-                (e2) => {
-                    const commenter = getAuthor(e2.getSender());
-                    return {
-                        content : e2.event.content.body,
-                        id : e2.getId(),
-                        isMine : e2.getSender() === creds.user_id,
-                        deleteEntry : () => {
-                            doDeleteEntry(e2.getId());
-                        },
-                        sender : e2.getSender(),
-                        author : commenter,
-                        datetime : new Date(e2.getTs()).toLocaleString(),
-                    };
-                }
-            );
-            let author = getAuthor(e.getSender());
-
-            return {
-                id : e.getId(),
-                isMine : e.event.sender === creds.user_id,
-                // TODO: sanitise self
-                html : e.event.content.body,
-                comments : comments,
-                deleteEntry : () => {
-                    doDeleteEntry(e.getId());
-                },
-                comment : function (ev) {
-                    doNewComment(
-                        e.getId(),
-                        // TODO: fix fun hack to get the input box
-                        Array.from(ev.currentTarget.parentElement.children).find(
-                            (e) => e.name==='comment_text'
-                        ).value
-                    );
-                },
-                author : author,
-                datetime : new Date(e.getTs()).toLocaleString(),
-                seenBy : e.seenByAcc,
-            }
-        });
-
-        if (entries.length < 10) {
-            scrollback();
-        }
-
-        const alias = self.currentRoom.getCanonicalAlias();
-        self.update({
-            entries: entries,
-            aliasInputValue: alias ? alias.slice(1) : null,
-            loadingStatus: "LOADING_STATUS_DONE",
-        });
-    }
-
-    let updateCurrentRoom = (room) => {
-        self.currentRoom = room;
-        self.currentRoom.name = room.name;
-        self.currentRoom.subscribers = room.getJoinedMembers().length;
-
-        const topicEvent = room.currentState.getStateEvents('m.room.topic', '');
-        self.currentRoom.topic = topicEvent ? topicEvent.getContent().topic : null;
-    }
 
     doCreateBlog = () => {
         cli.createRoom({
@@ -349,13 +335,12 @@ module.exports = (self) => {
     }
 
     doViewBlog = () => {
-        if (!self.isLoggedIn) {
+        if (!cli.credentials) {
             throw new Error('Cannot view blog, not logged in');
         }
-        console.log('Viewing ',currentRoomId);
+        console.log('Viewing ', currentRoomId);
 
         cli.joinRoom(currentRoomId).done((room) => {
-            self.currentRoom = room;
             let trackedRoomsJSON = localStorage.getItem('mx_tracked_rooms');
             if (!trackedRoomsJSON) {
                 trackedRooms = [room.roomId];
@@ -423,10 +408,6 @@ module.exports = (self) => {
                     filter : f,
                     pollTimeout : 10000
                 });
-                updateCurrentRoom(room);
-
-                // Update the view - we might not receive any events to trigger an update
-                updateEntries();
             });
         });
 
@@ -435,20 +416,16 @@ module.exports = (self) => {
                 admins = Object.keys(powerLevels.users).filter((uid) => powerLevels.users[uid] >= 100
                 );
                 self.update({
-                    isOwnerOfCurrentBlog: admins.indexOf(creds.user_id) !== -1
+                    isOwnerOfCurrentBlog: admins.indexOf(creds.user_id) !== -1,
                 });
-                updateEntriesDebounce(1000);
             }
         ).catch(console.error);
     }
 
     doDeleteEntry = (id) => {
-        console.log('Redacting...');
         return cli.redactEvent(currentRoomId, id).done(
             () => {
                 getCurrentTimeline().removeEvent(id);
-                console.log('Redacted');
-                updateEntries();
             }
         );
     }
@@ -458,7 +435,6 @@ module.exports = (self) => {
         if (!text) {
             return;
         }
-        console.log('commenting...');
         return cli.sendEvent(currentRoomId, "j.blog.comment", {body: text, in_response_to: id});
     }
 
@@ -525,9 +501,7 @@ module.exports = (self) => {
 
     let loggedIn = (loggedInCreds, homeserverUrl, isGuest) => {
         creds = loggedInCreds;
-        self.homeserverUrl = homeserverUrl;
         if (localStorage.getItem("auto_login") || isGuest) {
-            console.log('Storing access token and user id');
             localStorage.setItem("mx_access_token", creds.access_token);
             localStorage.setItem("mx_user_id", creds.user_id);
             localStorage.setItem("mx_is_guest", Boolean(isGuest));
@@ -539,42 +513,19 @@ module.exports = (self) => {
 
         wrapSyncingClient(cli, dis.dispatch);
 
-        cli.on("event", (e) => {
-            if (e.getRoomId() === currentRoomId) {
-                if (e.getType() === 'm.room.avatar') {
-                    // Force the state to be added
-                    self.currentRoom.currentState.setStateEvents([e]);
-                    // Update the room URL
-                    self.update({
-                        room_avatar_url : self.currentRoom.getAvatarUrl(
-                            homeserverUrl, 250, 250, "crop", false
-                        )
-                    });
-                }
-                updateEntriesDebounce(1000);
-            }
-        });
-        cli.on("Room.name", function(room) {
-            if (room.roomId === currentRoomId) {
-                updateCurrentRoom(room);
-            }
-        });
-
         self.update({
-            isLoggedIn: true,
-            isGuest: Boolean(isGuest),
+            loggedIn: true,
             userId: creds.user_id,
+            // Used by <aliasInput>
             domain: cli.getDomain(),
             connectionStatus: "CONNECTION_STATUS_CONNECTED",
             loadingStatus: "LOADING_STATUS_LOADING",
         });
-        console.log('Logged in as ' + creds.user_id);
 
         route.exec();
     }
 
     doLogout = () => {
-        self.update({isLoggedIn: false});
         // Guests cannot logout and we need to keep guest creds
         // so that the guests don't pile up for a single user.
         if (localStorage.getItem("mx_is_guest")) {
@@ -595,7 +546,6 @@ module.exports = (self) => {
 
     showTodo = false;
 
-    console.log('Routing starting...');
     route.start();
     route.exec(true);
 

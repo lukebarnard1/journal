@@ -1,8 +1,8 @@
 <blog>
     <div>
         <div class="j_blog_post_content">
-            <div if={author.avatar_url} class="j_user_avatar_container">
-                <img class="j_user_avatar" src={author.avatar_url}/>
+            <div if={author.httpAvatarUrl} class="j_user_avatar_container">
+                <img class="j_user_avatar" src={author.httpAvatarUrl}/>
             </div>
             <raw content={html}/>
             <div class="j_blog_footer">
@@ -15,7 +15,7 @@
 		        <button if={isMine} onClick={deleteEntry} title="Delete post">
 		            <i class="fa fa-trash" aria-hidden="true"></i>
 		        </button>
-                <span class="j_blog_post_written_by">written by <strong>{author.display_name}</strong> on {datetime}</span>
+                <span class="j_blog_post_written_by">written by <strong>{author.name}</strong> on {datetime}</span>
             </div>
         </div>
         <div each={comments} if={showComments} style="padding-left: 50px">

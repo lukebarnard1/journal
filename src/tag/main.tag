@@ -285,7 +285,7 @@
             <button title="Write a post" if={isOwnerOfCurrentBlog} onClick={()=>{this.showCreateBlogForm = !this.showCreateBlogForm}}><i class="fa fa-pencil-square-o"></i></button>
         </div>
 
-        <loginPanel if={!isLoggedIn}/>
+        <loginPanel if={!isLoggedIn && loadingStatus === "LOADING_STATUS_DONE"}/>
 
         <div if={isLoggedIn}>
             <div if={showCreateRoomForm}>
@@ -296,18 +296,18 @@
                 </select>
                 <button onClick={doCreateBlog}><i class="fa fa-plus" aria-hidden="true"></i></button>
             </div>
-            <div if={currentRoom} class="j_blog_header">
+            <div class="j_blog_header">
                 <div class="j_flex_row">
                     <div class="j_col">
-                        <roomAvatarPicker enabled={isOwnerOfCurrentBlog} room-avatar={room_avatar_url}/>
+                        <roomAvatarPicker enabled={isOwnerOfCurrentBlog} room-avatar={roomHttpAvatar}/>
                     </div>
                     <div class="j_col_expand j_blog_details">
-                        <span class="j_blog_name">{currentRoom.name}</span>
+                        <span class="j_blog_name">{roomName}</span>
                         <span class="j_blog_topic">
-                            <topicInput enabled={isOwnerOfCurrentBlog} initial-value={currentRoom.topic}/>
+                            <topicInput enabled={isOwnerOfCurrentBlog} initial-value={topicInputValue}/>
                         </span>
-                        <span class="j_user_count" if={currentRoom.subscribers}>
-                            <i class="fa fa-users" aria-hidden="true"></i> {currentRoom.subscribers}
+                        <span class="j_user_count" if={roomMemberCount}>
+                            <i class="fa fa-users" aria-hidden="true"></i> {roomMemberCount}
                         </span>
                         <div>
                             <aliasInput enabled={isOwnerOfCurrentBlog} domain={domain} initial-value={aliasInputValue}/>
