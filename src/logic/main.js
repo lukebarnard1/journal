@@ -213,23 +213,30 @@ module.exports = (self) => {
                 doLogout();
             break;
             case 'alias_change':
-                cli.createAlias(
-                    action.payload.value, currentRoomId
-                ).done(() => {
-                    // Set canonical (main) alias
+                const setCanonicalAlias = () => {
                     cli.sendStateEvent(
                         currentRoomId,
                         'm.room.canonical_alias', { alias: action.payload.value }, ''
                     );
+
                     dis.dispatch({
                         type: 'view_blog',
                         payload: {
                             addr: action.payload.value.slice(1), // remove #
                         }
                     });
-                }, (err) => {
-                    console.error(err);
+                };
+                cli.createAlias(
+                    action.payload.value, currentRoomId
+                ).catch((err) => {
+                    console.warn('Failed to set alias', err);
+                    if (err.httpStatus === 409) {
+                        setCanonicalAlias(action.payload.value);
+                    }
+                }).then(() => {
+                    setCanonicalAlias(action.payload.value);
                 });
+            break;
             case 'room_avatar_change':
                 cli.uploadContent(action.payload.file).then(function(url) {
                     return cli.sendStateEvent(currentRoomId, 'm.room.avatar', {url: url}, '');
