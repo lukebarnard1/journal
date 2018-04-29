@@ -38,7 +38,9 @@ module.exports = (self) => {
         const currentRoom = reduxState.mrw.wrapped_state.rooms[currentRoomId];
 
         let allEntries = currentRoom ?
-            currentRoom.timeline.sort((a, b) => b.ts - a.ts) : [];
+            currentRoom.timeline
+                .sort((a, b) => b.ts - a.ts)
+                .filter(e => e.content.body && !e.redactedBecause) : [];
 
         let seenByAcc = 0;
         allEntries.forEach((e) => {
