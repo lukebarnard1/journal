@@ -10,6 +10,22 @@ module.exports = (self) => {
 
     let reduxState = {};
 
+    function getStateEventContent(room, type, stateKey="") {
+        if (!room.state[type]) return null;
+        if (!room.state[type][stateKey]) return null;
+        return room.state[type][stateKey].content;
+    }
+
+    function getAuthor(member) {
+        const httpAvatarUrl = cli.mxcUrlToHttp(
+            member.avatarUrl, 250, 250, 'crop', false
+        );
+        return {
+            name: member.name,
+            httpAvatarUrl,
+        }
+    }
+
     // The redux store has been updated, map state to view state
     // XXX: When React is introduced, .update will be replaced
     // with .setState
