@@ -322,7 +322,7 @@
             </div>
             <blog each={entries}></blog>
 
-            <loadingBar loading={scrollingStatus === "SCROLLING_STATUS_SCROLLING"}/>
+            <loadingBar if={loadingStatus === "LOADING_STATUS_DONE"} loading={scrollingStatus === "SCROLLING_STATUS_SCROLLING"}/>
             <div if={entries.length==0} style="text-align:center">
                 {noBlogsMsg}
             </div>
