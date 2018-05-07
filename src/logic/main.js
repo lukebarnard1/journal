@@ -26,6 +26,34 @@ module.exports = (self) => {
         }
     }
 
+    let scrollbackDoneDebounce;
+    let scrollback = () => {
+        const shouldPaginate =
+            document.scrollingElement.scrollTop >= document.scrollingElement.scrollHeight - window.innerHeight * 2;
+        if (shouldPaginate && cli) {
+            const room = cli.getRoom(currentRoomId);
+            if (!room || !room.oldState.paginationToken) {
+                return;
+            }
+            const l = room.timeline.length;
+            self.update({
+                scrollingStatus: "SCROLLING_STATUS_SCROLLING",
+            });
+            cli.scrollback(room).then(() => {
+                if (scrollbackDoneDebounce) clearTimeout(scrollbackDoneDebounce);
+                scrollbackDoneDebounce = setTimeout(() => {
+                    self.update({
+                        scrollingStatus: "SCROLLING_STATUS_DONE",
+                    });
+                }, 500);
+            });
+        }
+    }
+
+    window.addEventListener('scroll', () => {
+        scrollback();
+    });
+
     // The redux store has been updated, map state to view state
     // XXX: When React is introduced, .update will be replaced
     // with .setState
@@ -126,7 +154,7 @@ module.exports = (self) => {
                 ERROR: STATUS_DISCONNECTED,
             }[reduxState.mrw.wrapped_state.sync.state] || STATUS_UNKNOWN,
 
-            isLoggedIn: Boolean(cli.credentials),
+            isLoggedIn: Boolean(cli && cli.credentials),
 
             roomList: trackedRooms
                 .map(roomId => ({
@@ -283,34 +311,6 @@ module.exports = (self) => {
         if (!room) return null;
         return room.getLiveTimeline();
     }
-
-    let scrollbackDoneDebounce;
-    let scrollback = () => {
-        const shouldPaginate =
-            document.scrollingElement.scrollTop >= document.scrollingElement.scrollHeight - window.innerHeight * 2;
-        if (shouldPaginate) {
-            const room = cli.getRoom(currentRoomId);
-            if (!room || !room.oldState.paginationToken) {
-                return;
-            }
-            const l = room.timeline.length;
-            self.update({
-                scrollingStatus: "SCROLLING_STATUS_SCROLLING",
-            });
-            cli.scrollback(room).then(() => {
-                if (scrollbackDoneDebounce) clearTimeout(scrollbackDoneDebounce);
-                scrollbackDoneDebounce = setTimeout(() => {
-                    self.update({
-                        scrollingStatus: "SCROLLING_STATUS_DONE",
-                    });
-                }, 500);
-            });
-        }
-    }
-
-    window.addEventListener('scroll', () => {
-        scrollback();
-    });
 
     doCreateBlog = () => {
         cli.createRoom({
