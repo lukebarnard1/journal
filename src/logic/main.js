@@ -142,9 +142,15 @@ module.exports = (self) => {
             roomName: nameContent.name || null,
             roomMemberCount: currentRoom ? currentRoom.members.length : null,
             entries,
-
-            loadingStatus: "LOADING_STATUS_DONE",
         });
+
+        if (entries.length > 0) {
+            self.update({
+                loadingStatus: "LOADING_STATUS_DONE",
+            });
+        } else {
+            scrollback();
+        }
     }
 
     let updateDebounce;
@@ -276,20 +282,14 @@ module.exports = (self) => {
             document.body.scrollTop >= document.body.scrollHeight - window.innerHeight * 2;
         if (shouldPaginate) {
             const room = cli.getRoom(currentRoomId);
-            if (!room.oldState.paginationToken) {
+            if (!room || !room.oldState.paginationToken) {
                 return;
             }
             const l = room.timeline.length;
             self.update({
                 loadingStatus: "LOADING_STATUS_LOADING",
             });
-            cli.scrollback(room).done(() => {
-                if (room.timeline.length !== l) {
-                    self.update({
-                        loadingStatus: "LOADING_STATUS_DONE",
-                    });
-                }
-            });
+            cli.scrollback(room);
         }
     }
 

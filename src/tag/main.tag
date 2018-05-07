@@ -205,9 +205,13 @@
 <loadingBar>
     <div class={className}>&nbsp;</div>
     <script>
-        this.className = "j_loading_bar " + {
-            "LOADING_STATUS_LOADING": "j_loading_bar_loading",
-        }[this.opts.status];
+        this.className = "j_loading_bar j_loading_bar_loading";
+
+        this.on('update', () => {
+            this.className = "j_loading_bar " + {
+                "LOADING_STATUS_LOADING": "j_loading_bar_loading",
+            }[this.opts.status];
+        });
     </script>
 </loadingBar>
 
@@ -222,7 +226,7 @@
         <button onClick={doLogout}><i class="fa fa-sign-out" aria-hidden="true"></i></button>
     </span>
     <loadingBar status={this.opts.loadingStatus}/>
-    <div style="clear:both">
+    <div if={this.opts.loadingStatus === "LOADING_STATUS_DONE"} style="clear:both">
         <span if={this.opts.roomList.length !== 0}>
         history:</span>
         <span each={this.opts.roomList} style="padding-right:10px">
@@ -294,7 +298,7 @@
                 </select>
                 <button onClick={doCreateBlog}><i class="fa fa-plus" aria-hidden="true"></i></button>
             </div>
-            <div class="j_blog_header">
+            <div class="j_blog_header" if={loadingStatus === "LOADING_STATUS_DONE"}>
                 <div class="j_flex_row">
                     <div class="j_col">
                         <roomAvatarPicker enabled={isOwnerOfCurrentBlog} room-avatar={roomHttpAvatar}/>
