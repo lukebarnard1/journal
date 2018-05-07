@@ -278,6 +278,7 @@ module.exports = (self) => {
         return room.getLiveTimeline();
     }
 
+    let scrollbackDoneDebounce;
     let scrollback = () => {
         const shouldPaginate =
             document.scrollingElement.scrollTop >= document.scrollingElement.scrollHeight - window.innerHeight * 2;
@@ -291,9 +292,12 @@ module.exports = (self) => {
                 scrollingStatus: "SCROLLING_STATUS_SCROLLING",
             });
             cli.scrollback(room).then(() => {
-                self.update({
-                    scrollingStatus: "SCROLLING_STATUS_DONE",
-                });
+                if (scrollbackDoneDebounce) clearTimeout(scrollbackDoneDebounce);
+                scrollbackDoneDebounce = setTimeout(() => {
+                    self.update({
+                        scrollingStatus: "SCROLLING_STATUS_DONE",
+                    });
+                }, 500);
             });
         }
     }
