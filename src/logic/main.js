@@ -317,6 +317,7 @@ module.exports = (self) => {
 
     // Initial loaded state
     self.update({
+        isLoggedIn: false,
         entries: [],
         showCreateRoomForm: false,
         showCreateBlogForm: false,
@@ -557,6 +558,7 @@ module.exports = (self) => {
         wrapSyncingClient(cli, dis.dispatch);
 
         self.update({
+            isLoggedIn: true,
             userId: creds.user_id,
             // Used by <aliasInput>
             domain: cli.getDomain(),
