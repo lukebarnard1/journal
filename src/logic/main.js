@@ -279,7 +279,7 @@ module.exports = (self) => {
 
     let scrollback = () => {
         const shouldPaginate =
-            document.body.scrollTop >= document.body.scrollHeight - window.innerHeight * 2;
+            document.scrollingElement.scrollTop >= document.scrollingElement.scrollHeight - window.innerHeight * 2;
         if (shouldPaginate) {
             const room = cli.getRoom(currentRoomId);
             if (!room || !room.oldState.paginationToken) {
