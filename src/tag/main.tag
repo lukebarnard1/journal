@@ -205,12 +205,11 @@
 <loadingBar>
     <div class={className}>&nbsp;</div>
     <script>
-        this.className = "j_loading_bar j_loading_bar_loading";
-
+        this.className = "j_loading_bar " + 
+            (this.opts.loading ? "j_loading_bar_loading" : "");
         this.on('update', () => {
-            this.className = "j_loading_bar " + {
-                "LOADING_STATUS_LOADING": "j_loading_bar_loading",
-            }[this.opts.status];
+            this.className = "j_loading_bar " + 
+                (this.opts.loading ? "j_loading_bar_loading" : "");
         });
     </script>
 </loadingBar>
@@ -225,7 +224,7 @@
         logged in as {loggedInAs}
         <button onClick={doLogout}><i class="fa fa-sign-out" aria-hidden="true"></i></button>
     </span>
-    <loadingBar status={this.opts.loadingStatus}/>
+    <loadingBar loading={this.opts.loadingStatus === "LOADING_STATUS_LOADING"}/>
     <div if={this.opts.loadingStatus === "LOADING_STATUS_DONE"} style="clear:both">
         <span if={this.opts.roomList.length !== 0}>
         history:</span>
@@ -322,6 +321,8 @@
                 <editor taid="main-editor" taname="new_blog_post_content" submit={doNewBlogPost} cancel={()=>{this.showCreateBlogForm = false;this.update();}}/>
             </div>
             <blog each={entries}></blog>
+
+            <loadingBar loading={scrollingStatus === "SCROLLING_STATUS_SCROLLING"}/>
             <div if={entries.length==0} style="text-align:center">
                 {noBlogsMsg}
             </div>

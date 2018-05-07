@@ -269,6 +269,7 @@ module.exports = (self) => {
         showCreateBlogForm: false,
         loadingStatus: "LOADING_STATUS_LOADING",
         connectionStatus: "CONNECTION_STATUS_UNKNOWN",
+        scrollingStatus: "SCROLLING_STATUS_DONE",
     });
 
     let getCurrentTimeline = () => {
@@ -287,9 +288,13 @@ module.exports = (self) => {
             }
             const l = room.timeline.length;
             self.update({
-                loadingStatus: "LOADING_STATUS_LOADING",
+                scrollingStatus: "SCROLLING_STATUS_SCROLLING",
             });
-            cli.scrollback(room);
+            cli.scrollback(room).then(() => {
+                self.update({
+                    scrollingStatus: "SCROLLING_STATUS_DONE",
+                });
+            });
         }
     }
 
