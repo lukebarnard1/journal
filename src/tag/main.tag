@@ -234,8 +234,9 @@
         </span>
     </div>
     <script>
+        this.loggedInAs = this.opts.loggedInAs;
         this.on('update', () => {
-            loggedInAs = this.opts.loggedInAs;
+            this.loggedInAs = this.opts.loggedInAs;
         });
 
         doLogout(e) {
