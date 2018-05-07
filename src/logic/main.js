@@ -140,7 +140,13 @@ module.exports = (self) => {
 
             roomHttpAvatar: avatarContent.url ? cli.mxcUrlToHttp(avatarContent.url) : null,
             roomName: nameContent.name || null,
-            roomMemberCount: currentRoom ? currentRoom.members.length : null,
+            roomMemberCount: currentRoom ?
+                Object.keys(currentRoom.members)
+                .filter(
+                    userId =>
+                        currentRoom.members[userId].membership === 'join' &&
+                        !(userId[1] >= '0' && userId[1] <= '9')
+                ).length  : null,
             entries,
         });
 
