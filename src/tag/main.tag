@@ -205,17 +205,9 @@
 <loadingBar>
     <div class={className}>&nbsp;</div>
     <script>
-        this.on('mount', () => {
-            this.updateClassName = function() {
-                this.className = "j_loading_bar " + {
-                    "LOADING_STATUS_LOADING": "j_loading_bar_loading",
-                }[this.opts.status];
-            }.bind(this);
-            this.updateClassName();
-        });
-        this.on('update', () => {
-            this.updateClassName();
-        });
+        this.className = "j_loading_bar " + {
+            "LOADING_STATUS_LOADING": "j_loading_bar_loading",
+        }[this.opts.status];
     </script>
 </loadingBar>
 
