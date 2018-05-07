@@ -54,10 +54,34 @@ module.exports = (self) => {
         scrollback();
     });
 
+    function wrapDebounce(debounceMS, fn) {
+        let c = 0;
+        let prevT = null;
+        let timeout = null;
+
+        return function debounce() {
+            if (prevT !== null) {
+                if (Date.now() - debounceMS < prevT) {
+                    if (timeout) return;
+                    timeout = setTimeout(() => debounce(), debounceMS - (Date.now() - prevT));
+                    return;
+                }
+            }
+            if (timeout) {
+                clearTimeout(timeout);
+                timeout = null;
+            }
+
+            prevT = Date.now();
+
+            fn();
+        }
+    }
+
     // The redux store has been updated, map state to view state
     // XXX: When React is introduced, .update will be replaced
     // with .setState
-    function updateView() {
+    const updateView = wrapDebounce(500, () => {
         const STATUS_UNKNOWN = 'CONNECTION_STATUS_UNKNOWN';
         const STATUS_CONNECTED = 'CONNECTION_STATUS_CONNECTED';
         const STATUS_RECONNECTING = 'CONNECTION_STATUS_RECONNECTING';
@@ -185,7 +209,7 @@ module.exports = (self) => {
         } else {
             scrollback();
         }
-    }
+    });
 
     let updateDebounce;
     // XXX: For now, register a listener to keep redux store state and call
@@ -193,12 +217,7 @@ module.exports = (self) => {
     dis.registerStore({
         onAction: (action) => {
             reduxState = matrixReduce(action, reduxState);
-
-            if (updateDebounce) clearTimeout(updateDebounce);
-            updateDebounce = setTimeout(
-                () => updateView(),
-                200
-            );
+            updateView();
         },
     });
 
