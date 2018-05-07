@@ -538,7 +538,6 @@ module.exports = (self) => {
         wrapSyncingClient(cli, dis.dispatch);
 
         self.update({
-            loggedIn: true,
             userId: creds.user_id,
             // Used by <aliasInput>
             domain: cli.getDomain(),
