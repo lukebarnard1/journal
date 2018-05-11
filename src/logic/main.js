@@ -181,8 +181,6 @@ module.exports = (self) => {
                 ERROR: STATUS_DISCONNECTED,
             }[reduxState.mrw.wrapped_state.sync.state] || STATUS_UNKNOWN,
 
-            isLoggedIn: Boolean(cli && cli.credentials),
-
             roomList: trackedRooms
                 .map(roomId => ({
                     roomId,
@@ -573,6 +571,11 @@ module.exports = (self) => {
     }
 
     doLogout = () => {
+        dis.dispatch(undefined);
+        self.update({
+            isLoggedIn: false,
+        });
+
         // Guests cannot logout and we need to keep guest creds
         // so that the guests don't pile up for a single user.
         if (localStorage.getItem("mx_is_guest")) {
@@ -588,7 +591,8 @@ module.exports = (self) => {
         cli.logout();
         cli.stopClient();
         cli.store.deleteAllData();
-        route('/journal/');
+
+        cli = null;
     }
 
     showTodo = false;

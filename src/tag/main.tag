@@ -287,7 +287,7 @@
             <button title="Write a post" if={isOwnerOfCurrentBlog} onClick={()=>{this.showCreateBlogForm = !this.showCreateBlogForm}}><i class="fa fa-pencil-square-o"></i></button>
         </div>
 
-        <loginPanel if={!isLoggedIn && loadingStatus === "LOADING_STATUS_DONE"}/>
+        <loginPanel if={!isLoggedIn}/>
 
         <div if={isLoggedIn}>
             <div if={showCreateRoomForm}>
