@@ -17,6 +17,7 @@ module.exports = (self) => {
     }
 
     function getAuthor(member) {
+        if (!member) return {name: 'Unknown'};
         const httpAvatarUrl = cli.mxcUrlToHttp(
             member.avatarUrl, 250, 250, 'crop', false
         );
