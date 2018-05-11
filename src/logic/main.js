@@ -97,6 +97,8 @@ module.exports = (self) => {
 
         let seenByAcc = 0;
         allEntries.forEach((e) => {
+            e.seenByAcc = 0;
+
             const eventReceipts = currentRoom.receipts[e.id]
             if (!eventReceipts) return;
             const readReceipts = eventReceipts['m.read'];
