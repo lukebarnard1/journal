@@ -10,7 +10,15 @@ A web client for writing news stories, personal blogs and more, built on the Mat
   - [Contributing](#contributing)
  - [Screenshot](#screenshot)
 
+### **WARNING**: Undergoing major rewrite with different architecture. For previous 0.0.1 POC, see branch `poc-2018`
+
+--------
+
+TODO:
+ - [ ] Rewrite all sections
+
 ## Introduction
+
 journal is a website that can be used to display content stored on [Matrix](https://matrix.org) servers. Matrix is a distributed messaging protocol that allows messages to be sent to others across a network of homeservers across the globe. The distributed nature of Matrix makes it ideal for hosting published content, with no central server that could fail. journal is an attempt to use Matrix for viewing, creating and publishing journalistic writing and blogs.
 
 ### But what _is_ journal?
