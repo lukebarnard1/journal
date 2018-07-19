@@ -1,15 +1,25 @@
 {
-  "name": "journal",
-  "version": "0.0.1",
-  "description": "a blogging platform built on [matrix]",
-  "main": "index.js",
-  "scripts": {
-  },
-  "author": "Luke Barnard",
-  "repository": "git@github.com:lukebarnard1/journal.git",
-  "license": "Apache 2.0",
-  "devDependencies": {
-  },
-  "dependencies": {
-  }
+    "name": "journal",
+    "version": "0.0.1",
+    "description": "a blogging platform built on [matrix]",
+    "main": "index.js",
+    "scripts": {
+        "dev": "node server.js",
+        "build": "next build",
+        "start": "next start -p 8000"
+    },
+    "author": "Luke Barnard",
+    "repository": "git@github.com:lukebarnard1/journal.git",
+    "license": "Apache-2.0",
+    "devDependencies": {},
+    "dependencies": {
+        "express": "^4.16.3",
+        "highlight.js": "^9.12.0",
+        "isomorphic-unfetch": "^2.0.0",
+        "next": "^6.1.1",
+        "raw-loader": "^0.5.1",
+        "react": "^16.4.1",
+        "react-dom": "^16.4.1",
+        "react-markdown": "^3.3.4"
+    }
 }
