@@ -3,4 +3,4 @@ export default {
     body: 'Open Sans, Arial, sans-serif',
     code: 'Ubuntu Mono, Courier New, monospaced',
     ui: 'Roboto, Arial, sans-serif',
-}
+};

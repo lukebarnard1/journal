@@ -1,11 +1,12 @@
-import Markdown from 'react-markdown'
+import Markdown from 'react-markdown';
 
 import fonts from '../style/fonts';
 
-const MarkdownStyled = (props) => {
-    return <div>
-        <Markdown className='j-article-md-body' {...props}/>
-        <style global jsx>{`
+const MarkdownStyled = props => (
+    <div>
+        <Markdown className="j-article-md-body" {...props} />
+        <style global jsx>
+        {`
             .j-article-md-body p,
             .j-article-md-body h1,
             .j-article-md-body h2,
@@ -99,8 +100,9 @@ const MarkdownStyled = (props) => {
             .j-article-md-body img {
                 width: 100%;
             }
-        `}</style>
-    </div>
-}
+        `}
+      </style>
+  </div>
+);
 
 export default MarkdownStyled;

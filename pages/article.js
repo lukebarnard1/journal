@@ -1,16 +1,18 @@
-import React from 'react'
-import fetch from 'isomorphic-unfetch'
-import * as hljs from 'highlight.js'
+import React from 'react';
+import fetch from 'isomorphic-unfetch';
+import * as hljs from 'highlight.js';
 
 import Navigation from '../components/navigation.js';
 import MarkdownStyled from '../components/markdown.js';
-import fonts from '../style/fonts'
+import fonts from '../style/fonts';
 
 class Avatar extends React.Component {
     render() {
-        return <div>
-            <img className="avatar" src={this.props.src}/>
-            <style jsx>{`
+        return (
+            <div>
+            <img className="avatar" src={this.props.src} />
+            <style jsx>
+                {`
                 .avatar {
                     width: ${this.props.size ? this.props.size : 64}px;
                     height: ${this.props.size ? this.props.size : 64}px;
@@ -18,26 +20,36 @@ class Avatar extends React.Component {
                     background-color: #f0f0f0;
                     border-radius: 50%;
                 }
-            `}</style>
-        </div>
+            `}
+              </style>
+          </div>
+        );
     }
 }
 
 class UserCard extends React.Component {
     render() {
-        return <div className="j-user-card">
-            <Avatar src={this.props.userImgUrl}/>
-            <div className="details">
-                <div className="name">{this.props.userName}</div>
-                <div className="tag">{this.props.userTagline}</div>
-                <div className="ts">{this.props.timestamp}</div>
-            </div>
-            <div className="subscribe">
-                <button>
+        return (
+            <div className="j-user-card">
+            <Avatar src={this.props.userImgUrl} />
+                <div className="details">
+                    <div className="name">
+                    {this.props.userName}
+                  </div>
+                    <div className="tag">
+                    {this.props.userTagline}
+                  </div>
+                <div className="ts">
+                      {this.props.timestamp}
+                    </div>
+              </div>
+                <div className="subscribe">
+                    <button>
                     Subscribe
-                </button>
-            </div>
-            <style jsx>{`
+                  </button>
+              </div>
+            <style jsx>
+                    {`
                 .j-user-card {
                     font-family: ${fonts.ui};
                     font-size: 10pt;
@@ -96,32 +108,36 @@ class UserCard extends React.Component {
                     border: 1px solid #444;
                     outline: 0px;
                 }
-            `}</style>
-        </div>
+            `}
+                </style>
+          </div>
+        );
     }
 }
 
 class ArticleHeader extends React.Component {
     render() {
-        return <div>
-            <UserCard {...this.props}/>
-        </div>
+        return (
+            <div>
+            <UserCard {...this.props} />
+          </div>
+        );
     }
 }
 
 class CommentDatum {
     constructor(depth) {
-        this.userImgUrl = "http://i.pravatar.cc/48"
-        this.userName = "Some Person"
+        this.userImgUrl = 'http://i.pravatar.cc/48';
+        this.userName = 'Some Person';
         this.text = [
-            "I am writing a comment. ",
-            "This is a comment. ",
-            "Writing comments makes me feel alive. ",
+            'I am writing a comment. ',
+            'This is a comment. ',
+            'Writing comments makes me feel alive. ',
         ][Math.floor(Math.random() * 3)].repeat(1 + Math.floor(Math.random() * 10));
         this.timestamp = [
-            "commented three days ago",
-            "commented two weeks ago",
-            "commented last year"
+            'commented three days ago',
+            'commented two weeks ago',
+            'commented last year',
         ][Math.floor(Math.random() * 3)];
 
         this.score = Math.floor(Math.random() * 50) - 25;
@@ -138,28 +154,30 @@ class CommentDatum {
 
 class Comment extends React.Component {
     render() {
-        return <div className="root">
-            <div className="comment">
-                <Avatar src={this.props.userImgUrl} size={48}/>
-                <div className="col-2">
-                    <div className="name">
+        return (
+            <div className="root">
+                <div className="comment">
+                    <Avatar src={this.props.userImgUrl} size={48} />
+                    <div className="col-2">
+                        <div className="name">
                         {this.props.userName}
-                    </div>
+                      </div>
                     <div className="text">
-                        {this.props.text}
-                    </div>
+                            {this.props.text}
+                        </div>
                     <div className="timestamp">
-                        {this.props.timestamp}
-                    </div>
-                </div>
-            </div>
+                            {this.props.timestamp}
+                        </div>
+                  </div>
+              </div>
             <div className="thread">
-                { this.props.comments && this.props.score > 0 ?
-                    <Comments comments={this.props.comments}/>
-                    : null
-                }
-            </div>
-            <style jsx>{`
+                    { this.props.comments && this.props.score > 0
+                        ? <Comments comments={this.props.comments} />
+                        : null
+                    }
+                </div>
+                <style jsx>
+                {`
                 .comment {
                     display: flex;
                     margin: 15px 0px;
@@ -200,8 +218,10 @@ class Comment extends React.Component {
 
                     margin: 10px 0px;
                 }
-            `}</style>
-        </div>
+            `}
+              </style>
+          </div>
+        );
     }
 }
 
@@ -210,14 +230,21 @@ class Comments extends React.Component {
         super();
         this.state = { visible: 1 };
     }
+
     render() {
-        return <div>
-            {this.props.comments
+        return (
+          <div>
+              {this.props.comments
                     .sort((commentA, commentB) => commentB.score - commentA.score)
                     .slice(0, this.state.visible)
-                    .map((comment, index) => <Comment key={index} {...comment}/>)}
-            { this.props.comments.length > this.state.visible ? <a className="more" href="javascript:;" onClick={() => this.setState({ visible: this.state.visible + 5})}>Show more</a> : null }
-            <style jsx>{`
+                    .map((comment, index) => <Comment key={index} {...comment} />)}
+                { this.props.comments.length > this.state.visible ? (
+              <a className="more" href="javascript:;" onClick={() => this.setState({ visible: this.state.visible + 5 })}>
+Show more
+                    </a>
+                ) : null }
+              <style jsx>
+                    {`
                 .more {
                     font-family: ${fonts.ui};
                     font-size: 10pt;
@@ -228,45 +255,55 @@ class Comments extends React.Component {
 
                     margin-top: 10px;
                 }
-            `}</style>
-        </div>
+            `}
+                </style>
+            </div>
+        );
     }
 }
 
 class ArticleFooter extends React.Component {
     render() {
-        return <div>
-            <UserCard {...this.props}/>
-            <Comments comments={this.props.articleComments}/>
-            <style jsx>{`
+        return (
+            <div>
+                <UserCard {...this.props} />
+                <Comments comments={this.props.articleComments} />
+            <style jsx>
+                    {`
                 div {
                     margin-bottom: 100px;
                 }
-            `}</style>
-        </div>
+            `}
+              </style>
+          </div>
+        );
     }
 }
 
 class Article extends React.Component {
     collectRoot(root) {
-        if (!root) return
+        if (!root) return;
 
         const md = root.getElementsByClassName('j-article-md-body')[0];
 
-        const codeElements = md.getElementsByTagName('pre')
-        Array.from(codeElements).map((el) => hljs.highlightBlock(el))
+        const codeElements = md.getElementsByTagName('pre');
+        Array.from(codeElements).map(el => hljs.highlightBlock(el));
     }
 
     render() {
-        return <div className="j-article" ref={this.collectRoot}>
-            <ArticleHeader {...this.props}/>
-            {this.props.imgUrl ? <img src={this.props.imgUrl}/> : null}
-            <div className="j-article-central">
-                <h1>{this.props.title}</h1>
-                <MarkdownStyled source={this.props.markdown}/>
-                <ArticleFooter {...this.props}/>
-            </div>
-            <style jsx="true">{`
+        return (
+            <div className="j-article" ref={this.collectRoot}>
+                <ArticleHeader {...this.props} />
+            {this.props.imgUrl ? <img src={this.props.imgUrl} /> : null}
+                <div className="j-article-central">
+                    <h1>
+                {this.props.title}
+              </h1>
+                    <MarkdownStyled source={this.props.markdown} />
+                    <ArticleFooter {...this.props} />
+              </div>
+                <style jsx="true">
+                {`
                 .j-article {
                     width: calc(100% -16px);
                     padding: 0px 8px;
@@ -288,11 +325,14 @@ class Article extends React.Component {
                     max-width: 100%;
                     margin: 0px auto;
                 }
-            `}</style>
-        </div>
+            `}
+              </style>
+          </div>
+        );
     }
 }
 const exampleMarkdown = require('raw-loader!../example.md');
+
 class ArticlePage extends React.Component {
     static async getInitialProps({ req, query }) {
         // When called on the server, this can do some async work to fetch
@@ -309,12 +349,12 @@ class ArticlePage extends React.Component {
             category: query.category,
             id: query.id,
 
-            title: "The title of the article",
+            title: 'The title of the article',
             timestamp: 'posted two days ago',
             // For now, load an example file.
             // TODO: Load content from store.
             markdown: exampleMarkdown,
-            imgUrl: "https://cdn-images-1.medium.com/max/2000/1*Q88mzWfxMkth0apk4vV7gw.jpeg",
+            imgUrl: 'https://cdn-images-1.medium.com/max/2000/1*Q88mzWfxMkth0apk4vV7gw.jpeg',
 
             articleComments: [
                 new CommentDatum(3),
@@ -322,27 +362,39 @@ class ArticlePage extends React.Component {
                 new CommentDatum(3),
             ],
 
-            userImgUrl: "http://i.pravatar.cc/64",
-            userName: "Duncan Idaho",
-            userTagline: "duke and rightful heir to the thrown on planet Arrakis",
-        }
+            userImgUrl: 'http://i.pravatar.cc/64',
+            userName: 'Duncan Idaho',
+            userTagline: 'duke and rightful heir to the thrown on planet Arrakis',
+        };
     }
 
     render() {
-        return <div>
-            <Navigation/>
-            <div>
-                <Article {...this.props} />
-                <div className="root">
-                    <a href="/about" className="brand">
+        return (
+          <div>
+                <Navigation />
+                <div>
+              <Article {...this.props} />
+              <div className="root">
+                        <a href="/about" className="brand">
                         journal // decentralised blogging
-                    </a>
-                    <a href="/">Home</a>
-                    <a href="/explore">Explore</a>
-                    <a href="/register">Register</a>
-                    <a href="/about">About</a>
-                    <a href="/code">Code</a>
-                    <style jsx>{`
+                </a>
+                      <a href="/">
+Home
+                        </a>
+                        <a href="/explore">
+Explore
+                </a>
+                        <a href="/register">
+Register
+                </a>
+                        <a href="/about">
+About
+                        </a>
+                        <a href="/code">
+Code
+                </a>
+                        <style jsx>
+                            {`
                         .brand {
                             font-family: ${fonts.header};
                             font-size: 20pt;
@@ -368,11 +420,13 @@ class ArticlePage extends React.Component {
                         a:hover {
                             color: #fff;
                         }
-                    `}</style>
-                </div>
+                    `}
+                </style>
+                    </div>
             </div>
-        </div>
+            </div>
+        );
     }
 }
 
-export default ArticlePage
+export default ArticlePage;

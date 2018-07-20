@@ -4,6 +4,7 @@
     "description": "a blogging platform built on [matrix]",
     "main": "index.js",
     "scripts": {
+        "lint": "eslint pages style components",
         "dev": "node server.js",
         "build": "next build",
         "start": "next start -p 8000"
@@ -11,7 +12,14 @@
     "author": "Luke Barnard",
     "repository": "git@github.com:lukebarnard1/journal.git",
     "license": "Apache-2.0",
-    "devDependencies": {},
+    "devDependencies": {
+        "eslint": "^5.1.0",
+        "eslint-config-airbnb": "^17.0.0",
+        "eslint-plugin-import": "^2.13.0",
+        "eslint-plugin-jsx-a11y": "^6.1.1",
+        "eslint-plugin-mocha": "^5.1.0",
+        "eslint-plugin-react": "^7.10.0"
+    },
     "dependencies": {
         "express": "^4.16.3",
         "highlight.js": "^9.12.0",
