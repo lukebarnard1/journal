@@ -1,4 +1,5 @@
 import Document, { Head, Main, NextScript } from 'next/document';
+import React from 'react';
 
 export default class MyDocument extends Document {
     static async getInitialProps(ctx) {
@@ -19,30 +20,30 @@ export default class MyDocument extends Document {
         const scriptUrls = [];
 
         return (
-            <html>
+            <html lang="en">
                 <Head>
-                <meta name="viewport" content="initial-scale=1" />
-                { styleSheetUrls.map(
+                    <meta name="viewport" content="initial-scale=1" />
+                    { styleSheetUrls.map(
                         url => <link href={url} rel="stylesheet" />,
                     ) }
-                { scriptUrls.map(
+                    { scriptUrls.map(
                         url => <script src={url} />,
                     ) }
-                <style>
-                      {`
+                    <style>
+                        {`
                         *:focus { outline: 1px solid }
                         body {
                             margin: 0px;
                         }
                     `}
                     </style>
-              </Head>
+                </Head>
                 {/* set className to body */}
                 <body>
                     <Main />
                     <NextScript />
-              </body>
-          </html>
+                </body>
+            </html>
         );
     }
 }

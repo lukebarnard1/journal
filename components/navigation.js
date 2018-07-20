@@ -4,7 +4,7 @@ import Link from 'next/link';
 import fonts from '../style/fonts';
 
 const NAV_HEIGHT = 50;
-const NAV_HEIGHT_px = `${NAV_HEIGHT}px`;
+const NAV_HEIGHT_PX = `${NAV_HEIGHT}px`;
 
 export default class Navigation extends React.Component {
     constructor() {
@@ -12,6 +12,16 @@ export default class Navigation extends React.Component {
         this.state = {
             showNavigation: true,
         };
+    }
+
+    componentDidMount() {
+        const wheelListener = ev => this.onPageScroll(ev);
+        this.removeWheelListener = () => document.removeEventListener('wheel', wheelListener);
+        document.addEventListener('wheel', wheelListener);
+    }
+
+    componentWillUnmount() {
+        this.removeWheelListener();
     }
 
     onPageScroll(ev) {
@@ -26,40 +36,30 @@ export default class Navigation extends React.Component {
         });
     }
 
-    componentDidMount() {
-        const wheelListener = ev => this.onPageScroll(ev);
-        this._removeWheelListener = () => document.removeEventListener('wheel', wheelListener);
-        document.addEventListener('wheel', wheelListener);
-    }
-
-
-    componentWillUnmount() {
-        this._removeWheelListener();
-    }
-
     render() {
+        const { showNavigation } = this.state;
         return (
-          <div className="root">
-              <nav>
-              <Link href="/">
-                        <a>
-journal
-                </a>
+            <div className="root">
+                <nav>
+                    <Link href="/">
+                        <a href="/">
+                            journal
+                        </a>
                     </Link>
-            </nav>
-              <style jsx="true">
-                  {`
+                </nav>
+                <style jsx="true">
+                    {`
                 .root {
-                    height: ${NAV_HEIGHT_px};
+                    height: ${NAV_HEIGHT_PX};
                 }
 
                 nav {
                     font-family: ${fonts.header};
                     font-size: 20pt;
-                    line-height: ${NAV_HEIGHT_px};
+                    line-height: ${NAV_HEIGHT_PX};
 
                     width: 100%;
-                    height: ${NAV_HEIGHT_px};
+                    height: ${NAV_HEIGHT_PX};
                     padding: 0px 35px;
                     border-bottom: 1px solid #ddd;
 
@@ -68,7 +68,7 @@ journal
 
                     position: fixed;
                     z-index: 1;
-                    top: ${this.state.showNavigation ? '0px' : `-${NAV_HEIGHT_px}`};
+                    top: ${showNavigation ? '0px' : `-${NAV_HEIGHT_PX}`};
                     left: 0px;
 
                     transition: top 0.2s ease-in-out 0.2s;
