@@ -81,48 +81,48 @@ class ArticlePage extends React.Component {
                         journal // decentralised blogging
                         </a>
                         <a href="/">
-Home
+                            Home
                         </a>
                         <a href="/explore">
-Explore
+                            Explore
                         </a>
                         <a href="/register">
-Register
+                            Register
                         </a>
                         <a href="/about">
-About
+                            About
                         </a>
                         <a href="/code">
-Code
+                            Code
                         </a>
                         <style jsx>
                             {`
-                        .brand {
-                            font-family: ${fonts.header};
-                            font-size: 20pt;
+                                .brand {
+                                    font-family: ${fonts.header};
+                                    font-size: 20pt;
 
-                            text-decoration: none;
+                                    text-decoration: none;
 
-                            margin-bottom: 40px;
-                        }
-                        .root {
-                            background-color: #444;
-                            padding: 50px;
-                        }
-                        a {
-                            font-family: ${fonts.ui};
-                            font-size: 10pt;
+                                    margin-bottom: 40px;
+                                }
+                                .root {
+                                    background-color: #444;
+                                    padding: 50px;
+                                }
+                                a {
+                                    font-family: ${fonts.ui};
+                                    font-size: 10pt;
 
-                            margin-bottom: 10px;
+                                    margin-bottom: 10px;
 
-                            display: block;
+                                    display: block;
 
-                            color: #eee;
-                        }
-                        a:hover {
-                            color: #fff;
-                        }
-                    `}
+                                    color: #eee;
+                                }
+                                a:hover {
+                                    color: #fff;
+                                }
+                            `}
                         </style>
                     </div>
                 </div>
