@@ -28,7 +28,7 @@ See, I told you. There's a limit to how much I can be bothered to type so much t
 ## Another header
 That header looked smaller, but I'm not sure.
 
-![](https://cdn-images-1.medium.com/max/2000/1*KYoHRVYuyBkEizDgsKa7mg.jpeg)
+![](https://journal.ldbco.de/beautiful_trees.jpg)
 
 -----
 
