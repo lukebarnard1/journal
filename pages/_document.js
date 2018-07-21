@@ -24,10 +24,10 @@ export default class MyDocument extends Document {
                 <Head>
                     <meta name="viewport" content="initial-scale=1" />
                     { styleSheetUrls.map(
-                        url => <link href={url} rel="stylesheet" />,
+                        url => <link href={url} rel="stylesheet" key={url} />,
                     ) }
                     { scriptUrls.map(
-                        url => <script src={url} />,
+                        url => <script src={url} key={url} />,
                     ) }
                     <style>
                         {`
