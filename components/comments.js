@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import fonts from '../style/fonts';
 import Avatar from './avatar';
+import Button from './button';
 
 function Comment({
     userImgUrl, userName, text, timestamp, score, comments,
@@ -114,28 +115,10 @@ export default class Comments extends React.Component {
                     .slice(0, visible)
                     .map(comment => <Comment key={comment.id} {...comment} />)}
                 { comments.length > visible ? (
-                    <button
-                        type="button"
-                        className="more"
-                        onClick={() => this.setState({ visible: visible + 5 })}
-                    >
+                    <Button onClick={() => this.setState({ visible: visible + 5 })}>
                         Show more
-                    </button>
+                    </Button>
                 ) : null }
-                <style jsx>
-                    {`
-                .more {
-                    font-family: ${fonts.ui};
-                    font-size: 10pt;
-
-                    color: #aaa;
-
-                    cursor: pointer;
-
-                    margin-top: 10px;
-                }
-            `}
-                </style>
             </div>
         );
     }

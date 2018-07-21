@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Avatar from './avatar';
 import fonts from '../style/fonts';
+import Button from './button';
 
 export default function UserCard({
     userImgUrl, userName, userTagline, timestamp,
@@ -21,9 +22,9 @@ export default function UserCard({
                 </div>
             </div>
             <div className="subscribe">
-                <button type="button">
+                <Button>
                     Subscribe
-                </button>
+                </Button>
             </div>
             <style jsx>
                 {`
@@ -65,27 +66,7 @@ export default function UserCard({
 
                     margin-left: 30px;
                 }
-
-                .subscribe button {
-                    border: 1px solid #ddd;
-                    border-radius: 4px;
-
-                    background-color: #fff;
-
-                    padding: 10px;
-
-                    cursor: pointer;
-                }
-
-                .subscribe button:active {
-                    color: #fff;
-                    background-color: #222;
-                }
-                .subscribe button:focus {
-                    border: 1px solid #444;
-                    outline: 0px;
-                }
-            `}
+                `}
             </style>
         </div>
     );
