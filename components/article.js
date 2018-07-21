@@ -26,6 +26,9 @@ function applyMarkdownCodeHighlighting(root) {
 
 export default function Article(props) {
     const { imgUrl, title, markdown } = props;
+    if (!imgUrl || !title || !markdown) {
+        return null;
+    }
     return (
         <div className="j-article" ref={applyMarkdownCodeHighlighting}>
             <ArticleHeader {...props} />
