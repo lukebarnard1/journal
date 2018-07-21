@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import fonts from '../style/fonts';
-import Navigation from '../components/navigation';
 import Article from '../components/article';
+import Page from '../components/page';
 
 function stateToProps(state = {}) {
     return {
@@ -31,61 +30,9 @@ class ArticlePage extends React.Component {
 
     render() {
         return (
-            <div>
-                <Navigation />
-                <div>
-                    <Article {...this.props} />
-                    <div className="root">
-                        <a href="/about" className="brand">
-                        journal // decentralised blogging
-                        </a>
-                        <a href="/">
-                            Home
-                        </a>
-                        <a href="/explore">
-                            Explore
-                        </a>
-                        <a href="/register">
-                            Register
-                        </a>
-                        <a href="/about">
-                            About
-                        </a>
-                        <a href="/code">
-                            Code
-                        </a>
-                        <style jsx>
-                            {`
-                                .brand {
-                                    font-family: ${fonts.header};
-                                    font-size: 20pt;
-
-                                    text-decoration: none;
-
-                                    margin-bottom: 40px;
-                                }
-                                .root {
-                                    background-color: #444;
-                                    padding: 50px;
-                                }
-                                a {
-                                    font-family: ${fonts.ui};
-                                    font-size: 10pt;
-
-                                    margin-bottom: 10px;
-
-                                    display: block;
-
-                                    color: #eee;
-                                }
-                                a:hover {
-                                    color: #fff;
-                                }
-                            `}
-                        </style>
-                    </div>
-                </div>
-            </div>
+            <Page>
+                <Article {...this.props} />
+            </Page>
         );
     }
 }
