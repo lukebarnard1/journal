@@ -3,7 +3,7 @@ import { takeEvery, put } from 'redux-saga/effects';
 class CommentDatum {
     constructor(depth) {
         this.id = Math.random().toString(16).slice(2, 10);
-        this.userImgUrl = 'http://i.pravatar.cc/48';
+        this.userImgUrl = '/static/avatar.png';
         this.userName = 'Some Person';
         this.text = [
             'I am writing a comment. ',
@@ -46,7 +46,7 @@ function* selectArticle({ payload }) {
             new CommentDatum(3),
         ],
 
-        userImgUrl: 'http://i.pravatar.cc/64',
+        userImgUrl: '/static/avatar.png',
         userName: 'Duncan Idaho',
         userTagline: 'duke and rightful heir to the thrown on planet Arrakis',
     };

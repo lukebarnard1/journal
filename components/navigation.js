@@ -25,7 +25,7 @@ export default class Navigation extends React.Component {
     }
 
     onPageScroll(ev) {
-        // TODO: Use redux saga for this?
+        // TODO: Use redux saga for this? Yep. Allows other components to use this state
         // wheel event -> scroll action
 
         // Scroll up -> show navigation
@@ -60,7 +60,7 @@ export default class Navigation extends React.Component {
 
                     width: 100%;
                     height: ${NAV_HEIGHT_PX};
-                    padding: 0px 35px;
+                    padding: 0px 50px;
                     border-bottom: 1px solid #ddd;
 
                     background-color: #fff;

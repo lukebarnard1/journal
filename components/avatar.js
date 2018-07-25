@@ -13,6 +13,8 @@ function Avatar({ src, size }) {
                     border: 1px solid rgba(0, 0, 0, 0.04);
                     background-color: #f0f0f0;
                     border-radius: 50%;
+
+                    object-fit: cover;
                 }
             `}
             </style>
