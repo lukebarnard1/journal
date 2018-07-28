@@ -16,7 +16,7 @@ function randomArticle() {
     ]);
     return {
         articleTitle,
-        articleImgSrc: '/static/image' + randomChoice(['', 2, 3, 4]) + '.jpg',
+        articleImgSrc: '/static/image' + randomChoice([1, 2, 3, 4, 5]) + '.jpg',
         articleTimestamp: randomChoice([
             '1 year ago',
             '20 days ago',
