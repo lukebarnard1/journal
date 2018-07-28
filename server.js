@@ -10,6 +10,12 @@ app.prepare()
     .then(() => {
         const server = express()
 
+        server.get('/:category', (req, res) => {
+            return app.render(req, res, '/', {
+                category: req.params.category,
+            })
+        })
+
         server.get('/:category/:id', (req, res) => {
             return app.render(req, res, '/article', {
                 category: req.params.category,
