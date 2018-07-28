@@ -1,22 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Avatar from './avatar';
-import fonts from '../style/fonts';
 import Button from './button';
+import * as mw from './ho/mediaWrapper';
+import fonts from '../style/fonts';
 
-export default function UserCard({
-    userImgUrl, userName, userTagline, timestamp,
+function UserCard({
+    userImgUrl, userName, userTagline, timestamp, media,
 }) {
+    const { isSmall } = media;
     return (
         <div className="j-user-card">
-            <Avatar src={userImgUrl} />
+            <Avatar src={userImgUrl} size={isSmall ? 32 : 64} />
             <div className="details">
                 <div className="name">
                     {userName}
                 </div>
-                <div className="tag">
-                    {userTagline}
-                </div>
+                { isSmall
+                    ? null : (
+                        <div className="tag">
+                            {userTagline}
+                        </div>
+                    )
+                }
                 <div className="ts">
                     {timestamp}
                 </div>
@@ -34,7 +40,7 @@ export default function UserCard({
                     display: flex;
                     align-items: center;
 
-                    padding: 35px 27px;
+                    padding: ${isSmall ? '10px 17px' : '35px 27px'};
                     border-bottom: 1px solid #ddd;
                     overflow: hidden;
                 }
@@ -46,10 +52,12 @@ export default function UserCard({
                 }
 
                 .j-user-card .details .name {
-                    font-size: 14pt;
-                    padding-top: 10px;
-                    line-height: 28pt;
+                    padding-top: ${isSmall ? '0px' : '10px'};
+
+                    font-size: ${isSmall ? '10pt' : '14pt'};
+                    line-height: ${isSmall ? '14pt' : '28pt'};
                 }
+
                 .j-user-card .details .tag {
                     font-size: 10pt;
                 }
@@ -76,4 +84,7 @@ UserCard.propTypes = {
     userName: PropTypes.string.isRequired,
     userTagline: PropTypes.string.isRequired,
     timestamp: PropTypes.string.isRequired,
+    media: PropTypes.shape(mw.propTypes).isRequired,
 };
+
+export default mw.mediaWrapper(UserCard);
