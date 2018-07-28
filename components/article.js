@@ -54,7 +54,7 @@ export default function Article(props) {
 
                     img {
                         width: 100%;
-                        max-height: 33vh;
+                        max-height: 40vh;
                         object-fit: cover;
                     }
 
