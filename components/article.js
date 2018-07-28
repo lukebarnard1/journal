@@ -44,7 +44,6 @@ export default function Article(props) {
                 {`
                     .j-article {
                         width: calc(100% -16px);
-                        padding: 0px 8px;
                     }
 
                     h1 {
@@ -62,6 +61,7 @@ export default function Article(props) {
                         width: 700px;
                         max-width: 100%;
                         margin: 0px auto;
+                        padding: 0px 8px;
                     }
                 `}
             </style>
