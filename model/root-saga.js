@@ -38,7 +38,7 @@ function* selectArticle({ payload }) {
         title: 'The title of the article',
         timestamp: 'posted two days ago',
         markdown: exampleMarkdown,
-        imgUrl: 'https://journal.ldbco.de/beautiful_trees.jpg',
+        imgUrl: `/static/image${1 + Math.floor(Math.random() * 4)}.jpg`,
 
         articleComments: [
             new CommentDatum(3),
