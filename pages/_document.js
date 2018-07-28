@@ -34,6 +34,16 @@ export default class MyDocument extends Document {
                         *:focus { outline: 1px solid }
                         body {
                             margin: 0px;
+                            overflow-y: scroll;
+                        }
+                        html {
+                            box-sizing: border-body;
+                        }
+                        html, body, #__next {
+                            height: 100%;
+                        }
+                        *, *:before, *:after {
+                            box-sizing: inherit;
                         }
                     `}
                     </style>
