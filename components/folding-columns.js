@@ -21,7 +21,7 @@ function FoldingColumns({ children, media }) {
 }
 FoldingColumns.propTypes = {
     children: PropTypes.node.isRequired,
-    media: PropTypes.shape(mw.propType).isRequired,
+    media: PropTypes.shape(mw.propTypes.media).isRequired,
 };
 
 export default mw.mediaWrapper(FoldingColumns);

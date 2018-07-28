@@ -84,7 +84,7 @@ UserCard.propTypes = {
     userName: PropTypes.string.isRequired,
     userTagline: PropTypes.string.isRequired,
     timestamp: PropTypes.string.isRequired,
-    media: PropTypes.shape(mw.propTypes).isRequired,
+    media: PropTypes.shape(mw.propTypes.media).isRequired,
 };
 
 export default mw.mediaWrapper(UserCard);

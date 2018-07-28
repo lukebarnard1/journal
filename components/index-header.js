@@ -117,7 +117,7 @@ function IndexHeader({ category, media }) {
 }
 IndexHeader.propTypes = {
     category: PropTypes.string.isRequired,
-    media: PropTypes.shape(mw.propTypes).isRequired,
+    media: PropTypes.shape(mw.propTypes.media).isRequired,
 };
 
 export default mw.mediaWrapper(IndexHeader);
