@@ -64,7 +64,7 @@ function Page({ children }) {
     );
 }
 Page.propTypes = {
-    children: PropTypes.arrayOf(PropTypes.node).isRequired,
+    children: PropTypes.node.isRequired,
 };
 
 export default Page;
