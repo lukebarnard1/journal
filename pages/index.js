@@ -9,26 +9,28 @@ import ArticleList from '../components/article-list';
 
 function stateToProps(state = {}) {
     return {
-        ...(state.articles || []),
+        articles: state.articles || [],
     };
 }
 
-
 class IndexPage extends React.Component {
-    static async getInitialProps({ query }) {
-        // TODO: fetch article list from store
+    static async getInitialProps({ query, store }) {
+        store.dispatch({
+            type: 'j-get-articles',
+            payload: {},
+        });
         return {
             category: query.category,
         };
     }
 
     render() {
-        const { category } = this.props;
+        const { category, articles } = this.props;
         return (
             <Page>
                 <FoldingColumns>
                     <IndexHeader category={category} />
-                    <ArticleList />
+                    <ArticleList articles={articles} />
                 </FoldingColumns>
             </Page>
         );

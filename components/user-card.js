@@ -7,12 +7,12 @@ import * as mw from './ho/mediaWrapper';
 import fonts from '../style/fonts';
 
 function UserCard({
-    userImgUrl, userName, userTagline, timestamp, media,
+    userImgSrc, userName, userTagline, timestamp, media,
 }) {
     const { isSmall } = media;
     return (
         <div className="user-card">
-            <Avatar src={userImgUrl} size={isSmall ? 32 : 64} />
+            <Avatar src={userImgSrc} size={isSmall ? 32 : 64} />
             <div className="details">
                 <div className="name">
                     {userName}

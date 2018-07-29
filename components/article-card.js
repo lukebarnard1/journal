@@ -6,7 +6,11 @@ import fonts from '../style/fonts';
 import Avatar from './avatar';
 
 function ArticleCard({
-    articleTitle, articleImgSrc, articleTimestamp, articleHref, userImgSrc,
+    articleTitle,
+    articleImgSrc,
+    articleTimestamp,
+    articleHref,
+    userImgSrc,
 }) {
     return (
         <div className="article-card">

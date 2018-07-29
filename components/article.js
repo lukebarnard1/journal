@@ -15,19 +15,25 @@ function ArticleHeader(props) {
 }
 
 export default function Article(props) {
-    const { imgUrl, title, markdown } = props;
-    if (!imgUrl || !title || !markdown) {
+    const { articleImgSrc, articleTitle, articleMarkdown } = props;
+
+    const { userImgSrc, userName, userTagline, articleTimestamp } = props;
+    const headerProps = {
+        userImgSrc, userName, userTagline, timestamp: articleTimestamp,
+    };
+
+    if (!articleImgSrc || !articleTitle || !articleMarkdown) {
         return null;
     }
     return (
         <div className="article">
-            <ArticleHeader {...props} />
-            {imgUrl ? <img alt="" src={imgUrl} /> : null}
+            <ArticleHeader {...headerProps} />
+            {articleImgSrc ? <img alt="" src={articleImgSrc} /> : null}
             <div className="article-central">
                 <h1>
-                    {title}
+                    {articleTitle}
                 </h1>
-                <MarkdownStyled source={markdown} />
+                <MarkdownStyled source={articleMarkdown} />
                 <ArticleFooter {...props} />
             </div>
             <style jsx="true">
@@ -59,10 +65,10 @@ export default function Article(props) {
     );
 }
 Article.defaultProps = {
-    imgUrl: null,
+    articleImgSrc: null,
 };
 Article.propTypes = {
-    imgUrl: PropTypes.string,
-    title: PropTypes.string.isRequired,
-    markdown: PropTypes.string.isRequired,
+    articleImgSrc: PropTypes.string,
+    articleTitle: PropTypes.string.isRequired,
+    articleMarkdown: PropTypes.string.isRequired,
 };
