@@ -1,10 +1,20 @@
 import React from 'react';
 import Markdown from 'react-markdown';
+import * as hljs from 'highlight.js';
 
 import fonts from '../style/fonts';
 
+function applyMarkdownCodeHighlighting(root) {
+    if (!root) return;
+
+    const md = root.getElementsByClassName('j-article-md-body')[0];
+
+    const codeElements = md.getElementsByTagName('pre');
+    Array.from(codeElements).map(el => hljs.highlightBlock(el));
+}
+
 const MarkdownStyled = props => (
-    <div>
+    <div ref={applyMarkdownCodeHighlighting}>
         <Markdown className="j-article-md-body" {...props} />
         <style global jsx>
             {`

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as hljs from 'highlight.js';
 
 import fonts from '../style/fonts';
 import MarkdownStyled from './markdown';
@@ -15,25 +14,16 @@ function ArticleHeader(props) {
     );
 }
 
-function applyMarkdownCodeHighlighting(root) {
-    if (!root) return;
-
-    const md = root.getElementsByClassName('j-article-md-body')[0];
-
-    const codeElements = md.getElementsByTagName('pre');
-    Array.from(codeElements).map(el => hljs.highlightBlock(el));
-}
-
 export default function Article(props) {
     const { imgUrl, title, markdown } = props;
     if (!imgUrl || !title || !markdown) {
         return null;
     }
     return (
-        <div className="j-article" ref={applyMarkdownCodeHighlighting}>
+        <div className="article">
             <ArticleHeader {...props} />
             {imgUrl ? <img alt="" src={imgUrl} /> : null}
-            <div className="j-article-central">
+            <div className="article-central">
                 <h1>
                     {title}
                 </h1>
@@ -42,7 +32,7 @@ export default function Article(props) {
             </div>
             <style jsx="true">
                 {`
-                    .j-article {
+                    .article {
                         width: calc(100% -16px);
                     }
 
@@ -57,7 +47,7 @@ export default function Article(props) {
                         object-fit: cover;
                     }
 
-                    .j-article-central {
+                    .article-central {
                         width: 700px;
                         max-width: 100%;
                         margin: 0px auto;
