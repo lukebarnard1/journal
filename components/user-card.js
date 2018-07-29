@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import Avatar from './avatar';
 import Button from './button';
 import * as mw from './ho/mediaWrapper';
@@ -10,7 +11,7 @@ function UserCard({
 }) {
     const { isSmall } = media;
     return (
-        <div className="j-user-card">
+        <div className="user-card">
             <Avatar src={userImgUrl} size={isSmall ? 32 : 64} />
             <div className="details">
                 <div className="name">
@@ -34,7 +35,7 @@ function UserCard({
             </div>
             <style jsx>
                 {`
-                .j-user-card {
+                .user-card {
                     font-family: ${fonts.ui};
                     font-size: 10pt;
                     display: flex;
@@ -45,24 +46,24 @@ function UserCard({
                     overflow: hidden;
                 }
 
-                .j-user-card .details {
+                .user-card .details {
                     margin-left: 30px;
                     color: #666;
                     line-height: 14pt;
                 }
 
-                .j-user-card .details .name {
+                .user-card .details .name {
                     padding-top: ${isSmall ? '0px' : '10px'};
 
                     font-size: ${isSmall ? '10pt' : '14pt'};
                     line-height: ${isSmall ? '14pt' : '28pt'};
                 }
 
-                .j-user-card .details .tag {
+                .user-card .details .tag {
                     font-size: 10pt;
                 }
 
-                .j-user-card .details .ts {
+                .user-card .details .ts {
                     font-size: 10pt;
                     color: #aaa;
                 }
