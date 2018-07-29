@@ -39,7 +39,7 @@ export default class Navigation extends React.Component {
     render() {
         const { showNavigation } = this.state;
         return (
-            <div className="root">
+            <div className="navigation">
                 <nav>
                     <Link href="/">
                         <a href="/">
@@ -49,7 +49,7 @@ export default class Navigation extends React.Component {
                 </nav>
                 <style jsx="true">
                     {`
-                .root {
+                .navigation {
                     height: ${NAV_HEIGHT_PX};
                 }
 

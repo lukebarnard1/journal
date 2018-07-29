@@ -9,7 +9,7 @@ function ArticleCard({
     articleTitle, articleImgSrc, articleTimestamp, articleHref, userImgSrc,
 }) {
     return (
-        <div className="root">
+        <div className="article-card">
             <Link href={articleHref}>
                 <div className="post-card">
                     <img src={articleImgSrc} alt="" />
@@ -26,7 +26,7 @@ function ArticleCard({
             </Link>
             <style jsx>
                 {`
-                    .root {
+                    .article-card {
                         min-width: 200px;
                         width: 100%;
                     }

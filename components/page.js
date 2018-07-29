@@ -10,7 +10,7 @@ function Page({ children }) {
             <Navigation />
             <div>
                 { children }
-                <div className="root">
+                <div className="page-footer">
                     <a href="/about" className="brand">
                     journal // decentralised blogging
                     </a>
@@ -39,7 +39,7 @@ function Page({ children }) {
 
                                 margin-bottom: 40px;
                             }
-                            .root {
+                            .page-footer {
                                 background-color: #444;
                                 padding: 50px;
                             }

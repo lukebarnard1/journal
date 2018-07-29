@@ -8,7 +8,7 @@ function Comment({
     userImgUrl, userName, text, timestamp, score, comments,
 }) {
     return (
-        <div className="root">
+        <div>
             <div className="comment">
                 <Avatar src={userImgUrl} size={48} />
                 <div className="col-2">
