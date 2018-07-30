@@ -2,6 +2,13 @@
 
 A web client for writing news stories, personal blogs and more, built on the Matrix protocol - https://matrix.org.
 
+-----
+
+### Note: journal is undergoing a big redesign, moving from Riot.js to React and changing architecture. 
+Read more on [this issue](https://github.com/lukebarnard1/journal/issues/70) and follow me on https://dev.to/luke for [updates](https://dev.to/luke/building-a-decentralised-blog-3oec). The redesign is being pushed to [luke/redesign](/tree/luke/redesign).
+
+-----
+
 ## Contents
  - [Introduction](#introduction)
  - [Development](#development)
