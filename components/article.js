@@ -27,7 +27,9 @@ export default function Article(props) {
     }
     return (
         <div className="article">
-            <ArticleHeader {...headerProps} />
+            <div className="article-central">
+                <ArticleHeader {...headerProps} />
+            </div>
             {articleImgSrc ? <img alt="" src={articleImgSrc} /> : null}
             <div className="article-central">
                 <h1>
@@ -54,8 +56,7 @@ export default function Article(props) {
                     }
 
                     .article-central {
-                        width: 700px;
-                        max-width: 100%;
+                        max-width: 700px;
                         margin: 0px auto;
                         padding: 0px 8px;
                     }
