@@ -25,12 +25,12 @@ class IndexPage extends React.Component {
     }
 
     render() {
-        const { category, articles } = this.props;
+        const { category } = this.props;
         return (
             <Page>
                 <FoldingColumns>
                     <IndexHeader category={category} />
-                    <ArticleList articles={articles} />
+                    <ArticleList />
                 </FoldingColumns>
             </Page>
         );

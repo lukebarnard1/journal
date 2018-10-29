@@ -1,12 +1,20 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ArticleCard from './article-card';
 import * as mw from './ho/mediaWrapper';
 
 function ArticleList({ articles }) {
+    const articleCards = Object.values(articles)
+        .map(article => (
+            <ArticleCard
+                {...article}
+                key={article.articleHref}
+            />
+        ));
     return (
         <div className="article-list">
-            {Object.values(articles).map(article => <ArticleCard {...article} key={article.articleHref} />)}
+            { articleCards }
             <style jsx>
                 {`
                     .article-list {
@@ -23,4 +31,7 @@ function ArticleList({ articles }) {
 ArticleList.propTypes = {
     articles: PropTypes.arrayOf(ArticleCard.propTypes).isRequired,
 };
-export default mw.mediaWrapper(ArticleList);
+
+const stateToProps = ({ articles }) => ({ articles });
+
+export default connect(stateToProps)(mw.mediaWrapper(ArticleList));
