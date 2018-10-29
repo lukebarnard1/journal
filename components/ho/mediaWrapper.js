@@ -10,29 +10,33 @@ export const DEVICE_SIZE = {
 
 const devices = [
     // These should be mutally exclusive
-    { size: DEVICE_SIZE.SMALL, width: {min: 0, max: 699} },
-    { size: DEVICE_SIZE.MEDIUM, width: {min: 700, max: 1399} },
-    { size: DEVICE_SIZE.LARGE, width: {min: 1400} },
+    { size: DEVICE_SIZE.SMALL, width: { min: 0, max: 699 } },
+    { size: DEVICE_SIZE.MEDIUM, width: { min: 700, max: 1399 } },
+    { size: DEVICE_SIZE.LARGE, width: { min: 1400 } },
 ];
 
 export function mediaWrapper(WrappedComponent) {
-    return (props) =>
+    return props => (
         <div>
-            { devices.map((device) =>
+            { devices.map(device => (
                 <MediaQuery
                     key={device.size}
                     minWidth={device.width.min}
                     maxWidth={device.width.max}
                 >
-                    <WrappedComponent media={{
-                        isSmall: device.size === DEVICE_SIZE.SMALL,
-                        isMedium: device.size === DEVICE_SIZE.MEDIUM,
-                        isLarge: device.size === DEVICE_SIZE.LARGE,
-                        size: device.size,
-                    }} {...props} />
+                    <WrappedComponent
+                        media={{
+                            isSmall: device.size === DEVICE_SIZE.SMALL,
+                            isMedium: device.size === DEVICE_SIZE.MEDIUM,
+                            isLarge: device.size === DEVICE_SIZE.LARGE,
+                            size: device.size,
+                        }}
+                        {...props}
+                    />
                 </MediaQuery>
-            ) }
-        </div>;
+            )) }
+        </div>
+    );
 }
 export const propTypes = {
     media: {
@@ -41,4 +45,4 @@ export const propTypes = {
         isMedium: PropTypes.bool.isRequired,
         isLarge: PropTypes.bool.isRequired,
     },
-}
+};
