@@ -17,7 +17,12 @@ function ArticleHeader(props) {
 export default function Article(props) {
     const { articleImgSrc, articleTitle, articleMarkdown } = props;
 
-    const { userImgSrc, userName, userTagline, articleTimestamp } = props;
+    const {
+        userImgSrc,
+        userName,
+        userTagline,
+        articleTimestamp,
+    } = props;
     const headerProps = {
         userImgSrc, userName, userTagline, timestamp: articleTimestamp,
     };
@@ -69,6 +74,10 @@ Article.defaultProps = {
     articleImgSrc: null,
 };
 Article.propTypes = {
+    userImgSrc: PropTypes.string.isRequired,
+    userName: PropTypes.string.isRequired,
+    userTagline: PropTypes.string.isRequired,
+    articleTimestamp: PropTypes.string.isRequired,
     articleImgSrc: PropTypes.string,
     articleTitle: PropTypes.string.isRequired,
     articleMarkdown: PropTypes.string.isRequired,
