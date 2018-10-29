@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 
 import fonts from '../style/fonts';
+import Button from './button';
 
 const NAV_HEIGHT = 50;
 const NAV_HEIGHT_PX = `${NAV_HEIGHT}px`;
@@ -41,11 +42,20 @@ export default class Navigation extends React.Component {
         return (
             <div className="navigation">
                 <nav>
-                    <Link href="/">
-                        <a href="/">
-                            journal
-                        </a>
-                    </Link>
+                    <div className="brand">
+                        <Link href="/">
+                            <a href="/">
+                                journal
+                            </a>
+                        </Link>
+                    </div>
+                    <div className="account-button">
+                        <Link href="/login">
+                            <Button>
+                                Log in / Sign up
+                            </Button>
+                        </Link>
+                    </div>
                 </nav>
                 <style jsx="true">
                     {`
@@ -58,9 +68,11 @@ export default class Navigation extends React.Component {
                     font-size: 20pt;
                     line-height: ${NAV_HEIGHT_PX};
 
+                    display: grid;
+                    grid-template-columns: 40px 50px auto 100px 40px;
+
                     width: 100%;
                     height: ${NAV_HEIGHT_PX};
-                    padding: 0px 50px;
                     border-bottom: 1px solid #ddd;
 
                     background-color: #fff;
@@ -74,9 +86,19 @@ export default class Navigation extends React.Component {
                     transition: top 0.2s ease-in-out 0.2s;
                 }
 
-                nav a {
+                .brand a {
                     color: inherit;
                     text-decoration: none;
+                }
+
+                .brand {
+                    grid-column-start: 2;
+                    grid-column-end: span 1;
+                }
+
+                .account-button {
+                    grid-column-start: -3;
+                    grid-column-end: span 1;
                 }
             `}
                 </style>
