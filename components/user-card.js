@@ -81,7 +81,7 @@ function UserCard({
     );
 }
 UserCard.propTypes = {
-    userImgUrl: PropTypes.string.isRequired,
+    userImgSrc: PropTypes.string.isRequired,
     userName: PropTypes.string.isRequired,
     userTagline: PropTypes.string.isRequired,
     timestamp: PropTypes.string.isRequired,
