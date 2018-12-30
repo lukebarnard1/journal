@@ -22,9 +22,11 @@ export default function Article(props) {
         userName,
         userTagline,
         articleTimestamp,
+        articleDate,
     } = props;
+
     const headerProps = {
-        userImgSrc, userName, userTagline, timestamp: articleTimestamp,
+        userImgSrc, userName, userTagline, timestamp: articleTimestamp, date: articleDate,
     };
 
     if (!articleImgSrc || !articleTitle || !articleMarkdown) {
@@ -77,6 +79,7 @@ Article.propTypes = {
     userImgSrc: PropTypes.string.isRequired,
     userName: PropTypes.string.isRequired,
     userTagline: PropTypes.string.isRequired,
+    articleDate: PropTypes.string.isRequired,
     articleTimestamp: PropTypes.string.isRequired,
     articleImgSrc: PropTypes.string,
     articleTitle: PropTypes.string.isRequired,

@@ -9,6 +9,7 @@ function ArticleCard({
     articleTitle,
     articleImgSrc,
     articleTimestamp,
+    articleDate,
     articleHref,
     userImgSrc,
 }) {
@@ -22,7 +23,7 @@ function ArticleCard({
                     </div>
                     <div className="detail">
                         <Avatar src={userImgSrc} size={32} />
-                        <div className="timestamp">
+                        <div className="timestamp" title={new Date(articleDate).toLocaleString()}>
                             {articleTimestamp}
                         </div>
                     </div>
@@ -38,7 +39,8 @@ function ArticleCard({
                         margin: 20px;
                         padding-bottom: 8px;
 
-                        box-shadow: 0px 0px 10px 2px #ccc;
+                        border-bottom: 1px solid #f0f0f0;
+
                         cursor: pointer;
                     }
                     div.title {

@@ -49,6 +49,7 @@ export default class Navigation extends React.Component {
                             </a>
                         </Link>
                     </div>
+                    { /*
                     <div className="account-button">
                         <Link href="/login">
                             <Button>
@@ -56,6 +57,7 @@ export default class Navigation extends React.Component {
                             </Button>
                         </Link>
                     </div>
+                        */ }
                 </nav>
                 <style jsx="true">
                     {`

@@ -38,13 +38,9 @@ CategoryLink.propTypes = {
     selected: PropTypes.bool.isRequired,
 };
 
-function IndexHeader({ category, media }) {
+function IndexHeader({ category, categories, media }) {
     const { isSmall } = media;
-    const categories = [
-        { id: 'architecture', name: 'architecture' },
-        { id: 'mental-health', name: 'mental health' },
-        { id: 'politics', name: 'politics' },
-    ].map(
+    const categoriesNav = categories.map(
         ({ id, name }) => <CategoryLink id={id} selected={id === category} name={name} />,
     );
 
@@ -69,7 +65,7 @@ function IndexHeader({ category, media }) {
                 </div>
             </div>
             <div className="filter">
-                { categories }
+                { categoriesNav }
             </div>
             <style jsx>
                 {`
@@ -96,7 +92,7 @@ function IndexHeader({ category, media }) {
                     h1 {
                         font-family: ${fonts.header};
                         font-size: 20pt;
-                        margin: 0px;
+                        margin-bottom: 5px;
                     }
 
                     span {
@@ -104,9 +100,10 @@ function IndexHeader({ category, media }) {
                     }
 
                     .filter {
-                        box-shadow: ${isSmall ? '' : '0px 0px 10px 2px #ccc'};
+                        box-shadow: ${isSmall ? '' : '0px 0px 15px -3px #ccc'};
 
                         min-width: 200px;
+                        margin-top: 15px;
 
                         display: ${isSmall ? 'flex' : 'block'};
                     }
@@ -116,7 +113,7 @@ function IndexHeader({ category, media }) {
     );
 }
 IndexHeader.propTypes = {
-    category: PropTypes.string.isRequired,
+    category: PropTypes.string,
     media: PropTypes.shape(mw.propTypes.media).isRequired,
 };
 

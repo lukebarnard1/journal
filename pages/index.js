@@ -7,6 +7,8 @@ import IndexHeader from '../components/index-header';
 import FoldingColumns from '../components/folding-columns';
 import ArticleList from '../components/article-list';
 
+import fetch from 'isomorphic-unfetch';
+
 function stateToProps(state = {}) {
     return {
         articles: state.articles || [],
@@ -14,11 +16,13 @@ function stateToProps(state = {}) {
 }
 
 class IndexPage extends React.Component {
-    static async getInitialProps({ query, store }) {
-        store.dispatch({
-            type: 'j-get-articles',
-            payload: {},
-        });
+    static async getInitialProps({ query, store, isServer }) {
+        if (isServer) {
+            store.dispatch({
+                type: 'j-get-articles',
+            });
+        } else {
+        }
         return {
             category: query.category,
         };
@@ -26,18 +30,29 @@ class IndexPage extends React.Component {
 
     render() {
         const { category } = this.props;
+        const { articles } = this.props;
+        let categories = {};
+        Object.keys(articles).forEach((k) => {
+            const a = articles[k];
+            const href = a.articleHref;
+            const category = href.split('/')[0];
+            categories[category] = true;
+        });
+        categories = Object.keys(categories).map(
+            k => ({id: k, name: k})
+        );
         return (
             <Page>
                 <FoldingColumns>
-                    <IndexHeader category={category} />
-                    <ArticleList />
+                    <IndexHeader categories={categories} category={category} />
+                    <ArticleList category={category} />
                 </FoldingColumns>
             </Page>
         );
     }
 }
 IndexPage.propTypes = {
-    category: PropTypes.string.isRequired,
+    category: PropTypes.string,
 };
 
 export default connect(stateToProps)(IndexPage);

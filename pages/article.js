@@ -21,6 +21,10 @@ class ArticlePage extends React.Component {
                 id: [query.category, query.id],
             },
         });
+        // Also need to get articles if we land on this originally
+        store.dispatch({
+            type: 'j-get-articles',
+        });
 
         return {
             category: query.category,

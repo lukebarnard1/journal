@@ -2,17 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Avatar from './avatar';
-import Button from './button';
 import * as mw from './ho/mediaWrapper';
 import fonts from '../style/fonts';
 
 function UserCard({
-    userImgSrc, userName, userTagline, timestamp, media,
+    userImgSrc, userName, userTagline, timestamp, date, media,
 }) {
     const { isSmall } = media;
     return (
         <div className="user-card">
-            <Avatar src={userImgSrc} size={isSmall ? 32 : 64} />
+            <div className="avatar">
+                <Avatar src={userImgSrc} size={isSmall ? 32 : 64} />
+            </div>
             <div className="details">
                 <div className="name">
                     {userName}
@@ -24,15 +25,17 @@ function UserCard({
                         </div>
                     )
                 }
-                <div className="ts">
+                <div className="ts" title={new Date(date).toLocaleString()}>
                     {timestamp}
                 </div>
             </div>
+            { /*
             <div className="subscribe">
                 <Button>
                     Subscribe
                 </Button>
             </div>
+            */ }
             <style jsx>
                 {`
                 .user-card {
@@ -46,8 +49,11 @@ function UserCard({
                     overflow: hidden;
                 }
 
+                .user-card .avatar {
+                    margin-right: 30px;
+                }
+
                 .user-card .details {
-                    margin-left: 30px;
                     color: #666;
                     line-height: 14pt;
                 }
@@ -85,6 +91,7 @@ UserCard.propTypes = {
     userName: PropTypes.string.isRequired,
     userTagline: PropTypes.string.isRequired,
     timestamp: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
     media: PropTypes.shape(mw.propTypes.media).isRequired,
 };
 

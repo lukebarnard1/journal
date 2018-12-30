@@ -1,6 +1,5 @@
 
 export default function rootReducer(state = { articles: [] }, action) {
-    console.info(Object.keys(state.articles).length, action.type, Object.keys(action.payload || {}));
     switch (action.type) {
     case 'j-select-article':
         return {

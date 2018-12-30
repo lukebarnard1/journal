@@ -9,7 +9,9 @@ function Page({ children }) {
         <div>
             <Navigation />
             <div>
-                { children }
+                <div className="main">
+                    { children }
+                </div>
                 <div className="page-footer">
                     <a href="/about" className="brand">
                     journal // decentralised blogging
@@ -29,37 +31,44 @@ function Page({ children }) {
                     <a href="/code">
                         Code
                     </a>
-                    <style jsx>
-                        {`
-                            .brand {
-                                font-family: ${fonts.header};
-                                font-size: 20pt;
-
-                                text-decoration: none;
-
-                                margin-bottom: 40px;
-                            }
-                            .page-footer {
-                                background-color: #444;
-                                padding: 50px;
-                            }
-                            a {
-                                font-family: ${fonts.ui};
-                                font-size: 10pt;
-
-                                margin-bottom: 10px;
-
-                                display: block;
-
-                                color: #eee;
-                            }
-                            a:hover {
-                                color: #fff;
-                            }
-                        `}
-                    </style>
                 </div>
             </div>
+            <style jsx>
+                {`
+                    .main {
+                        min-height: calc(100vh - 130px);
+                    }
+
+                    .brand {
+                        font-family: ${fonts.header};
+                        font-size: 20pt;
+
+                        text-decoration: none;
+
+                        margin-bottom: 40px;
+                    }
+
+                    .page-footer {
+                        background-color: #444;
+                        border-top: 2px solid #111;
+                        padding: 25px 50px;
+                    }
+
+                    a {
+                        font-family: ${fonts.ui};
+                        font-size: 10pt;
+
+                        margin-bottom: 10px;
+
+                        display: block;
+
+                        color: #eee;
+                    }
+                    a:hover {
+                        color: #fff;
+                    }
+                `}
+            </style>
         </div>
     );
 }

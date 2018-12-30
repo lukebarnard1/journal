@@ -2,10 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ArticleCard from './article-card';
-import * as mw from './ho/mediaWrapper';
 
-function ArticleList({ articles }) {
+function ArticleList({ articles, category }) {
     const articleCards = Object.values(articles)
+        .filter(article => category === undefined || article.articleCategory === category)
+        .sort((a, b) => b.articleDate - a.articleDate)
         .map(article => (
             <ArticleCard
                 {...article}
@@ -20,6 +21,7 @@ function ArticleList({ articles }) {
                     .article-list {
                         display: flex;
                         flex-wrap: wrap;
+                        flex-grow: 1;
 
                         justify-content: center;
                     }
@@ -28,10 +30,14 @@ function ArticleList({ articles }) {
         </div>
     );
 }
+ArticleList.defaultProps = {
+    category: undefined,
+};
 ArticleList.propTypes = {
     articles: PropTypes.arrayOf(ArticleCard.propTypes).isRequired,
+    category: PropTypes.string,
 };
 
 const stateToProps = ({ articles }) => ({ articles });
 
-export default connect(stateToProps)(mw.mediaWrapper(ArticleList));
+export default connect(stateToProps)(ArticleList);
