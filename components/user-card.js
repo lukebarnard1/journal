@@ -45,7 +45,6 @@ function UserCard({
                     align-items: center;
 
                     padding: ${isSmall ? '10px 17px' : '35px 27px'};
-                    border-bottom: 1px solid #ddd;
                     overflow: hidden;
                 }
 
