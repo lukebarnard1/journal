@@ -10,7 +10,9 @@ A web client for writing news stories, personal blogs and more, built on the Mat
   - [Contributing](#contributing)
  - [Screenshot](#screenshot)
 
-### **WARNING**: Undergoing major rewrite with different architecture. For previous 0.0.1 POC, see branch `poc-2018`
+--------
+
+### **WARNING**: Undergoing major rewrite with different architecture. For previous 0.0.1 POC, see branch `poc-2018`. For rewrite branch, see `luke/redesign`.
 
 --------
 
