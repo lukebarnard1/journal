@@ -4,3 +4,4 @@ bundle.js
 .next
 
 articles
+config/config.json
