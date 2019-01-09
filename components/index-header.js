@@ -6,6 +6,8 @@ import fonts from '../style/fonts';
 import * as mw from './ho/mediaWrapper';
 import Avatar from './avatar';
 
+import config from '../config';
+
 function CategoryLink({ id, name, selected }) {
     return (
         <Link href={`/?category=${id}`} as={id} key={id}>
@@ -51,16 +53,16 @@ function IndexHeader({ category, categories, media }) {
                 <div className="clickable">
                     <Link prefetch href="/">
                         <a href="/">
-                            <Avatar src="/static/avatar.png" size={isSmall ? 64 : 128} />
+                            <Avatar src={config.authorImg} size={isSmall ? 64 : 128} />
                         </a>
                     </Link>
                 </div>
                 <div className="name">
                     <h1>
-                        Duncan Idaho
+                        {config.authorName}
                     </h1>
                     <span>
-                        building a better world
+                        {config.authorTagline}
                     </span>
                 </div>
             </div>
