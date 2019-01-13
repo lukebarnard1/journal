@@ -5,9 +5,8 @@
     "main": "index.js",
     "scripts": {
         "lint": "eslint pages style components",
-        "dev": "node server.js",
         "build": "next build",
-        "start": "next start -p 8000"
+        "start": "node server.js"
     },
     "author": "Luke Barnard",
     "repository": "git@github.com:lukebarnard1/journal.git",
