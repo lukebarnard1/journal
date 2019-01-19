@@ -14,12 +14,7 @@ This contains data about the blog as a key-value dictionary.
 title: The Title of My Blog
 author: Luke
 
-...
-
 ---
-
-...
-
 ```
 
 Please see the example below. Changes are currently likely as journal evolves.
