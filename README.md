@@ -53,7 +53,7 @@ Users will login to the matrix.org homeserver with their Matrix user/password co
 
 In this sense, journal will be seen as a use case of the Matrix protocol. It uses the flexibility of the Matrix protocol to embed published materials and comments with meta-data that serve to enhance the functionality of journal.
 
-### next.js
+### Next.js
 
 Next.js is now a key component to the journal web view. It enables SSR (Server-Side Rendering) of pages that are rendered using React. This makes viewing pages snappy but keeps the benefits of being able to update the view dynamically based on user interaction and new data from the server.
 
