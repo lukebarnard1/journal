@@ -54,13 +54,13 @@ This has some bullet points:
 
 
 Now for some code:
-```js
+\`\`\`js
 const test = 'test';
 
 function hello() {
     console.info('i am a function. you called?');
 }
-```
+\`\`\`
 
 See, I told you. There's a limit to how much I can be bothered to type so much text so I might start repeating myself. There's a limit to how much I can be bothered to type so much text so I might start repeating myself. There's a limit to how much I can be bothered to type so much text so I might start repeating myself. There's a limit to how much I can be bothered to type so much text so I might start repeating myself.
 
