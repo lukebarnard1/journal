@@ -8,9 +8,8 @@ Future: A web client for writing news stories, personal blogs and more, built on
  - [Introduction](#introduction)
    - [Matrix](#matrix)
    - [But what is journal?](#but_what_is_journal)
- - [Development](#development)
-   - [Quick Start](#quick_start)
-   - [Contributing](#contributing)
+ - [Installation](#installation)
+ - [Contributing](#contributing)
 
 ## Introduction
 
@@ -59,7 +58,9 @@ The [demo](https://journal.lukebarnard.co.uk) shows one example of journal runni
 
 ## Installation
 
-journal runs on [node.js](https://nodejs.org) version >10
+### Docker
+
+journal runs on [node.js](https://nodejs.org) version >=8
 
 It is recommended to run journal in a docker container with the following commands:
 
