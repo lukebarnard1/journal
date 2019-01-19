@@ -69,9 +69,13 @@ journal runs on [node.js](https://nodejs.org) version >=8
 It is recommended to run journal in a docker container with the following commands:
 
 ```
+# Create a directory for all of your markdown articles
 mkdir articles
+
+# Create a category directory
 mkdir articles/baking
 
+# Create your first article (See docs/writing-an-article.md)
 vi articles/baking/my-first-carrot-cake.md
 
 export JOURNAL_ARTICLES_DIR=$(pwd)/articles
