@@ -1,8 +1,8 @@
 # journal - a blogging platform built on [\[matrix\]](https://matrix.org)
 
-Currently: An open source blog hosting website.
+An open source blog hosting website.
 
-Future: A web client for writing news stories, personal blogs and more, built on the Matrix protocol - https://matrix.org.
+In the future: A web client for writing news stories, personal blogs and more, built on the Matrix protocol - https://matrix.org.
 
 ## Contents
  - [Introduction](#introduction)
