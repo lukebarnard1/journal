@@ -1,34 +1,41 @@
 {
-  "name": "journal",
-  "version": "0.0.1",
-  "description": "a blogging platform built on [matrix]",
-  "main": "index.js",
-  "scripts": {
-    "watch": "watchify src/index.js --debug -o web/bundle.js -t [ riotify ] -v",
-    "build": "browserify src/index.js -o web/bundle.js -t [ riotify ] -v",
-    "run": "node index.js",
-    "dev": "npm run-script run & npm run-script watch"
-  },
-  "author": "Luke Barnard",
-  "repository": "git@github.com:lukebarnard1/journal.git",
-  "license": "ISC",
-  "devDependencies": {
-    "browserify": "^13.1.1",
-    "riotify": "^2.0.0",
-    "watchify": "v3.6.1"
-  },
-  "dependencies": {
-    "babel-runtime": "^6.26.0",
-    "bluebird": "^3.4.6",
-    "express": "^4.14.0",
-    "marked": "^0.3.9",
-    "matrix-js-sdk": "^0.8.5",
-    "matrix-redux-wrap": "^1.1.2",
-    "riot": "^3.3.2",
-    "riot-compiler": "^3.2.1",
-    "riot-route": "^3.1.1",
-    "sanitize-html": "^1.14.1",
-    "simplemde": "^1.11.2",
-    "sourceify": "^0.1.0"
-  }
+    "name": "journal",
+    "version": "0.0.1",
+    "description": "a blogging platform built on [matrix]",
+    "main": "index.js",
+    "scripts": {
+        "lint": "eslint pages style components",
+        "build": "next build",
+        "start": "node server.js"
+    },
+    "author": "Luke Barnard",
+    "repository": "git@github.com:lukebarnard1/journal.git",
+    "license": "Apache-2.0",
+    "devDependencies": {
+        "eslint": "^5.1.0",
+        "eslint-config-airbnb": "^17.0.0",
+        "eslint-config-airbnb-base": "^13.0.0",
+        "eslint-plugin-import": "^2.13.0",
+        "eslint-plugin-jsx-a11y": "^6.1.1",
+        "eslint-plugin-mocha": "^5.1.0",
+        "eslint-plugin-react": "^7.10.0"
+    },
+    "dependencies": {
+        "express": "^4.16.3",
+        "highlight.js": "^9.12.0",
+        "isomorphic-unfetch": "^2.0.0",
+        "next": "^7.0.2",
+        "next-redux-saga": "^3.0.0-beta.1",
+        "next-redux-wrapper": "^2.0.0",
+        "prop-types": "^15.6.2",
+        "raw-loader": "^0.5.1",
+        "react": "^16.4.1",
+        "react-dom": "^16.4.1",
+        "react-markdown": "^3.3.4",
+        "react-redux": "^5.0.7",
+        "react-responsive": "^5.0.0",
+        "redux": "^4.0.0",
+        "redux-saga": "^0.16.0",
+        "request": "^2.88.0"
+    }
 }
