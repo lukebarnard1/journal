@@ -13,7 +13,7 @@ In the future: A web client for writing news stories, personal blogs and more, b
 
 ## Introduction
 
-journal is (currently) an open source blog website that in future will form part of a larger, decentralised blog network built on the Matrix protocol.
+journal is (currently) an open source blog website that in future will be part of a larger system, forming part of a decentralised blog network built on the Matrix protocol.
 
 Originally, journal was a Matrix client that relied on being connected to a Matrix server in order to view blog posts, write blog posts and comment on blog posts. However, connecting to a Matrix server to download blogs for the first time gave a poor user experience so a change in architecture was devised to overcome this:
 
