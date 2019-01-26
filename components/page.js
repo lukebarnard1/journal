@@ -13,22 +13,24 @@ function Page({ children }) {
                     { children }
                 </div>
                 <div className="page-footer">
-                    <a href="/about" className="brand">
-                    journal // decentralised blogging
+                    <a
+                        className="brand"
+                        href="https://github.com/lukebarnard1/journal/blob/master/README.md"
+                        rel="noopener noreferrer"
+                        target="_blank"
+                    >
+                        journal // decentralised blogging
                     </a>
                     <a href="/">
                         Home
                     </a>
-                    <a href="/explore">
+                    <a href="/explore" className="disabled">
                         Explore
                     </a>
-                    <a href="/register">
+                    <a href="/register" className="disabled">
                         Register
                     </a>
-                    <a href="/about">
-                        About
-                    </a>
-                    <a href="/code">
+                    <a href="https://github.com/lukebarnard1/journal" target="_blank" rel="noopener noreferrer">
                         Code
                     </a>
                 </div>
@@ -46,6 +48,13 @@ function Page({ children }) {
                         text-decoration: none;
 
                         margin-bottom: 40px;
+                    }
+
+                    .disabled {
+                        pointer-events: none;
+
+                        text-decoration: none;
+                        opacity: 0.7;
                     }
 
                     .page-footer {
