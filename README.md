@@ -86,7 +86,7 @@ cd journal
 docker build -t journal .
 docker run -d \
   --name="journal" \
-  --mount "type=bind,source=$JOURNAL_ARTICLES_DIR,target=/usr/src/app/articles" \
+  --mount "type=bind,source=$JOURNAL_ARTICLES_DIR,target=/usr/src/app/web/articles" \
   -p 3000:3000 \
   journal
 

@@ -3,5 +3,5 @@ node_modules
 bundle.js
 .next
 
-articles
+web/articles
 config/config.json

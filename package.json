@@ -4,9 +4,9 @@
     "description": "a blogging platform built on [matrix]",
     "main": "index.js",
     "scripts": {
-        "lint": "eslint pages style components",
-        "build": "next build",
-        "start": "node server.js"
+        "lint":  "cd web; eslint pages style components",
+        "build": "cd web; next build",
+        "start": "cd web; node server.js"
     },
     "author": "Luke Barnard",
     "repository": "git@github.com:lukebarnard1/journal.git",
