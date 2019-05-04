@@ -38,6 +38,8 @@ function Page({ children }) {
             <style jsx>
                 {`
                     .main {
+                        max-width: 1000px;
+                        margin: 0 auto;
                         min-height: calc(100vh - 130px);
                     }
 

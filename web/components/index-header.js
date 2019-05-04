@@ -72,7 +72,7 @@ function IndexHeader({ category, categories, media }) {
             <style jsx>
                 {`
                     .floater {
-                        min-width: 220px;
+                        width: 220px;
                         position: ${isSmall ? 'initial' : 'sticky'};
                         top: 50px;
                         padding: 20px;
