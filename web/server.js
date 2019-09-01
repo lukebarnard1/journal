@@ -69,10 +69,18 @@ function relativeDate(date) {
 
 function loadArticle({ id, category }) {
     const fileName = `./articles/${category}/${id}.md`;
-    const contents = fs.readFileSync(fileName).toString('utf8');
-    const date = fs.statSync(fileName).ctime;
+    const contents = (() => {
+      try {
+        return fs.readFileSync(fileName).toString('utf8');
+      } catch (e) {
+        console.log(e)
+        return null
+      }
+    })()
 
-    console.info({fileName, contents, date});
+    if (!contents) return null
+
+    const date = fs.statSync(fileName).ctime;
 
     const sections = contents.split('---');
 
@@ -113,9 +121,14 @@ function loadArticle({ id, category }) {
 
 function listArticles() {
     let categories = fs.readdirSync('./articles');
-    const articles = categories.map(category => fs.readdirSync(`./articles/${category}`).map(id => ({ category, id: id.split('.')[0] }))).reduce((a, b) => a.concat(b), []);
+    const articles = categories
+      .map(category => fs.readdirSync(`./articles/${category}`)
+      .filter(fileName => /.*\.md/.test(fileName))
+      .map(id => ({ category, id: id.split('.')[0] })))
+      .reduce((a, b) => a.concat(b), []);
     return articles
         .map(loadArticle)
+        .filter(Boolean)
         .reduce((rest, a) => ({ ...rest, [a.articleHref]: a }), Object(null));
 }
 
