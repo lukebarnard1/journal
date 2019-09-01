@@ -121,7 +121,11 @@ function loadArticle({ id, category }) {
 
 function listArticles() {
     let categories = fs.readdirSync('./articles');
-    const articles = categories.map(category => fs.readdirSync(`./articles/${category}`).map(id => ({ category, id: id.split('.')[0] }))).reduce((a, b) => a.concat(b), []);
+    const articles = categories
+      .map(category => fs.readdirSync(`./articles/${category}`)
+      .filter(fileName => /.*\.md/.test(fileName))
+      .map(id => ({ category, id: id.split('.')[0] })))
+      .reduce((a, b) => a.concat(b), []);
     return articles
         .map(loadArticle)
         .filter(Boolean)
