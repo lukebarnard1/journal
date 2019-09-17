@@ -35,7 +35,7 @@
         "react-redux": "^5.0.7",
         "react-responsive": "^5.0.0",
         "redux": "^4.0.0",
-        "redux-saga": "^0.16.0",
+        "redux-saga": "^1.1.0",
         "request": "^2.88.0"
     }
 }
