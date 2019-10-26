@@ -2,7 +2,11 @@
 
 An open source blog hosting website.
 
-In the future: A web client for writing news stories, personal blogs and more, built on the Matrix protocol - https://matrix.org.
+### Note: journal is no longer maintained
+
+What I imagined it could be: A web client for writing news stories, personal blogs and more, built on the Matrix protocol - https://matrix.org.
+
+What happened: I didn't have enough time to build the entire thing, plus there are decent alternatives. See https://github.com/lukebarnard1/journal/issues/118.
 
 ## Contents
  - [Introduction](#introduction)
