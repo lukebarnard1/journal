@@ -21,7 +21,7 @@
         "eslint-plugin-react": "^7.16.0"
     },
     "dependencies": {
-        "express": "^4.16.3",
+        "express": "^4.17.1",
         "highlight.js": "^9.15.10",
         "isomorphic-unfetch": "^3.0.0",
         "next": "^9.1.1",
