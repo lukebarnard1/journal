@@ -1,4 +1,4 @@
-# journal - a blogging platform built on [\[matrix\]](https://matrix.org)
+# journal - an (incomplete) blogging platform concept built on [\[matrix\]](https://matrix.org)
 
 An open source blog hosting website.
 
